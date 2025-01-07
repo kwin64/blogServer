@@ -12,4 +12,3 @@ app.get('/', (req, res) => {
   res.status(200).send('server start');
 });
 app.use(settings.PATH.BLOGS, blogsRouter);
-app.use(settings.PATH.POSTS, postsRouter);

@@ -1,7 +1,7 @@
 import { DBtypes } from './DB.types';
 
 const DB: DBtypes = {
-  blogs: [
+  posts: [
     {
       id: 'string',
       title: 'string',
@@ -11,7 +11,7 @@ const DB: DBtypes = {
       blogName: 'string',
     },
   ],
-  posts: [
+  blogs: [
     {
       id: 'string',
       name: 'string',

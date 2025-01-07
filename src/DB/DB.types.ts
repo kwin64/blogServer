@@ -1,13 +1,13 @@
 export type DBtypes = { blogs: blogType[]; posts: postType[] };
 
-export type postType = {
+export type blogType = {
   id: string;
   name: string;
   description: string;
   websiteUrl: string;
 };
 
-export type blogType = {
+export type postType = {
   id: string;
   title: string;
   shortDescription: string;

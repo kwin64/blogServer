@@ -1,3 +1,4 @@
+import { blogType } from '../DB/DB.types';
 import { blogsRepository } from '../repositories/blogsRepository';
 
 export const blogsService = {
@@ -9,5 +10,7 @@ export const blogsService = {
     return video;
   },
 
-  async createVideo(data: { title: string; author: string }) {},
+  async createBlog(name: string, description: string, websiteUrl: string) {
+    return await blogsRepository.create(name, description, websiteUrl);
+  },
 };
