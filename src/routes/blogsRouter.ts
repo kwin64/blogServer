@@ -1,13 +1,14 @@
-import { NextFunction, Router } from 'express';
+import { Router } from 'express';
 import blogsController from '../controllers/blogsController';
+import blogValidationMiddleware from '../utils/validations/blogsValidation';
+import inputValidationMIddleware from '../utils/validations/inputValidationMIddleware';
 
 export const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
 
 blogsRouter.post(
   '/',
-  (req, res, next: NextFunction) => {
-    next();
-  },
+  blogValidationMiddleware,
+  inputValidationMIddleware,
   blogsController.newBlog
 );

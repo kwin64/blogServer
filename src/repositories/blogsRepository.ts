@@ -7,7 +7,11 @@ export const blogsRepository = {
     const allBlogs = await DB.blogs;
     return allBlogs;
   },
-  async create(name: string, description: string, websiteUrl: string) {
+  async create(
+    name: string,
+    description: string,
+    websiteUrl: string
+  ): Promise<blogType> {
     const newBlog = {
       id: getRandomId(Date.now()),
       name,
