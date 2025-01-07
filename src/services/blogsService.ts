@@ -1,4 +1,3 @@
-import { blogType } from '../DB/DB.types';
 import { blogsRepository } from '../repositories/blogsRepository';
 
 export const blogsService = {

@@ -14,11 +14,11 @@ const blogsController = {
   async newBlog(req: Request, res: Response) {
     const { name, description, websiteUrl } = req.body;
     try {
-      const newBlog = await blogsService.createBlog({
+      const newBlog = await blogsService.createBlog(
         name,
         description,
-        websiteUrl,
-      });
+        websiteUrl
+      );
       res.status(HTTP_STATUSES.CREATED).json(newBlog);
     } catch (error) {
       res.status(HTTP_STATUSES.NOT_FOUND);
