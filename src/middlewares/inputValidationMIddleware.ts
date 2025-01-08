@@ -8,9 +8,13 @@ const inputValidationMIddleware = (
 ) => {
   const errorsResult = validationResult(req);
   if (!errorsResult.isEmpty()) {
-    const firstError = errorsResult.array()[0];
     res.status(HTTP_STATUSES.BAD_REQUEST).json({
-      errorsMessages: [{ message: firstError.msg, field: firstError.path }],
+      errorsMessages: errorsResult
+        .array({ onlyFirstError: true })
+        .map((error) => ({
+          message: error.msg,
+          field: error.path,
+        })),
     });
   } else {
     next();
