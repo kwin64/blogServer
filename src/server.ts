@@ -1,6 +1,6 @@
 import { app } from './app';
-import settings from './utils/constants/settings';
+import SETTINGS from './utils/constants/settings';
 
-app.listen(settings.PORT, () => {
-  console.log(`listen on ${settings.PORT} port`);
+app.listen(SETTINGS.PORT, () => {
+  console.log(`listen on ${SETTINGS.PORT} port`);
 });

@@ -1,13 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { HTTP_STATUSES } from '../constants/httpStatuses';
-
-type ErrorsType = {
-  errorsMessages: {
-    message: string;
-    field: string;
-  }[];
-};
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 const inputValidationMIddleware = (
   req: Request,
   res: Response,
