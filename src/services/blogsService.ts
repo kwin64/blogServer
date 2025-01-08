@@ -21,6 +21,14 @@ const blogsService = {
   async createBlog(name: string, description: string, websiteUrl: string) {
     return await blogsRepository.create(name, description, websiteUrl);
   },
+  async deleteBlog(id: string) {
+    const deletedBlog = await blogsRepository.delete(id);
+    if (!deletedBlog) {
+      console.error('Service error: delete blog in DB:', deletedBlog);
+      throw new Error('Blog not found');
+    }
+    return deletedBlog;
+  },
 };
 
 export default blogsService;

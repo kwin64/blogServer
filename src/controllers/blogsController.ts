@@ -44,5 +44,23 @@ const blogsController = {
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
+  async deleteBlog(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const deletedBlog = await blogsService.deleteBlog(id);
+
+      if (!deletedBlog) {
+        res
+          .status(HTTP_STATUSES.NOT_FOUND)
+          .json({ error: 'Failed to deleted blog' });
+        return;
+      }
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedBlog);
+    } catch (error) {
+      console.error('Controller Error:', error);
+      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
 };
 export default blogsController;

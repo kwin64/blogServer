@@ -45,5 +45,17 @@ export const blogsRepository = {
     }
   },
   async change(id: string) {},
-  async delete(id: string) {},
+  async delete(id: string) {
+    try {
+      const index = await DB.blogs.findIndex((blog) => blog.id === id);
+      if (index === -1) {
+        return null;
+      }
+      const deletedBlog = DB.blogs.splice(index, 1);
+      return deletedBlog;
+    } catch (error) {
+      console.error('Error delete blog with DB:', error);
+      throw new Error('Database: delete blog failed');
+    }
+  },
 };
