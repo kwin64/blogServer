@@ -15,20 +15,20 @@ const blogsController = {
   async newBlog(req: Request, res: Response) {
     const { name, description, websiteUrl } = req.body;
     try {
-      const newBlog = await blogsService.createBlog(
+      const createdBlog = await blogsService.createBlog(
         name,
         description,
         websiteUrl
       );
 
-      if (!newBlog) {
+      if (!createdBlog) {
         res
           .status(HTTP_STATUSES.BAD_REQUEST)
           .json({ error: 'Failed to create blog' });
         return;
       }
 
-      res.status(HTTP_STATUSES.CREATED).json(newBlog);
+      res.status(HTTP_STATUSES.CREATED).json(createdBlog);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND);
@@ -42,6 +42,30 @@ const blogsController = {
     } catch (error) {
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
+  async changeBlog(req: Request, res: Response) {
+    const { name, description, websiteUrl } = req.body;
+    const { id } = req.params;
+    try {
+      const changedBlog = await blogsService.changeBlog(
+        id,
+        name,
+        description,
+        websiteUrl
+      );
+
+      if (!changedBlog) {
+        res
+          .status(HTTP_STATUSES.BAD_REQUEST)
+          .json({ error: 'Failed to create blog' });
+        return;
+      }
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(changedBlog);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(HTTP_STATUSES.NOT_FOUND);
     }
   },
   async deleteBlog(req: Request, res: Response) {

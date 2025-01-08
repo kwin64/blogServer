@@ -44,7 +44,29 @@ export const blogsRepository = {
       throw new Error('Database: get blog failed');
     }
   },
-  async change(id: string) {},
+  async change(
+    id: string,
+    name: string,
+    description: string,
+    websiteUrl: string
+  ): Promise<blogType | null> {
+    try {
+      const blog: blogType | undefined = DB.blogs.find(
+        (blog) => blog.id === id
+      );
+      if (blog) {
+        blog.name = name;
+        blog.description = description;
+        blog.websiteUrl = websiteUrl;
+        return blog;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error change blog in DB:', error);
+      throw new Error('Database: change blog failed');
+    }
+  },
   async delete(id: string) {
     try {
       const index = await DB.blogs.findIndex((blog) => blog.id === id);

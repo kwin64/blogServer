@@ -21,6 +21,14 @@ const blogsService = {
   async createBlog(name: string, description: string, websiteUrl: string) {
     return await blogsRepository.create(name, description, websiteUrl);
   },
+  async changeBlog(
+    id: string,
+    name: string,
+    description: string,
+    websiteUrl: string
+  ) {
+    return await blogsRepository.change(id, name, description, websiteUrl);
+  },
   async deleteBlog(id: string) {
     const deletedBlog = await blogsRepository.delete(id);
     if (!deletedBlog) {

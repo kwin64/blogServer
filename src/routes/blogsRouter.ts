@@ -13,6 +13,13 @@ blogsRouter.post(
   inputValidationMIddleware,
   blogsController.newBlog
 );
+blogsRouter.put(
+  '/:id',
+  //authMiddleware
+  blogValidationMiddleware,
+  inputValidationMIddleware,
+  blogsController.changeBlog
+);
 blogsRouter.delete('/:id', blogsController.deleteBlog);
 
 export default blogsRouter;
