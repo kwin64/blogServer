@@ -9,14 +9,14 @@ blogsRouter.get('/', blogsController.allBlogs);
 blogsRouter.get('/:id', blogsController.getBlog);
 blogsRouter.post(
   '/',
-  // authMiddleware,
+  authMiddleware,
   blogValidationMiddleware,
   inputValidationMIddleware,
   blogsController.newBlog
 );
 blogsRouter.put(
   '/:id',
-  // authMiddleware,
+  authMiddleware,
   blogValidationMiddleware,
   inputValidationMIddleware,
   blogsController.changeBlog
