@@ -57,7 +57,7 @@ const blogsController = {
 
       if (!changedBlog) {
         res
-          .status(HTTP_STATUSES.BAD_REQUEST)
+          .status(HTTP_STATUSES.NOT_FOUND)
           .json({ error: 'Failed to create blog' });
         return;
       }
@@ -65,7 +65,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedBlog);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND);
+      res.status(HTTP_STATUSES.BAD_REQUEST);
     }
   },
   async deleteBlog(req: Request, res: Response) {
