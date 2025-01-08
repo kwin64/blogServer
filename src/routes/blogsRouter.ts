@@ -3,12 +3,16 @@ import blogsController from '../controllers/blogsController';
 import blogValidationMiddleware from '../utils/validations/blogsValidation';
 import inputValidationMIddleware from '../utils/validations/inputValidationMIddleware';
 
-export const blogsRouter = Router({});
+const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
+blogsRouter.get('/:id', blogsController.allBlogs);
 
 blogsRouter.post(
   '/',
+  //authMiddleware
   blogValidationMiddleware,
   inputValidationMIddleware,
   blogsController.newBlog
 );
+
+export default blogsRouter;

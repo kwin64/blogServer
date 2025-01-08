@@ -1,6 +1,6 @@
 import { blogsRepository } from '../repositories/blogsRepository';
 
-export const blogsService = {
+const blogsService = {
   async getBlogs() {
     const video = await blogsRepository.getBlogs();
     if (!video) {
@@ -13,3 +13,5 @@ export const blogsService = {
     return await blogsRepository.create(name, description, websiteUrl);
   },
 };
+
+export default blogsService;

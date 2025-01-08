@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { blogsService } from '../services/blogsService';
+import blogsService from '../services/blogsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 
 const blogsController = {
