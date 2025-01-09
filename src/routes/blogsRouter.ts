@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import blogsController from '../controllers/blogsController';
-import blogValidationMiddleware from '../utils/validations/blogsValidation';
+import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
 import inputValidationMIddleware from '../middlewares/inputValidationMIddleware';
 import authMiddleware from '../middlewares/authMiddleware';
 
@@ -10,14 +10,14 @@ blogsRouter.get('/:id', blogsController.getBlog);
 blogsRouter.post(
   '/',
   authMiddleware,
-  blogValidationMiddleware,
+  blogsValidationMiddleware,
   inputValidationMIddleware,
   blogsController.newBlog
 );
 blogsRouter.put(
   '/:id',
   authMiddleware,
-  blogValidationMiddleware,
+  blogsValidationMiddleware,
   inputValidationMIddleware,
   blogsController.changeBlog
 );

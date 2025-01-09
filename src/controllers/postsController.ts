@@ -20,8 +20,8 @@ const postsController = {
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
-      blogId: req.body.blogId,
-      blogName: req.body.blogName,
+      blogId: getRandomId(Date.now()), // с DB.blogs, когда создан тот или иной блогс
+      // blogName: req.body.blogName,
     };
     try {
       const createdPost = await postsService.createPost(postData);
@@ -51,7 +51,7 @@ const postsController = {
     const { id } = req.params;
     try {
       const deletedBlog = await postsService.deletePost(id);
-      
+
       if (!deletedBlog) {
         res
           .status(HTTP_STATUSES.NOT_FOUND)
@@ -63,6 +63,29 @@ const postsController = {
     } catch (error) {
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
+  async changePost(req: Request, res: Response) {
+    const postData: postType = {
+      id: req.params.id,
+      title: req.body.title,
+      shortDescription: req.body.shortDescription,
+      content: req.body.content,
+      blogId: getRandomId(Date.now()),
+      blogName: req.body.blogName,
+    };
+    try {
+      const changedPost = await postsService.changePost(postData);
+      if (!changedPost) {
+        res
+          .status(HTTP_STATUSES.NOT_FOUND)
+          .json({ error: 'Failed to create post' });
+        return;
+      }
+      res.status(HTTP_STATUSES.NO_CONTENT).json(changedPost);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(HTTP_STATUSES.BAD_REQUEST);
     }
   },
 };

@@ -34,21 +34,16 @@ const blogsRepository = {
       throw new Error('Database: get blog failed');
     }
   },
-  async change(
-    id: string,
-    name: string,
-    description: string,
-    websiteUrl: string
-  ): Promise<blogType | null> {
+  async change(blog: blogType): Promise<blogType | null> {
     try {
-      const blog: blogType | undefined = DB.blogs.find(
-        (blog) => blog.id === id
+      let foundedBlog: blogType | undefined = DB.blogs.find(
+        (item) => item.id === blog.id
       );
-      if (blog) {
-        blog.name = name;
-        blog.description = description;
-        blog.websiteUrl = websiteUrl;
-        return blog;
+      if (foundedBlog) {
+        foundedBlog.name = blog.name;
+        foundedBlog.description = blog.description;
+        foundedBlog.websiteUrl = blog.websiteUrl;
+        return foundedBlog;
       } else {
         return null;
       }

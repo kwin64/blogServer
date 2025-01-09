@@ -48,23 +48,20 @@ const blogsController = {
     }
   },
   async changeBlog(req: Request, res: Response) {
-    const { name, description, websiteUrl } = req.body;
-    const { id } = req.params;
+    const blogData: blogType = {
+      id: req.params.id,
+      name: req.body.name,
+      description: req.body.description,
+      websiteUrl: req.body.websiteUrl,
+    };
     try {
-      const changedBlog = await blogsService.changeBlog(
-        id,
-        name,
-        description,
-        websiteUrl
-      );
-
+      const changedBlog = await blogsService.changeBlog(blogData);
       if (!changedBlog) {
         res
           .status(HTTP_STATUSES.NOT_FOUND)
           .json({ error: 'Failed to create blog' });
         return;
       }
-
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedBlog);
     } catch (error) {
       console.error('Controller error:', error);

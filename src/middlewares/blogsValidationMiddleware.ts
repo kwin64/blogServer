@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-const blogValidationMiddleware = [
+const blogsValidationMiddleware = [
   body('name')
     .isString()
     .trim()
@@ -20,4 +20,4 @@ const blogValidationMiddleware = [
     .isLength({ min: 1, max: 100 })
     .withMessage('The name length must be between 1 and 100 characters.'),
 ];
-export default blogValidationMiddleware;
+export default blogsValidationMiddleware;

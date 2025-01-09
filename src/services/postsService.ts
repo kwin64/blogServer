@@ -30,5 +30,8 @@ const postsService = {
     }
     return deletedPost;
   },
+  async changePost(post: postType) {
+    return await postsRepository.change(post);
+  },
 };
 export default postsService;

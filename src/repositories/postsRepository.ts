@@ -44,5 +44,24 @@ const postsRepository = {
       throw new Error('Database: delete post failed');
     }
   },
+  async change(post: postType): Promise<postType | null> {
+    try {
+      const newPost: postType | undefined = DB.posts.find(
+        (item) => item.id === post.id
+      );
+      if (newPost) {
+        newPost.title = post.title;
+        newPost.shortDescription = post.shortDescription;
+        newPost.content = post.content;
+        newPost.blogName = post.blogName;
+        return newPost;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error change post in DB:', error);
+      throw new Error('Database: change post failed');
+    }
+  },
 };
 export default postsRepository;
