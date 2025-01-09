@@ -12,7 +12,6 @@ const blogsService = {
   },
   async getBlog(id: string) {
     const blog = await blogsRepository.getBlog(id);
-
     if (!blog) {
       console.error('Service error: get blog from DB:', blog);
       throw new Error('Blog not found');

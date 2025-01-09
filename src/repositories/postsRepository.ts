@@ -19,5 +19,18 @@ const postsRepository = {
       throw new Error('Database: set post failed');
     }
   },
+  async getPost(id: string): Promise<postType | null> {
+    try {
+      const foundedPost = await DB.posts.find((post) => post.id === id);
+      if (foundedPost) {
+        return foundedPost;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error get post with DB:', error);
+      throw new Error('Database: get post failed');
+    }
+  },
 };
 export default postsRepository;

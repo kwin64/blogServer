@@ -13,5 +13,14 @@ const postsService = {
   async createPost(post: postType) {
     return await postsRepository.create(post);
   },
+  async getPost(id: string) {
+    const post = await postsRepository.getPost(id);
+
+    if (!post) {
+      console.error('Service error: get post from DB:', post);
+      throw new Error('post not found');
+    }
+    return post;
+  },
 };
 export default postsService;

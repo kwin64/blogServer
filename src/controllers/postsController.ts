@@ -37,5 +37,15 @@ const postsController = {
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
+  async getPost(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const post = await postsService.getPost(id);
+      res.status(HTTP_STATUSES.OK).json(post);
+    } catch (error) {
+      console.error('Controller Error:', error);
+      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
 };
 export default postsController;
