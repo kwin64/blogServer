@@ -12,20 +12,10 @@ const blogsRepository = {
       throw new Error('Database: get blogs failed');
     }
   },
-  async create(
-    name: string,
-    description: string,
-    websiteUrl: string
-  ): Promise<blogType> {
-    const newBlog: blogType = {
-      id: getRandomId(Date.now()),
-      name,
-      description,
-      websiteUrl,
-    };
+  async create(blog: blogType): Promise<blogType> {
     try {
-      DB.blogs.push(newBlog);
-      return newBlog;
+      DB.blogs.push(blog);
+      return blog;
     } catch (error) {
       console.error('Error set blog in DB:', error);
       throw new Error('Database: set blog failed');

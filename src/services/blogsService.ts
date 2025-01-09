@@ -1,3 +1,4 @@
+import { blogType } from '../DB/DB.types';
 import blogsRepository from '../repositories/blogsRepository';
 
 const blogsService = {
@@ -18,8 +19,8 @@ const blogsService = {
     }
     return blog;
   },
-  async createBlog(name: string, description: string, websiteUrl: string) {
-    return await blogsRepository.create(name, description, websiteUrl);
+  async createBlog(blog: blogType) {
+    return await blogsRepository.create(blog);
   },
   async changeBlog(
     id: string,

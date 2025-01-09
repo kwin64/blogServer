@@ -1,3 +1,4 @@
+import { postType } from '../DB/DB.types';
 import postsRepository from '../repositories/postsRepository';
 
 const postsService = {
@@ -8,6 +9,9 @@ const postsService = {
       throw new Error('Posts not found');
     }
     return posts;
+  },
+  async createPost(post: postType) {
+    return await postsRepository.create(post);
   },
 };
 export default postsService;
