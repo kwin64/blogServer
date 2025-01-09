@@ -32,5 +32,17 @@ const postsRepository = {
       throw new Error('Database: get post failed');
     }
   },
+  async delete(id: string) {
+    try {
+      const index = await DB.posts.findIndex((post) => post.id === id);
+      if (index === -1) {
+        return null;
+      }
+      return DB.posts.splice(index, 1);
+    } catch (error) {
+      console.error('Error delete post with DB:', error);
+      throw new Error('Database: delete post failed');
+    }
+  },
 };
 export default postsRepository;

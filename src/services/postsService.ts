@@ -22,5 +22,13 @@ const postsService = {
     }
     return post;
   },
+  async deletePost(id: string) {
+    const deletedPost = await postsRepository.delete(id);
+    if (!deletedPost) {
+      console.error('Service error: delete post in DB:', deletedPost);
+      throw new Error('post not found');
+    }
+    return deletedPost;
+  },
 };
 export default postsService;

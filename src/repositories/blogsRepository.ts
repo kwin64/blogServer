@@ -63,8 +63,7 @@ const blogsRepository = {
       if (index === -1) {
         return null;
       }
-      const deletedBlog = DB.blogs.splice(index, 1);
-      return deletedBlog;
+      return DB.blogs.splice(index, 1);
     } catch (error) {
       console.error('Error delete blog with DB:', error);
       throw new Error('Database: delete blog failed');
