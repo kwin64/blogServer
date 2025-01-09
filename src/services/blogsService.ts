@@ -1,11 +1,11 @@
-import { blogsRepository } from '../repositories/blogsRepository';
+import blogsRepository from '../repositories/blogsRepository';
 
 const blogsService = {
   async getBlogs() {
     const blogs = await blogsRepository.getBlogs();
     if (!blogs) {
-      console.error('Service error: set blog in DB:', blogs);
-      throw new Error('Blog not found');
+      console.error('Service error: get blogs in DB:', blogs);
+      throw new Error('Blogs not found');
     }
     return blogs;
   },

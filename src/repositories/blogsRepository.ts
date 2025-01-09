@@ -2,7 +2,7 @@ import DB from '../DB/DB';
 import { blogType } from '../DB/DB.types';
 import getRandomId from '../utils/getRandomId';
 
-export const blogsRepository = {
+const blogsRepository = {
   async getBlogs(): Promise<blogType[]> {
     try {
       const allBlogs = await DB.blogs;
@@ -81,3 +81,5 @@ export const blogsRepository = {
     }
   },
 };
+
+export default blogsRepository;
