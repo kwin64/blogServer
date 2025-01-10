@@ -14,7 +14,13 @@ postsRouter.post(
   errorsResultMIddleware,
   postsController.newPost
 );
-postsRouter.put('/:id', authMiddleware, postsController.changePost);
+postsRouter.put(
+  '/:id',
+  authMiddleware,
+  postsValidationMiddleware,
+  errorsResultMIddleware,
+  postsController.changePost
+);
 postsRouter.delete('/:id', authMiddleware, postsController.deletePost);
 
 export default postsRouter;

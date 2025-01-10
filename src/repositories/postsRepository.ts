@@ -33,16 +33,14 @@ const postsRepository = {
     }
   },
   async delete(id: string) {
-    try {
-      const index = await DB.posts.findIndex((post) => post.id === id);
-      if (index === -1) {
-        return null;
-      }
-      return DB.posts.splice(index, 1);
-    } catch (error) {
-      console.error('Error delete post with DB:', error);
-      throw new Error('Database: delete post failed');
+    const index = await DB.posts.findIndex((post) => post.id === id);
+    if (index === -1) {
+      return null;
     }
+    return DB.posts.splice(index, 1);
+  },
+  async deletePostsByBlogId(blogId: string) {
+    DB.posts = await DB.posts.filter((post) => post.blogId !== blogId);
   },
   async change(post: postType): Promise<postType | null> {
     try {
@@ -53,7 +51,6 @@ const postsRepository = {
         newPost.title = post.title;
         newPost.shortDescription = post.shortDescription;
         newPost.content = post.content;
-        newPost.blogName = post.blogName;
         return newPost;
       } else {
         return null;

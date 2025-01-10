@@ -1,5 +1,6 @@
 import { blogType } from '../DB/DB.types';
 import blogsRepository from '../repositories/blogsRepository';
+import postsRepository from '../repositories/postsRepository';
 
 const blogsService = {
   async getBlogs() {
@@ -26,7 +27,8 @@ const blogsService = {
   },
   async deleteBlog(id: string) {
     const deletedBlog = await blogsRepository.delete(id);
-    if (!deletedBlog) {
+    const deletePostsByBlogId = await postsRepository.deletePostsByBlogId(id);
+    if (!deletedBlog && !deletePostsByBlogId) {
       console.error('Service error: delete blog in DB:', deletedBlog);
       throw new Error('Blog not found');
     }

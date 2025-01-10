@@ -1,6 +1,5 @@
 import DB from '../DB/DB';
 import { blogType } from '../DB/DB.types';
-import getRandomId from '../utils/getRandomId';
 
 const blogsRepository = {
   async getBlogs(): Promise<blogType[]> {

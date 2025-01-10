@@ -24,7 +24,6 @@ const postsValidationMiddleware = [
     .withMessage('The content length must be between 1 and 1000 characters.'),
   body('blogId').custom(async (blogId, { req }) => {
     const foundedBlog = await blogsRepository.getBlog(blogId);
-
     if (!foundedBlog) {
       throw new Error('The provided blogId does not exist');
     }
