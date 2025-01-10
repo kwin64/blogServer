@@ -27,8 +27,8 @@ const blogsService = {
   },
   async deleteBlog(id: string) {
     const deletedBlog = await blogsRepository.delete(id);
-    const deletePostsByBlogId = await postsRepository.deletePostsByBlogId(id);
-    if (!deletedBlog && !deletePostsByBlogId) {
+    await postsRepository.deletePostsByBlogId(id);
+    if (!deletedBlog) {
       console.error('Service error: delete blog in DB:', deletedBlog);
       throw new Error('Blog not found');
     }
