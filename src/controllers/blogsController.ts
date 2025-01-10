@@ -44,7 +44,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.OK).json(blog);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
+      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
   async changeBlog(req: Request, res: Response) {
@@ -65,7 +65,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedBlog);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
+      res.status(HTTP_STATUSES.NOT_FOUND);
     }
   },
   async deleteBlog(req: Request, res: Response) {
