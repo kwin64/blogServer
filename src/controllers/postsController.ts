@@ -44,7 +44,7 @@ const postsController = {
       res.status(HTTP_STATUSES.OK).json(post);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
+      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
   async deletePost(req: Request, res: Response) {
@@ -54,7 +54,7 @@ const postsController = {
 
       if (!deletedBlog) {
         res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .status(HTTP_STATUSES.NOT_FOUND)
           .json({ error: 'Failed to deleted post' });
         return;
       }
@@ -85,7 +85,7 @@ const postsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedPost);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
+      res.status(HTTP_STATUSES.NOT_FOUND);
     }
   },
 };
