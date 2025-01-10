@@ -1,23 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { Result, ValidationError, validationResult } from 'express-validator';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-const inputValidationMIddleware = (
+const errorsResultMIddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const errorsResult = validationResult(req);
+  const errorsResult: Result<ValidationError> = validationResult(req);
   if (!errorsResult.isEmpty()) {
     res.status(HTTP_STATUSES.BAD_REQUEST).json({
       errorsMessages: errorsResult
         .array({ onlyFirstError: true })
         .map((error) => ({
           message: error.msg,
-          field: error.path,
+          field: (error as any).path,
         })),
     });
   } else {
     next();
   }
 };
-export default inputValidationMIddleware;
+export default errorsResultMIddleware;

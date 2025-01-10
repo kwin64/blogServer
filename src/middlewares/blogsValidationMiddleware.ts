@@ -14,8 +14,10 @@ const blogsValidationMiddleware = [
     .isLength({ min: 1, max: 500 })
     .withMessage('The name length must be between 1 and 500 characters.'),
   body('websiteUrl')
-    .isURL()
     .trim()
+    .matches(
+      /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+    )
     .withMessage('Website URL must be a valid URL')
     .isLength({ min: 1, max: 100 })
     .withMessage('The name length must be between 1 and 100 characters.'),

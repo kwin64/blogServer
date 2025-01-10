@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import blogsController from '../controllers/blogsController';
-import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
-import inputValidationMIddleware from '../middlewares/inputValidationMIddleware';
 import authMiddleware from '../middlewares/authMiddleware';
+import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
+import errorsResultMIddleware from '../middlewares/errorsResultMIddleware';
 
 const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
@@ -11,14 +11,14 @@ blogsRouter.post(
   '/',
   authMiddleware,
   blogsValidationMiddleware,
-  inputValidationMIddleware,
+  errorsResultMIddleware,
   blogsController.newBlog
 );
 blogsRouter.put(
   '/:id',
   authMiddleware,
   blogsValidationMiddleware,
-  inputValidationMIddleware,
+  errorsResultMIddleware,
   blogsController.changeBlog
 );
 blogsRouter.delete('/:id', authMiddleware, blogsController.deleteBlog);

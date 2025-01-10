@@ -11,7 +11,7 @@ const postsController = {
       res.status(HTTP_STATUSES.OK).json(posts);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
     }
   },
   async newPost(req: Request, res: Response) {
@@ -20,14 +20,14 @@ const postsController = {
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
-      blogId: getRandomId(Date.now()), // с DB.blogs, когда создан тот или иной блогс
-      // blogName: req.body.blogName,
+      blogId: req.body.blogId,
+      blogName: req.body.blogName,
     };
     try {
       const createdPost = await postsService.createPost(postData);
       if (!createdPost) {
         res
-          .status(HTTP_STATUSES.BAD_REQUEST)
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
           .json({ error: 'Failed to create post' });
         return;
       }
@@ -44,7 +44,7 @@ const postsController = {
       res.status(HTTP_STATUSES.OK).json(post);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
     }
   },
   async deletePost(req: Request, res: Response) {
@@ -54,7 +54,7 @@ const postsController = {
 
       if (!deletedBlog) {
         res
-          .status(HTTP_STATUSES.NOT_FOUND)
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
           .json({ error: 'Failed to deleted post' });
         return;
       }
@@ -71,8 +71,7 @@ const postsController = {
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
-      blogId: getRandomId(Date.now()),
-      blogName: req.body.blogName,
+      blogId: req.body.blogId,
     };
     try {
       const changedPost = await postsService.changePost(postData);
@@ -85,7 +84,7 @@ const postsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedPost);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.BAD_REQUEST);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
     }
   },
 };

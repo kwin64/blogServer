@@ -11,7 +11,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.OK).json(blogs);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
     }
   },
   async newBlog(req: Request, res: Response) {
@@ -34,7 +34,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.CREATED).json(createdBlog);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
     }
   },
   async getBlog(req: Request, res: Response) {
@@ -44,7 +44,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.OK).json(blog);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
     }
   },
   async changeBlog(req: Request, res: Response) {
@@ -65,7 +65,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedBlog);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.BAD_REQUEST);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
     }
   },
   async deleteBlog(req: Request, res: Response) {
@@ -83,7 +83,7 @@ const blogsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedBlog);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).send(error);
     }
   },
 };

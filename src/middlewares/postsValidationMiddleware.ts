@@ -1,23 +1,34 @@
 import { body } from 'express-validator';
+import blogsRepository from '../repositories/blogsRepository';
 
 const postsValidationMiddleware = [
-  body('name')
+  body('title')
     .isString()
     .trim()
-    .withMessage('Name must be a string')
-    .isLength({ min: 1, max: 15 })
-    .withMessage('The name length must be between 1 and 15 characters.'),
-  body('description')
+    .withMessage('title must be a string')
+    .isLength({ min: 1, max: 30 })
+    .withMessage('The title length must be between 1 and 30 characters.'),
+  body('shortDescription')
     .isString()
     .trim()
-    .withMessage('Description must be a string')
-    .isLength({ min: 1, max: 500 })
-    .withMessage('The name length must be between 1 and 500 characters.'),
-  body('websiteUrl')
-    .isURL()
-    .trim()
-    .withMessage('Website URL must be a valid URL')
+    .withMessage('shortDescription must be a string')
     .isLength({ min: 1, max: 100 })
-    .withMessage('The name length must be between 1 and 100 characters.'),
+    .withMessage(
+      'The shortDescription length must be between 1 and 100 characters.'
+    ),
+  body('content')
+    .isString()
+    .trim()
+    .withMessage('content must be a string')
+    .isLength({ min: 1, max: 1000 })
+    .withMessage('The content length must be between 1 and 1000 characters.'),
+  body('blogId').custom(async (blogId, { req }) => {
+    const foundedBlog = await blogsRepository.getBlog(blogId);
+
+    if (!foundedBlog) {
+      throw new Error('The provided blogId does not exist');
+    }
+    req.body.blogName = foundedBlog.name;
+  }),
 ];
 export default postsValidationMiddleware;
