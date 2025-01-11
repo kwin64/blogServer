@@ -4,6 +4,12 @@ import blogsRouter from './routes/blogsRouter';
 import testsRouter from './routes/testsRouter';
 import postsRouter from './routes/postsRouter';
 import SETTINGS from './utils/constants/settings';
+import mongoose from 'mongoose';
+
+mongoose
+  .connect(SETTINGS.MONGODB as string)
+  .then(() => console.log('db ok'))
+  .catch((err) => console.log(err));
 export const app = express();
 
 app.use(express.json());
