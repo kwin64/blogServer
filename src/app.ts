@@ -1,15 +1,13 @@
 import cors from 'cors';
 import express from 'express';
 import blogsRouter from './routes/blogsRouter';
-import testsRouter from './routes/testsRouter';
 import postsRouter from './routes/postsRouter';
+import testsRouter from './routes/testsRouter';
 import SETTINGS from './utils/constants/settings';
-import mongoose from 'mongoose';
+import connectToDatabase from './utils/database';
 
-mongoose
-  .connect(SETTINGS.MONGODB as string)
-  .then(() => console.log('db ok'))
-  .catch((err) => console.log(err));
+connectToDatabase();
+
 export const app = express();
 
 app.use(express.json());
