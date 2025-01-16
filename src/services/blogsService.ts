@@ -1,4 +1,4 @@
-import { blogType } from '../DB/DB.types';
+import { IBlog } from '../models/BlogModel';
 import blogsRepository from '../repositories/blogsRepository';
 import postsRepository from '../repositories/postsRepository';
 
@@ -19,10 +19,10 @@ const blogsService = {
     }
     return blog;
   },
-  async createBlog(blog: blogType) {
+  async createBlog(blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt'>) {
     return await blogsRepository.create(blog);
   },
-  async changeBlog(blog: blogType) {
+  async changeBlog(blog: Omit<IBlog, 'createdAt' | 'updatedAt'>) {
     return await blogsRepository.change(blog);
   },
   async deleteBlog(id: string) {

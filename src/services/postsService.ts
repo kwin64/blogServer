@@ -1,5 +1,8 @@
 import { postType } from '../DB/DB.types';
+import { IPost } from '../models/PostModel';
+import blogsRepository from '../repositories/blogsRepository';
 import postsRepository from '../repositories/postsRepository';
+import { PostsServiceinputDataType } from './types';
 
 const postsService = {
   async getPosts() {
@@ -10,8 +13,17 @@ const postsService = {
     }
     return posts;
   },
-  async createPost(post: postType) {
-    return await postsRepository.create(post);
+  async createPost(post: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>) {
+    const blog = await blogsRepository.getBlog(post.blogId);
+    if (!blog) {
+      throw new Error('Blog not found');
+    }
+
+    return await postsRepository.create({
+      ...post,
+      blogId: blog.id,
+      blogName: blog.name,
+    });
   },
   async getPost(id: string) {
     const post = await postsRepository.getPost(id);
@@ -30,7 +42,7 @@ const postsService = {
     }
     return deletedPost;
   },
-  async changePost(post: postType) {
+  async changePost(post: Omit<IPost, 'createdAt' | 'updatedAt'>) {
     return await postsRepository.change(post);
   },
 };

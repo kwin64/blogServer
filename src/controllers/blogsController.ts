@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { blogType } from '../DB/DB.types';
+import { IBlog } from '../models/BlogModel';
 import blogsService from '../services/blogsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 
@@ -14,13 +14,12 @@ const blogsController = {
     }
   },
   async newBlog(req: Request, res: Response) {
-    const blogData: blogType = {
-      name: req.body.name,
-      description: req.body.description,
-      websiteUrl: req.body.websiteUrl,
-    };
     try {
-      const createdBlog = await blogsService.createBlog(blogData);
+      const createdBlog = await blogsService.createBlog({
+        name: req.body.name,
+        description: req.body.description,
+        websiteUrl: req.body.websiteUrl,
+      });
 
       if (!createdBlog) {
         res
@@ -46,7 +45,7 @@ const blogsController = {
     }
   },
   async changeBlog(req: Request, res: Response) {
-    const blogData: blogType = {
+    const blogData: Omit<IBlog, 'createdAt' | 'updatedAt'> = {
       id: req.params.id,
       name: req.body.name,
       description: req.body.description,

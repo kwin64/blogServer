@@ -1,29 +1,31 @@
 import DB from '../DB/DB';
-import { blogType } from '../DB/DB.types';
+import { mapBlogDocumentToBlogType } from '../mappers/mapBlogDocumentToBlogType';
 import { Blog } from '../models';
+import { IBlog } from '../models/BlogModel';
+import { BlogsServiceinputDataType } from '../services/types';
 
 const blogsRepository = {
-  async getBlogs() {
-    return Blog.find().lean<blogType[]>();
+  async getBlogs(): Promise<IBlog[]> {
+    return Blog.find().lean<IBlog[]>();
   },
-  async create(blog: blogType) {
+  async create(
+    blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<IBlog> {
     const newBlog = new Blog({
       name: blog.name,
       description: blog.description,
       websiteUrl: blog.websiteUrl,
     });
-    return newBlog.save();
+    const savedBlog = await newBlog.save();
+    return mapBlogDocumentToBlogType(savedBlog);
   },
-  async getBlog(id: string): Promise<blogType | null> {
-    const foundedBlog = await DB.blogs.find((blog) => blog.id === id);
-    if (foundedBlog) {
-      return foundedBlog;
-    } else {
-      return null;
-    }
+  async getBlog(id: string): Promise<IBlog | null> {
+    return await Blog.findOne({ _id: id }).lean<IBlog>();
   },
-  async change(blog: blogType): Promise<blogType | null> {
-    let foundedBlog: blogType | undefined = DB.blogs.find(
+  async change(
+    blog: Omit<IBlog, 'createdAt' | 'updatedAt'>
+  ): Promise<IBlog | null> {
+    let foundedBlog: IBlog | undefined = DB.blogs.find(
       (item) => item.id === blog.id
     );
     if (foundedBlog) {

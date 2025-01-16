@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { postType } from '../DB/DB.types';
+import { IPost } from '../models/PostModel';
 import postsService from '../services/postsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import getRandomId from '../utils/getRandomId';
 
 const postsController = {
   async allPosts(req: Request, res: Response) {
@@ -15,16 +14,14 @@ const postsController = {
     }
   },
   async newPost(req: Request, res: Response) {
-    const postData: postType = {
-      id: getRandomId(Date.now()),
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      content: req.body.content,
-      blogId: req.body.blogId,
-      blogName: req.body.blogName,
-    };
     try {
-      const createdPost = await postsService.createPost(postData);
+      const createdPost = await postsService.createPost({
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        blogId: req.body.blogId,
+        blogName: req.body.blogName,
+      });
       if (!createdPost) {
         res
           .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
@@ -66,7 +63,7 @@ const postsController = {
     }
   },
   async changePost(req: Request, res: Response) {
-    const postData: postType = {
+    const postData: Omit<IPost, 'createdAt' | 'updatedAt'> = {
       id: req.params.id,
       title: req.body.title,
       shortDescription: req.body.shortDescription,

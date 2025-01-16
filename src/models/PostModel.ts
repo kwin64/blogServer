@@ -1,14 +1,28 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
-export interface IPost extends Document {
+export interface IPost {
+  id: string;
   title: string;
   shortDescription: string;
   content: string;
   blogId: string;
   blogName: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const PostSchema: Schema = new Schema(
+export interface PostDocument extends Document {
+  _id: Types.ObjectId;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const PostSchema: Schema<PostDocument> = new Schema(
   {
     title: { type: String, required: true },
     shortDescription: { type: String, required: true },
@@ -18,6 +32,8 @@ const PostSchema: Schema = new Schema(
   },
   { timestamps: true }
 );
-
-const Post = mongoose.model<IPost>('Posts', PostSchema);
+const Post: Model<PostDocument> = mongoose.model<PostDocument>(
+  'Posts',
+  PostSchema
+);
 export default Post;

@@ -1,12 +1,24 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
-export interface IBlog extends Document {
+export interface IBlog {
+  id: string;
   name: string;
   description: string;
-  websiteUrl: number;
+  websiteUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const BlogSchema: Schema = new Schema(
+export interface BlogDocument extends Document {
+  _id: Types.ObjectId;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const BlogSchema: Schema<BlogDocument> = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -15,5 +27,9 @@ const BlogSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const Blog = mongoose.model<IBlog>('Blogs', BlogSchema);
+const Blog: Model<BlogDocument> = mongoose.model<BlogDocument>(
+  'Blogs',
+  BlogSchema
+);
+
 export default Blog;
