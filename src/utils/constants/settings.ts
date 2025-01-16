@@ -6,7 +6,7 @@ const SETTINGS = {
   AUTH_USERNAME: process.env.AUTH_USERNAME,
   AUTH_PASSWORD: process.env.AUTH_PASSWORD,
   MONGO_URI: process.env.MONGO_URI,
-  MONGO_NAME: process.env.DB_NAME,
+  MONGO_DB_NAME: process.env.DB_NAME,
   PATH: {
     BLOGS: '/blogs',
     POSTS: '/posts',

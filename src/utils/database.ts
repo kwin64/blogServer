@@ -3,7 +3,9 @@ import SETTINGS from './constants/settings';
 
 const connectToDatabase = async () => {
   try {
-    const connection = await mongoose.connect(SETTINGS.MONGO_URI as string);
+    const connection = await mongoose.connect(SETTINGS.MONGO_URI as string, {
+      dbName: SETTINGS.MONGO_DB_NAME,
+    });
     console.log(`MongoDB connected: ${connection.connection.host}`);
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
