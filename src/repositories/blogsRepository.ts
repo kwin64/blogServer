@@ -37,11 +37,11 @@ const blogsRepository = {
     return updatedBlog || null;
   },
   async delete(id: string) {
-    const index = await DB.blogs.findIndex((blog) => blog.id === id);
-    if (index === -1) {
+    const result = await Blog.findByIdAndDelete(id);
+    if (!result) {
       return null;
     }
-    return DB.blogs.splice(index, 1);
+    return true;
   },
 };
 
