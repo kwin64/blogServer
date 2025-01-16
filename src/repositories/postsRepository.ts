@@ -20,12 +20,7 @@ const postsRepository = {
     return mapPostDocumentToPostType(savedPost);
   },
   async getPost(id: string): Promise<IPost | null> {
-    const foundedPost = await DB.posts.find((post) => post.id === id);
-    if (foundedPost) {
-      return foundedPost;
-    } else {
-      return null;
-    }
+    return await Post.findOne({ _id: id }).lean<IPost>();
   },
   async delete(id: string) {
     const index = await DB.posts.findIndex((post) => post.id === id);
