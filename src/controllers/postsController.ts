@@ -20,7 +20,6 @@ const postsController = {
         shortDescription: req.body.shortDescription,
         content: req.body.content,
         blogId: req.body.blogId,
-        blogName: req.body.blogName,
       });
       if (!createdPost) {
         res

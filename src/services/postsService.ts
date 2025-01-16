@@ -1,8 +1,6 @@
-import { postType } from '../DB/DB.types';
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/blogsRepository';
 import postsRepository from '../repositories/postsRepository';
-import { PostsServiceinputDataType } from './types';
 
 const postsService = {
   async getPosts() {
@@ -13,7 +11,9 @@ const postsService = {
     }
     return posts;
   },
-  async createPost(post: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>) {
+  async createPost(
+    post: Omit<IPost, 'id' | 'createdAt' | 'updatedAt' | 'blogName'>
+  ) {
     const blog = await blogsRepository.getBlog(post.blogId);
     if (!blog) {
       throw new Error('Blog not found');
@@ -21,7 +21,7 @@ const postsService = {
 
     return await postsRepository.create({
       ...post,
-      blogId: blog.id,
+      blogId: post.blogId,
       blogName: blog.name,
     });
   },

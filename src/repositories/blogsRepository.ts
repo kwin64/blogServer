@@ -1,4 +1,3 @@
-import DB from '../DB/DB';
 import { mapBlogDocumentToBlogType } from '../mappers/mapBlogDocumentToBlogType';
 import { Blog } from '../models';
 import { IBlog } from '../models/BlogModel';

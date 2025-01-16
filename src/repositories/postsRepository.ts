@@ -1,22 +1,19 @@
-import DB from '../DB/DB';
-import { postType } from '../DB/DB.types';
 import { mapPostDocumentToPostType } from '../mappers/mapPostDocumentToPostType';
 import { Post } from '../models';
 import { IPost } from '../models/PostModel';
 
 const postsRepository = {
   async getPosts(): Promise<IPost[]> {
-    return Post.find().lean<postType[]>();
+    return Post.find().lean<IPost[]>();
   },
   async create(
     post: Omit<IPost, 'createdAt' | 'updatedAt' | 'id'>
   ): Promise<IPost> {
     const newPost = new Post({
-      id: post.blogId,
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
-      blogId: post.content,
+      blogId: post.blogId,
       blogName: post.blogName,
     });
     const savedPost = await newPost.save();
@@ -38,7 +35,7 @@ const postsRepository = {
     return DB.posts.splice(index, 1);
   },
   async deletePostsByBlogId(blogId: string) {
-    DB.posts = await DB.posts.filter((post) => post.blogId !== blogId);
+    // await Post.findOneAndDelete(blogId);
   },
   async change(
     post: Omit<IPost, 'createdAt' | 'updatedAt'>
