@@ -22,7 +22,7 @@ const blogsService = {
   async createBlog(blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt'>) {
     return await blogsRepository.create(blog);
   },
-  async changeBlog(blog: Omit<IBlog, 'createdAt' | 'updatedAt'>) {
+  async changeBlog(blog: IBlog) {
     return await blogsRepository.change(blog);
   },
   async deleteBlog(id: string) {

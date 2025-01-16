@@ -2,7 +2,6 @@ import DB from '../DB/DB';
 import { mapBlogDocumentToBlogType } from '../mappers/mapBlogDocumentToBlogType';
 import { Blog } from '../models';
 import { IBlog } from '../models/BlogModel';
-import { BlogsServiceinputDataType } from '../services/types';
 
 const blogsRepository = {
   async getBlogs(): Promise<IBlog[]> {
@@ -22,20 +21,20 @@ const blogsRepository = {
   async getBlog(id: string): Promise<IBlog | null> {
     return await Blog.findOne({ _id: id }).lean<IBlog>();
   },
-  async change(
-    blog: Omit<IBlog, 'createdAt' | 'updatedAt'>
-  ): Promise<IBlog | null> {
-    let foundedBlog: IBlog | undefined = DB.blogs.find(
-      (item) => item.id === blog.id
-    );
-    if (foundedBlog) {
-      foundedBlog.name = blog.name;
-      foundedBlog.description = blog.description;
-      foundedBlog.websiteUrl = blog.websiteUrl;
-      return foundedBlog;
-    } else {
-      return null;
-    }
+  async change(blog: IBlog): Promise<IBlog | null> {
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      blog.id,
+      {
+        name: blog.name,
+        description: blog.description,
+        websiteUrl: blog.websiteUrl,
+      },
+      {
+        new: true,
+      }
+    ).lean<IBlog>();
+
+    return updatedBlog || null;
   },
   async delete(id: string) {
     const index = await DB.blogs.findIndex((blog) => blog.id === id);
