@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { blogType } from '../DB/DB.types';
 import blogsService from '../services/blogsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import getRandomId from '../utils/getRandomId';
 
 const blogsController = {
   async allBlogs(req: Request, res: Response) {
@@ -16,7 +15,6 @@ const blogsController = {
   },
   async newBlog(req: Request, res: Response) {
     const blogData: blogType = {
-      id: getRandomId(Date.now()),
       name: req.body.name,
       description: req.body.description,
       websiteUrl: req.body.websiteUrl,

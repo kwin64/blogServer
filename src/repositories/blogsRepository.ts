@@ -1,14 +1,18 @@
 import DB from '../DB/DB';
 import { blogType } from '../DB/DB.types';
+import { Blog } from '../models';
 
 const blogsRepository = {
-  async getBlogs(): Promise<blogType[]> {
-    const allBlogs = await DB.blogs;
-    return allBlogs;
+  async getBlogs() {
+    return Blog.find().lean<blogType[]>();
   },
-  async create(blog: blogType): Promise<blogType> {
-    DB.blogs.push(blog);
-    return blog;
+  async create(blog: blogType) {
+    const newBlog = new Blog({
+      name: blog.name,
+      description: blog.description,
+      websiteUrl: blog.websiteUrl,
+    });
+    return newBlog.save();
   },
   async getBlog(id: string): Promise<blogType | null> {
     const foundedBlog = await DB.blogs.find((blog) => blog.id === id);
