@@ -22,12 +22,12 @@ const blogsService = {
   async createBlog(blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt'>) {
     return await blogsRepository.create(blog);
   },
-  async changeBlog(blog: IBlog) {
+  async changeBlog(blog: Omit<IBlog, 'createdAt' | 'updatedAt'>) {
     return await blogsRepository.change(blog);
   },
   async deleteBlog(id: string) {
     const deletedBlog = await blogsRepository.delete(id);
-    // await postsRepository.deletePostsByBlogId(id);
+    await postsRepository.deletePostsByBlogId(id);
     if (!deletedBlog) {
       console.error('Service error: delete blog in DB:', deletedBlog);
       throw new Error('Blog not found');

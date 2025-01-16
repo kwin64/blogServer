@@ -45,13 +45,11 @@ const blogsController = {
     }
   },
   async changeBlog(req: Request, res: Response) {
-    const blogData: IBlog = {
+    const blogData: Omit<IBlog, 'createdAt' | 'updatedAt'> = {
       id: req.params.id,
       name: req.body.name,
       description: req.body.description,
       websiteUrl: req.body.websiteUrl,
-      createdAt: req.body.websiteUrl,
-      updatedAt: req.body.websiteUrl,
     };
     try {
       const changedBlog = await blogsService.changeBlog(blogData);

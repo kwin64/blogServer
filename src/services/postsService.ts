@@ -36,6 +36,7 @@ const postsService = {
   },
   async deletePost(id: string) {
     const deletedPost = await postsRepository.delete(id);
+
     if (!deletedPost) {
       console.error('Service error: delete post in DB:', deletedPost);
       throw new Error('post not found');

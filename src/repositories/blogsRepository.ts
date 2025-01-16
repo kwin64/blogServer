@@ -20,7 +20,9 @@ const blogsRepository = {
   async getBlog(id: string): Promise<IBlog | null> {
     return await Blog.findOne({ _id: id }).lean<IBlog>();
   },
-  async change(blog: IBlog): Promise<IBlog | null> {
+  async change(
+    blog: Omit<IBlog, 'createdAt' | 'updatedAt'>
+  ): Promise<IBlog | null> {
     const updatedBlog = await Blog.findByIdAndUpdate(
       blog.id,
       {

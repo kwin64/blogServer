@@ -23,29 +23,32 @@ const postsRepository = {
     return await Post.findOne({ _id: id }).lean<IPost>();
   },
   async delete(id: string) {
-    const index = await DB.posts.findIndex((post) => post.id === id);
-    if (index === -1) {
+    const result = await Post.findByIdAndDelete(id);
+    if (!result) {
       return null;
     }
-    return DB.posts.splice(index, 1);
+    return true;
   },
   async deletePostsByBlogId(blogId: string) {
-    // await Post.findOneAndDelete(blogId);
+    const result = await Post.deleteMany({ blogId });
+    return result.deletedCount || 0;
   },
   async change(
     post: Omit<IPost, 'createdAt' | 'updatedAt'>
   ): Promise<IPost | null> {
-    const newPost: IPost | undefined = DB.posts.find(
-      (item) => item.id === post.id
-    );
-    if (newPost) {
-      newPost.title = post.title;
-      newPost.shortDescription = post.shortDescription;
-      newPost.content = post.content;
-      return newPost;
-    } else {
-      return null;
-    }
+    const updatedPost = await Post.findByIdAndUpdate(
+      post.id,
+      {
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+      },
+      {
+        new: true,
+      }
+    ).lean<IPost>();
+
+    return updatedPost || null;
   },
 };
 export default postsRepository;

@@ -46,16 +46,16 @@ const postsController = {
   async deletePost(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const deletedBlog = await postsService.deletePost(id);
+      const deletedPost = await postsService.deletePost(id);
 
-      if (!deletedBlog) {
+      if (!deletedPost) {
         res
           .status(HTTP_STATUSES.NOT_FOUND)
           .json({ error: 'Failed to deleted post' });
         return;
       }
 
-      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedBlog);
+      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedPost);
     } catch (error) {
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
