@@ -1,10 +1,11 @@
 import { mapPostDocumentToPostType } from '../mappers/mapPostDocumentToPostType';
 import { Post } from '../models';
-import { IPost } from '../models/PostModel';
+import { IPost, PostDocument } from '../models/PostModel';
 
 const postsRepository = {
   async getPosts(): Promise<IPost[]> {
-    return Post.find().lean<IPost[]>();
+    const posts = await Post.find().lean();
+    return posts.map(mapPostDocumentToPostType);
   },
   async create(
     post: Omit<IPost, 'createdAt' | 'updatedAt' | 'id'>
@@ -20,7 +21,13 @@ const postsRepository = {
     return mapPostDocumentToPostType(savedPost);
   },
   async getPost(id: string): Promise<IPost | null> {
-    return await Post.findOne({ _id: id }).lean<IPost>();
+    const post = await Post.findOne({ _id: id }).lean();
+
+    if (!post) {
+      return null;
+    }
+
+    return mapPostDocumentToPostType(post);
   },
   async delete(id: string) {
     const result = await Post.findByIdAndDelete(id);
@@ -46,9 +53,13 @@ const postsRepository = {
       {
         new: true,
       }
-    ).lean<IPost>();
+    ).lean();
 
-    return updatedPost || null;
+    if (!updatedPost) {
+      return null;
+    }
+
+    return mapPostDocumentToPostType(updatedPost);
   },
 };
 export default postsRepository;

@@ -1,6 +1,8 @@
 import { IPost, PostDocument } from '../models/PostModel';
 
-export const mapPostDocumentToPostType = (postDoc: PostDocument): IPost => {
+export const mapPostDocumentToPostType = (
+  postDoc: PostDocument
+): Omit<IPost, 'updatedAt'> => {
   return {
     id: postDoc._id.toString(),
     title: postDoc.title,
@@ -9,6 +11,5 @@ export const mapPostDocumentToPostType = (postDoc: PostDocument): IPost => {
     blogId: postDoc.blogId,
     blogName: postDoc.blogName,
     createdAt: postDoc.createdAt,
-    updatedAt: postDoc.updatedAt,
   };
 };

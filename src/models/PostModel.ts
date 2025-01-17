@@ -7,8 +7,8 @@ export interface IPost {
   content: string;
   blogId: string;
   blogName: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface PostDocument extends Document {
