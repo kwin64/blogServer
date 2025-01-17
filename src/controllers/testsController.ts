@@ -5,6 +5,7 @@ import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 const testsController = {
   async resetDB(req: Request, res: Response) {
     try {
+      await testingService.resetDB();
       res.sendStatus(HTTP_STATUSES.NO_CONTENT);
     } catch (error) {
       console.error('Controller Error:', error);

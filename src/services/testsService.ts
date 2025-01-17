@@ -1,5 +1,14 @@
-import { testsRepository } from '../repositories/testsRepository';
+import testsRepository from '../repositories/testsRepository';
 
-const testsService = {};
+const testsService = {
+  async resetDB() {
+    try {
+      return await testsRepository.deleteAllData();
+    } catch (error) {
+      console.error('Service error DB reset:', error);
+      throw error;
+    }
+  },
+};
 
 export default testsService;
