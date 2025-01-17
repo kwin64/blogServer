@@ -15,6 +15,8 @@ const blogsRepository = {
       websiteUrl: blog.websiteUrl,
     });
     const savedBlog = await newBlog.save();
+    console.log('savedBlog',savedBlog);
+    
     return mapBlogDocumentToBlogType(savedBlog);
   },
   async getBlog(id: string): Promise<IBlog | null> {
