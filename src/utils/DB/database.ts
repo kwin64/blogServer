@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import SETTINGS from './constants/settings';
+import SETTINGS from '../constants/settings';
 
 const connectToDatabase = async () => {
   try {

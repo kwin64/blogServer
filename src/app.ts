@@ -4,7 +4,7 @@ import blogsRouter from './routes/blogsRouter';
 import postsRouter from './routes/postsRouter';
 import testsRouter from './routes/testsRouter';
 import SETTINGS from './utils/constants/settings';
-import connectToDatabase from './utils/database';
+import connectToDatabase from './utils/DB/database';
 
 connectToDatabase();
 

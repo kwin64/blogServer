@@ -5,9 +5,9 @@ export interface IBlog {
   name: string;
   description: string;
   websiteUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
-  isMembership: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  isMembership?: boolean;
 }
 
 export interface BlogDocument extends Document {
