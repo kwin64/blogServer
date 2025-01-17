@@ -1,10 +1,11 @@
 import { mapBlogDocumentToBlogType } from '../mappers/mapBlogDocumentToBlogType';
 import { Blog } from '../models';
-import { IBlog } from '../models/BlogModel';
+import { BlogDocument, IBlog } from '../models/BlogModel';
 
 const blogsRepository = {
   async getBlogs(): Promise<IBlog[]> {
-    return Blog.find().lean<IBlog[]>();
+    const blogs = await Blog.find().lean<IBlog[]>();
+    return blogs.map((blog) => mapBlogDocumentToBlogType(blog as BlogDocument));
   },
   async create(
     blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt' | 'isMembership'>
@@ -15,12 +16,11 @@ const blogsRepository = {
       websiteUrl: blog.websiteUrl,
     });
     const savedBlog = await newBlog.save();
-    console.log('savedBlog',savedBlog);
-    
     return mapBlogDocumentToBlogType(savedBlog);
   },
   async getBlog(id: string): Promise<IBlog | null> {
-    return await Blog.findOne({ _id: id }).lean<IBlog>();
+    const blog = await Blog.findOne({ _id: id }).lean<IBlog>();
+    return mapBlogDocumentToBlogType(blog as BlogDocument);
   },
   async change(
     blog: Omit<IBlog, 'createdAt' | 'updatedAt' | 'isMembership'>
@@ -37,7 +37,7 @@ const blogsRepository = {
       }
     ).lean<IBlog>();
 
-    return updatedBlog || null;
+    return mapBlogDocumentToBlogType(updatedBlog as BlogDocument) || null;
   },
   async delete(id: string) {
     const result = await Blog.findByIdAndDelete(id);

@@ -21,6 +21,8 @@ const blogsController = {
         websiteUrl: req.body.websiteUrl,
       });
 
+      console.log('createdBlog', createdBlog);
+
       if (!createdBlog) {
         res
           .status(HTTP_STATUSES.BAD_REQUEST)
