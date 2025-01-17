@@ -19,10 +19,14 @@ const blogsService = {
     }
     return blog;
   },
-  async createBlog(blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt'>) {
+  async createBlog(
+    blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt' | 'isMembership'>
+  ) {
     return await blogsRepository.create(blog);
   },
-  async changeBlog(blog: Omit<IBlog, 'createdAt' | 'updatedAt'>) {
+  async changeBlog(
+    blog: Omit<IBlog, 'createdAt' | 'updatedAt' | 'isMembership'>
+  ) {
     return await blogsRepository.change(blog);
   },
   async deleteBlog(id: string) {

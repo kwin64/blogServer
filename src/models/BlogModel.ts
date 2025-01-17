@@ -7,6 +7,7 @@ export interface IBlog {
   websiteUrl: string;
   createdAt: Date;
   updatedAt: Date;
+  isMembership: boolean;
 }
 
 export interface BlogDocument extends Document {
@@ -16,6 +17,7 @@ export interface BlogDocument extends Document {
   websiteUrl: string;
   createdAt: Date;
   updatedAt: Date;
+  isMembership: boolean;
 }
 
 const BlogSchema: Schema<BlogDocument> = new Schema(
@@ -23,6 +25,7 @@ const BlogSchema: Schema<BlogDocument> = new Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     websiteUrl: { type: String, required: true },
+    isMembership: { type: Boolean, required: false, default: false },
   },
   { timestamps: true }
 );

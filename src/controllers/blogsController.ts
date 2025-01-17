@@ -45,7 +45,7 @@ const blogsController = {
     }
   },
   async changeBlog(req: Request, res: Response) {
-    const blogData: Omit<IBlog, 'createdAt' | 'updatedAt'> = {
+    const blogData: Omit<IBlog, 'createdAt' | 'updatedAt' | 'isMembership'> = {
       id: req.params.id,
       name: req.body.name,
       description: req.body.description,

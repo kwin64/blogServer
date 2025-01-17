@@ -8,5 +8,6 @@ export const mapBlogDocumentToBlogType = (blogDoc: BlogDocument): IBlog => {
     websiteUrl: blogDoc.websiteUrl,
     createdAt: blogDoc.createdAt!,
     updatedAt: blogDoc.updatedAt!,
+    isMembership: blogDoc.isMembership,
   };
 };
