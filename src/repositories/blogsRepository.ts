@@ -37,7 +37,9 @@ const blogsRepository = {
       }
     ).lean<IBlog>();
 
-    return mapBlogDocumentToBlogType(updatedBlog as BlogDocument) || null;
+    if (!updatedBlog) return null;
+
+    return mapBlogDocumentToBlogType(updatedBlog as BlogDocument);
   },
   async delete(id: string) {
     const result = await Blog.findByIdAndDelete(id);
