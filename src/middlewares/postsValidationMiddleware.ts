@@ -1,5 +1,6 @@
 import { body } from 'express-validator';
 import blogsRepository from '../repositories/blogsRepository';
+import { validateBlogId } from '../utils/validations/validateBlogId';
 
 const postsValidationMiddleware = [
   body('title')
@@ -22,12 +23,6 @@ const postsValidationMiddleware = [
     .withMessage('content must be a string')
     .isLength({ min: 1, max: 1000 })
     .withMessage('The content length must be between 1 and 1000 characters.'),
-  body('blogId').custom(async (blogId, { req }) => {
-    const foundedBlog = await blogsRepository.getBlog(blogId);
-    if (!foundedBlog) {
-      throw new Error('The provided blogId does not exist');
-    }
-    req.body.blogName = foundedBlog.name;
-  }),
+  body('blogId').custom(validateBlogId),
 ];
 export default postsValidationMiddleware;

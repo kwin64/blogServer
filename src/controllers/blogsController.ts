@@ -42,6 +42,8 @@ const blogsController = {
       const blog = await blogsService.getBlog(id);
       res.status(HTTP_STATUSES.OK).json(blog);
     } catch (error) {
+      console.log('error',error);
+      
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
