@@ -3,28 +3,21 @@ import { IBlog } from '../models/BlogModel';
 import blogQueryRepository from '../repositories/queries/blogQueryRepository';
 import blogsService from '../services/blogsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import parseQueryParams from '../utils/parsers/parseQueryParams';
 
 const blogsController = {
   async allBlogs(req: Request, res: Response): Promise<void> {
     try {
-      const searchValue =
-        req.query.searchValue?.toString() === '' ||
-        req.query.searchValue === undefined
-          ? null
-          : req.query.searchValue?.toString();
-      const sortBy = req.query.sortBy?.toString() ?? 'createdAt';
-      const sortDirection =
-        req.query.sortDirection?.toString() === 'asc' ? 'asc' : 'desc';
-      const pageNumber = Number(req.query.page);
-      const pageSize = Number(req.query.limit);
-      const offset = (pageNumber - 1) * pageSize;
+      const {
+        searchValue,
+        sortBy,
+        sortDirection,
+        pageNumber,
+        pageSize,
+        offset,
+      } = parseQueryParams(req.query);
 
-      if (
-        isNaN(pageNumber) ||
-        pageNumber < 1 ||
-        isNaN(pageSize) ||
-        pageSize < 1
-      ) {
+      if (isNaN(pageNumber) || isNaN(pageSize)) {
         res.status(400).json({ error: 'Invalid page or limit parameters' });
         return;
       }
