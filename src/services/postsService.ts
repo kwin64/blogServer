@@ -1,6 +1,6 @@
 import { IPost } from '../models/PostModel';
-import blogsRepository from '../repositories/blogsRepository';
-import postsRepository from '../repositories/postsRepository';
+import blogsRepository from '../repositories/commands/blogsRepository';
+import postsRepository from '../repositories/commands/postsRepository';
 
 const postsService = {
   async getPosts() {

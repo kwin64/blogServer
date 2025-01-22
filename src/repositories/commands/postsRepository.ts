@@ -1,6 +1,6 @@
-import { mapPostDocumentToPostType } from '../mappers/mapPostDocumentToPostType';
-import { Post } from '../models';
-import { IPost, PostDocument } from '../models/PostModel';
+import { mapPostDocumentToPostType } from "../../mappers/mapPostDocumentToPostType";
+import { IPost } from "../../models/PostModel";
+import { Post } from "../../models/";
 
 const postsRepository = {
   async getPosts(): Promise<IPost[]> {

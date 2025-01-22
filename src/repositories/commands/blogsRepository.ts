@@ -1,6 +1,6 @@
-import { mapBlogDocumentToBlogType } from '../mappers/mapBlogDocumentToBlogType';
-import { Blog } from '../models';
-import { BlogDocument, IBlog } from '../models/BlogModel';
+import { mapBlogDocumentToBlogType } from '../../mappers/mapBlogDocumentToBlogType';
+import { Blog } from '../../models';
+import { BlogDocument, IBlog } from '../../models/BlogModel';
 
 const blogsRepository = {
   async getBlogs(): Promise<IBlog[]> {

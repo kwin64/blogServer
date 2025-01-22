@@ -1,5 +1,4 @@
 import { body } from 'express-validator';
-import blogsRepository from '../repositories/blogsRepository';
 import { validateBlogId } from '../utils/validations/validateBlogId';
 
 const postsValidationMiddleware = [

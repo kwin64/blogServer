@@ -1,4 +1,4 @@
-import testsRepository from '../repositories/testsRepository';
+import testsRepository from "../repositories/commands/testsRepository";
 
 const testsService = {
   async resetDB() {
