@@ -1,6 +1,6 @@
 import { mapBlogDocumentToBlogType } from '../../mappers/mapBlogDocumentToBlogType';
 import { Blog } from '../../models';
-import { BlogDocument, IBlog } from '../../models/BlogModel';
+import { BlogDocument } from '../../models/BlogModel';
 
 const blogQueryRepository = {
   async getAllBlogs(
@@ -8,7 +8,7 @@ const blogQueryRepository = {
     sortBy: string,
     sortDirection: string,
     offset: number,
-    limit: number
+    pageSize: number
   ) {
     const filter = searchValue
       ? { name: { $regex: searchValue, $options: 'i' } }
@@ -19,7 +19,24 @@ const blogQueryRepository = {
     const blogs = await Blog.find(filter)
       .sort({ [sortBy]: validSortDirection })
       .skip(offset)
-      .limit(limit)
+      .limit(pageSize)
+      .exec();
+
+    return blogs.map((blog) => mapBlogDocumentToBlogType(blog as BlogDocument));
+  },
+  async getAllPostsBlog(
+    sortBy: string,
+    sortDirection: string,
+    offset: number,
+    pageSize: number,
+    blogId: string
+  ) {
+    const validSortDirection = sortDirection === 'asc' ? 1 : -1;
+
+    const blogs = await Blog.find()
+      .sort({ [sortBy]: validSortDirection })
+      .skip(offset)
+      .limit(pageSize)
       .exec();
 
     return blogs.map((blog) => mapBlogDocumentToBlogType(blog as BlogDocument));

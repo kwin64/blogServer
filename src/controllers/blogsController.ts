@@ -15,7 +15,7 @@ const blogsController = {
         pageNumber,
         pageSize,
         offset,
-      } = parseQueryParams(req.query);
+      } = parseQueryParams.allBlogs(req.query);
 
       if (isNaN(pageNumber) || isNaN(pageSize)) {
         res.status(400).json({ error: 'Invalid page or limit parameters' });
@@ -67,6 +67,32 @@ const blogsController = {
 
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
+  async getPostsForBlog(req: Request, res: Response) {
+    try {
+      const { pageNumber, pageSize, sortBy, sortDirection, offset } =
+        parseQueryParams.postsForBlog(req.query);
+
+      if (isNaN(pageNumber) || isNaN(pageSize)) {
+        res.status(400).json({ error: 'Invalid page or limit parameters' });
+        return;
+      }
+
+      const blogs = await blogQueryRepository.getAllPostsBlog(
+        sortBy,
+        sortDirection,
+        offset,
+        pageSize,
+        req.params.id
+      );
+
+      res.status(HTTP_STATUSES.OK).json(blogs);
+    } catch (error) {
+      console.error('Controller Error:', error);
+      res
+        .status(HTTP_STATUSES.NOT_FOUND)
+        .send('If specificied blog is not exists');
     }
   },
   async changeBlog(req: Request, res: Response) {

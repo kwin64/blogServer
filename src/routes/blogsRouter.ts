@@ -8,6 +8,11 @@ import { validateObjectIdParam } from '../utils/validations/validateObjectIdPara
 const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
 blogsRouter.get('/:id', validateObjectIdParam('id'), blogsController.getBlog);
+blogsRouter.get(
+  '/:id/posts',
+  validateObjectIdParam('id'),
+  blogsController.getPostsForBlog
+);
 blogsRouter.post(
   '/',
   authMiddleware,
