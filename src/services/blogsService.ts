@@ -12,12 +12,18 @@ const blogsService = {
     return blogs;
   },
   async getBlog(id: string) {
-    const blog = await blogsRepository.getBlog(id);
-    if (!blog) {
-      console.error('Service error: get blog from DB:', blog);
-      throw new Error('Blog not found');
+    try {
+      const blog = await blogsRepository.getBlog(id);
+
+      if (!blog) {
+        throw new Error(`Blog with ID ${id} not found`);
+      }
+
+      return blog;
+    } catch (error) {
+      console.error('Service error:', error);
+      throw error;
     }
-    return blog;
   },
   async createBlog(
     blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt' | 'isMembership'>

@@ -66,17 +66,15 @@ const blogsController = {
         content: req.body.content,
         blogId: req.params.id,
       });
-
-      if (!createdPostForBlog) {
-        res
-          .status(HTTP_STATUSES.BAD_REQUEST)
-          .json({ error: 'Failed to create post for blog' });
-        return;
-      }
       res.status(HTTP_STATUSES.CREATED).json(createdPostForBlog);
-    } catch (error) {
-      console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
+    } catch (error: unknown) {
+      if (error.message.includes('not found')) {
+        res.status(HTTP_STATUSES.NOT_FOUND).json({ error: error.message });
+      } else {
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ error: 'Internal Server Error' });
+      }
     }
   },
   async getBlog(req: Request, res: Response) {
@@ -97,7 +95,9 @@ const blogsController = {
         parseQueryParams.postsForBlog(req.query);
 
       if (isNaN(pageNumber) || isNaN(pageSize)) {
-        res.status(400).json({ error: 'Invalid page or limit parameters' });
+        res
+          .status(HTTP_STATUSES.BAD_REQUEST)
+          .json({ error: 'Invalid page or limit parameters' });
         return;
       }
 
