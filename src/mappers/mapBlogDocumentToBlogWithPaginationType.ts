@@ -2,7 +2,7 @@ import { IBlogWithPagination } from '../models/BlogModel';
 import { PostDocument } from '../models/PostModel';
 
 export const mapBlogDocumentToBlogWithPaginationType = (
-  postDoc: any,
+  postDoc: PostDocument[],
   pagesCount: number,
   pageNumber: number,
   pageSize: number,
@@ -13,6 +13,14 @@ export const mapBlogDocumentToBlogWithPaginationType = (
     page: pageNumber,
     pageSize: pageSize,
     totalCount: totalCount,
-    items: postDoc,
+    items: postDoc.map((postDoc) => ({
+      id: postDoc._id.toString(),
+      title: postDoc.title,
+      shortDescription: postDoc.shortDescription,
+      content: postDoc.content,
+      blogId: postDoc.blogId,
+      blogName: postDoc.blogName,
+      createdAt: postDoc.createdAt,
+    })),
   };
 };
