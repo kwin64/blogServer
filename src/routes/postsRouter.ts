@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import postsController from '../controllers/postsController';
 import authMiddleware from '../middlewares/authMiddleware';
-import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
+import { errorsResultMiddleware } from '../middlewares/errorsResultMiddleware';
 import postsValidationMiddleware from '../middlewares/postsValidationMiddleware';
 
 const postsRouter = Router({});
