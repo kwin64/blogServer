@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import postsController from '../controllers/postsController';
 import authMiddleware from '../middlewares/authMiddleware';
+import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
 import postsValidationMiddleware from '../middlewares/postsValidationMiddleware';
-import errorsResultMiddleware from '../middlewares/errorsResultMIddleware';
 
 const postsRouter = Router({});
 postsRouter.get('/', postsController.allPosts);
