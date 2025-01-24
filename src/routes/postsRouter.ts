@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import postsController from '../controllers/postsController';
 import authMiddleware from '../middlewares/authMiddleware';
-import errorsResultMIddleware from '../middlewares/errorsResultMiddleware';
+import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
 import postsValidationMiddleware from '../middlewares/postsValidationMiddleware';
 
 const postsRouter = Router({});
@@ -11,14 +11,14 @@ postsRouter.post(
   '/',
   authMiddleware,
   postsValidationMiddleware,
-  errorsResultMIddleware,
+  errorsResultMiddleware,
   postsController.newPost
 );
 postsRouter.put(
   '/:id',
   authMiddleware,
   postsValidationMiddleware,
-  errorsResultMIddleware,
+  errorsResultMiddleware,
   postsController.changePost
 );
 postsRouter.delete('/:id', authMiddleware, postsController.deletePost);

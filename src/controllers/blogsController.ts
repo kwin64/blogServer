@@ -67,8 +67,6 @@ const blogsController = {
         blogId: req.params.id,
       });
 
-      console.log('req.params.id', req.params.id);
-
       if (!createdPostForBlog) {
         res
           .status(HTTP_STATUSES.BAD_REQUEST)
