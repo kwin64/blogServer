@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Result, ValidationError, validationResult } from 'express-validator';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-const errorsResultMiddleware = (
+const errorsResultMIddleware = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -20,4 +20,4 @@ const errorsResultMiddleware = (
     next();
   }
 };
-export default errorsResultMiddleware;
+export default errorsResultMIddleware;

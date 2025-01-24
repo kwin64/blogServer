@@ -4,7 +4,7 @@ import authMiddleware from '../middlewares/authMiddleware';
 import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
 import postsForBlogValidationMiddleware from '../middlewares/postsForBlogValidationMiddleware';
 import validateObjectIdParam from '../utils/validations/validateObjectIdParam';
-import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
+import errorsResultMiddleware from '../middlewares/errorsResultMIddleware';
 
 const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
