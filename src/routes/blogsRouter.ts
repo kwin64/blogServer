@@ -2,7 +2,7 @@ import { Router } from 'express';
 import blogsController from '../controllers/blogsController';
 import authMiddleware from '../middlewares/authMiddleware';
 import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
-import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
+import errorsMiddleware from '../middlewares/errorsMiddleware';
 import postsForBlogValidationMiddleware from '../middlewares/postsForBlogValidationMiddleware';
 import validateObjectIdParam from '../utils/validations/validateObjectIdParam';
 
@@ -12,7 +12,7 @@ blogsRouter.get('/:id', validateObjectIdParam('id'), blogsController.getBlog);
 blogsRouter.get(
   '/:id/posts',
   validateObjectIdParam('id'),
-  errorsResultMiddleware,
+  errorsMiddleware,
   blogsController.getPostsForBlog
 );
 blogsRouter.post(
@@ -20,14 +20,14 @@ blogsRouter.post(
   authMiddleware,
   validateObjectIdParam('id'),
   postsForBlogValidationMiddleware,
-  errorsResultMiddleware,
+  errorsMiddleware,
   blogsController.newPostForBlog
 );
 blogsRouter.post(
   '/',
   authMiddleware,
   blogsValidationMiddleware,
-  errorsResultMiddleware,
+  errorsMiddleware,
   blogsController.newBlog
 );
 blogsRouter.put(
@@ -35,7 +35,7 @@ blogsRouter.put(
   authMiddleware,
   validateObjectIdParam('id'),
   blogsValidationMiddleware,
-  errorsResultMiddleware,
+  errorsMiddleware,
   blogsController.changeBlog
 );
 blogsRouter.delete(
