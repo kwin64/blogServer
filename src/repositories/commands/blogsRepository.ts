@@ -1,6 +1,7 @@
 import { mapBlogDocumentToBlogType } from '../../mappers/mapBlogDocumentToBlogType';
-import { Blog } from '../../models';
+import { Blog, Post } from '../../models';
 import { BlogDocument, IBlog } from '../../models/BlogModel';
+import postsRepository from './postsRepository';
 
 const blogsRepository = {
   async getBlogs(): Promise<IBlog[]> {
@@ -17,6 +18,16 @@ const blogsRepository = {
     });
     const savedBlog = await newBlog.save();
     return mapBlogDocumentToBlogType(savedBlog);
+  },
+  async createPostForBlog(postValue: {
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+    blogName: string;
+  }) {
+    const newPost = await postsRepository.create(postValue);
+    return newPost;
   },
   async getBlog(id: string): Promise<IBlog | null> {
     const blog = await Blog.findOne({ _id: id }).lean<IBlog>();

@@ -1,6 +1,9 @@
 import { mapBlogDocumentToBlogType } from '../../mappers/mapBlogDocumentToBlogType';
-import { Blog } from '../../models';
+import { mapBlogDocumentToBlogWithPaginationType } from '../../mappers/mapBlogDocumentToBlogWithPaginationType';
+import { mapPostDocumentToPostType } from '../../mappers/mapPostDocumentToPostType';
+import { Blog, Post } from '../../models';
 import { BlogDocument } from '../../models/BlogModel';
+import { PostDocument } from '../../models/PostModel';
 
 const blogQueryRepository = {
   async getAllBlogs(
@@ -8,16 +11,15 @@ const blogQueryRepository = {
     sortBy: string,
     sortDirection: string,
     offset: number,
-    pageSize: number
+    pageSize: number,
+    pageNumber: number
   ) {
     const filter = searchValue
       ? { name: { $regex: searchValue, $options: 'i' } }
       : {};
 
-    const validSortDirection = sortDirection === 'asc' ? 1 : -1;
-
     const blogs = await Blog.find(filter)
-      .sort({ [sortBy]: validSortDirection })
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .skip(offset)
       .limit(pageSize)
       .exec();
@@ -29,17 +31,24 @@ const blogQueryRepository = {
     sortDirection: string,
     offset: number,
     pageSize: number,
-    blogId: string
+    blogId: string,
+    pageNumber: number
   ) {
-    const validSortDirection = sortDirection === 'asc' ? 1 : -1;
-
-    const blogs = await Blog.find()
-      .sort({ [sortBy]: validSortDirection })
+    const totalCount = await Post.countDocuments({ blogId });
+    const posts = await Post.find({ blogId })
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .skip(offset)
       .limit(pageSize)
       .exec();
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    return blogs.map((blog) => mapBlogDocumentToBlogType(blog as BlogDocument));
+    return mapBlogDocumentToBlogWithPaginationType(
+      posts,
+      pagesCount,
+      pageNumber,
+      pageSize,
+      totalCount
+    );
   },
 };
 export default blogQueryRepository;

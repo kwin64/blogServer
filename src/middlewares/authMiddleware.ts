@@ -37,7 +37,6 @@ const authMiddleware = async (
       return;
     }
   } catch (error) {
-    //когда выводить 500
     console.error('auth middleware error:', error);
     res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
   }

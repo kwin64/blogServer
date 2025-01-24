@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
+import { IPost } from './PostModel';
 
 export interface IBlog {
   id: string;
@@ -8,6 +9,13 @@ export interface IBlog {
   createdAt?: Date;
   updatedAt?: Date;
   isMembership?: boolean;
+}
+export interface IBlogWithPagination {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: IPost[];
 }
 
 export interface BlogDocument extends Document {

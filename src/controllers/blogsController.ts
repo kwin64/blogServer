@@ -27,7 +27,8 @@ const blogsController = {
         sortBy,
         sortDirection,
         offset,
-        pageSize
+        pageSize,
+        pageNumber
       );
 
       res.status(HTTP_STATUSES.OK).json(blogs);
@@ -52,6 +53,29 @@ const blogsController = {
       }
 
       res.status(HTTP_STATUSES.CREATED).json(createdBlog);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
+    }
+  },
+  async newPostForBlog(req: Request, res: Response) {
+    try {
+      const createdPostForBlog = await blogsService.createPostForBlog({
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        blogId: req.params.id,
+      });
+
+      console.log('req.params.id', req.params.id);
+
+      if (!createdPostForBlog) {
+        res
+          .status(HTTP_STATUSES.BAD_REQUEST)
+          .json({ error: 'Failed to create post for blog' });
+        return;
+      }
+      res.status(HTTP_STATUSES.CREATED).json(createdPostForBlog);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
@@ -84,7 +108,8 @@ const blogsController = {
         sortDirection,
         offset,
         pageSize,
-        req.params.id
+        req.params.id,
+        pageNumber
       );
 
       res.status(HTTP_STATUSES.OK).json(blogs);

@@ -2,8 +2,8 @@ export type ParseQueryAllBlogsParamsType = {
   searchValue?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
-  page?: string | number;
-  limit?: string | number;
+  pageNumber?: string | number;
+  pageSize?: string | number;
 };
 
 export type ParseQueryPostsForBlogParamsType = {

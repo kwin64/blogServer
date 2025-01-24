@@ -1,7 +1,7 @@
 import {
   ParseQueryAllBlogsParamsType,
   ParseQueryPostsForBlogParamsType,
-} from './parseQueryParamsType';
+} from './ParseQueryParamsType';
 
 const parseQueryParams = {
   allBlogs(query: ParseQueryAllBlogsParamsType) {
@@ -13,10 +13,14 @@ const parseQueryParams = {
       query.sortDirection?.toString().trim() === 'asc' ? 'asc' : 'desc';
 
     const pageNumber =
-      Number(query.page) && Number(query.page) > 0 ? Number(query.page) : 1;
+      Number(query.pageNumber) && Number(query.pageNumber) > 0
+        ? Number(query.pageNumber)
+        : 1;
 
     const pageSize =
-      Number(query.limit) && Number(query.limit) > 0 ? Number(query.limit) : 10;
+      Number(query.pageSize) && Number(query.pageSize) > 0
+        ? Number(query.pageSize)
+        : 10;
 
     const offset = (pageNumber - 1) * pageSize;
 
@@ -29,10 +33,12 @@ const parseQueryParams = {
       query.sortDirection?.toString().trim() === 'asc' ? 'asc' : 'desc';
 
     const pageNumber =
-      Number(query.pageNumber) > 0 ? Number(query.pageNumber) : 1;
+      Number(query.pageNumber) && Number(query.pageNumber) > 0
+        ? Number(query.pageNumber)
+        : 1;
 
     const pageSize =
-      Number(query.pageNumber) && Number(query.pageSize) > 0
+      Number(query.pageSize) && Number(query.pageSize) > 0
         ? Number(query.pageSize)
         : 10;
 

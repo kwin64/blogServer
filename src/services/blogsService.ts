@@ -24,6 +24,23 @@ const blogsService = {
   ) {
     return await blogsRepository.create(blog);
   },
+  async createPostForBlog(postValue: {
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+  }) {
+    const blog = await blogsService.getBlog(postValue.blogId);
+    if (!blog) {
+      throw new Error(`Blog with id ${postValue.blogId} not found`);
+    }
+
+    const post = await blogsRepository.createPostForBlog({
+      ...postValue,
+      blogName: blog.name,
+    });
+    return await blogsRepository.createPostForBlog(post);
+  },
   async changeBlog(
     blog: Omit<IBlog, 'createdAt' | 'updatedAt' | 'isMembership'>
   ) {
