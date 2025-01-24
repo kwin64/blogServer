@@ -1,7 +1,7 @@
 import { Request, Response, RequestHandler, NextFunction } from 'express';
 import { HTTP_STATUSES } from '../constants/httpStatuses';
 
-export const validateObjectIdParam = (paramName: string): RequestHandler => {
+const validateObjectIdParam = (paramName: string): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const id = req.params[paramName];
 
@@ -12,3 +12,4 @@ export const validateObjectIdParam = (paramName: string): RequestHandler => {
     next();
   };
 };
+export default validateObjectIdParam;

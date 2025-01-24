@@ -2,9 +2,9 @@ import { Router } from 'express';
 import blogsController from '../controllers/blogsController';
 import authMiddleware from '../middlewares/authMiddleware';
 import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware';
-import { errorsResultMiddleware } from '../middlewares/errorsResultMiddleware';
 import postsForBlogValidationMiddleware from '../middlewares/postsForBlogValidationMiddleware';
-import { validateObjectIdParam } from '../utils/validations/validateObjectIdParam';
+import validateObjectIdParam from '../utils/validations/validateObjectIdParam';
+import errorsResultMiddleware from '../middlewares/errorsResultMiddleware';
 
 const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
