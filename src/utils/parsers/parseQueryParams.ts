@@ -1,5 +1,6 @@
 import {
   ParseQueryAllBlogsParamsType,
+  ParseQueryAllpostsParamsType,
   ParseQueryPostsForBlogParamsType,
 } from './ParseQueryParamsType';
 
@@ -24,7 +25,14 @@ const parseQueryParams = {
 
     const offset = (pageNumber - 1) * pageSize;
 
-    return { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, offset };
+    return {
+      searchNameTerm,
+      sortBy,
+      sortDirection,
+      pageNumber,
+      pageSize,
+      offset,
+    };
   },
   postsForBlog(query: ParseQueryPostsForBlogParamsType) {
     const sortBy = query.sortBy?.toString().trim() || 'createdAt';
@@ -45,6 +53,32 @@ const parseQueryParams = {
     const offset = (pageNumber - 1) * pageSize;
 
     return { sortBy, sortDirection, pageNumber, pageSize, offset };
+  },
+  allPosts(query: ParseQueryAllpostsParamsType) {
+    const sortBy = query.sortBy?.toString().trim() || 'createdAt';
+
+    const sortDirection =
+      query.sortDirection?.toString().trim() === 'asc' ? 'asc' : 'desc';
+
+    const pageNumber =
+      Number(query.pageNumber) && Number(query.pageNumber) > 0
+        ? Number(query.pageNumber)
+        : 1;
+
+    const pageSize =
+      Number(query.pageSize) && Number(query.pageSize) > 0
+        ? Number(query.pageSize)
+        : 10;
+
+    const offset = (pageNumber - 1) * pageSize;
+
+    return {
+      sortBy,
+      sortDirection,
+      pageNumber,
+      pageSize,
+      offset,
+    };
   },
 };
 export default parseQueryParams;

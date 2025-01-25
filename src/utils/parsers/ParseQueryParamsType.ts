@@ -12,3 +12,10 @@ export type ParseQueryPostsForBlogParamsType = {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 };
+
+export type ParseQueryAllpostsParamsType = {
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  pageNumber?: string | number;
+  pageSize?: string | number;
+};

@@ -1,12 +1,32 @@
 import { Request, Response } from 'express';
 import { IPost } from '../models/PostModel';
+import postQueryRepository from '../repositories/queries/postQueryRepository';
 import postsService from '../services/postsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import parseQueryParams from '../utils/parsers/parseQueryParams';
 
 const postsController = {
   async allPosts(req: Request, res: Response) {
     try {
-      const posts = await postsService.getPosts();
+      const { sortBy, sortDirection, pageNumber, pageSize, offset } =
+        parseQueryParams.allPosts(req.query);
+
+      if (isNaN(pageNumber) || isNaN(pageSize)) {
+        res
+          .status(HTTP_STATUSES.BAD_REQUEST)
+          .json({ error: 'Invalid page or limit parameters' });
+        return;
+      }
+
+      const posts = await postQueryRepository.getAllPosts(
+        sortBy,
+        sortDirection,
+        offset,
+        pageSize,
+        pageNumber
+      );
+
+      // const posts = await postsService.getPosts();
       res.status(HTTP_STATUSES.OK).json(posts);
     } catch (error) {
       console.error('Controller Error:', error);
