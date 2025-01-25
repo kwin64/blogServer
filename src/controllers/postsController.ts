@@ -26,7 +26,6 @@ const postsController = {
         pageNumber
       );
 
-      // const posts = await postsService.getPosts();
       res.status(HTTP_STATUSES.OK).json(posts);
     } catch (error) {
       console.error('Controller Error:', error);
