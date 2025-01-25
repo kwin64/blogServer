@@ -1,13 +1,12 @@
-import { IBlogWithPagination } from '../models/BlogModel';
-import { PostDocument } from '../models/PostModel';
+import { IPostWithPagination, PostDocument } from '../models/PostModel';
 
-export const mapBlogDocumentToBlogWithPaginationType = (
+export const mapPostDocumentToBlogWithPaginationType = (
   postDoc: PostDocument[],
   pagesCount: number,
   pageNumber: number,
   pageSize: number,
   totalCount: number
-): IBlogWithPagination => {
+): IPostWithPagination => {
   return {
     pagesCount: pagesCount,
     page: pageNumber,

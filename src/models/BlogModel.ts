@@ -15,7 +15,7 @@ export interface IBlogWithPagination {
   page: number;
   pageSize: number;
   totalCount: number;
-  items: IPost[];
+  items: IBlog[];
 }
 
 export interface BlogDocument extends Document {

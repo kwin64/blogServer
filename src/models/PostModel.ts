@@ -11,6 +11,14 @@ export interface IPost {
   updatedAt?: Date;
 }
 
+export interface IPostWithPagination {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: IPost[];
+}
+
 export interface PostDocument extends Document {
   _id: Types.ObjectId;
   title: string;

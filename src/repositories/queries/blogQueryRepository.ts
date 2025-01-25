@@ -1,9 +1,6 @@
-import { mapBlogDocumentToBlogType } from '../../mappers/mapBlogDocumentToBlogType';
-import { mapBlogDocumentToBlogWithPaginationType } from '../../mappers/mapBlogDocumentToBlogWithPaginationType';
-import { mapPostDocumentToPostType } from '../../mappers/mapPostDocumentToPostType';
+import { mapBlogDocumentWithPaginationType } from '../../mappers/mapBlogDocumentWithPaginationType';
+import { mapPostDocumentToBlogWithPaginationType } from '../../mappers/mapPostDocumentToBlogWithPaginationType';
 import { Blog, Post } from '../../models';
-import { BlogDocument } from '../../models/BlogModel';
-import { PostDocument } from '../../models/PostModel';
 
 const blogQueryRepository = {
   async getAllBlogs(
@@ -14,17 +11,24 @@ const blogQueryRepository = {
     pageSize: number,
     pageNumber: number
   ) {
+    const totalCount = await Blog.countDocuments({});
     const filter = searchValue
       ? { name: { $regex: searchValue, $options: 'i' } }
       : {};
-
     const blogs = await Blog.find(filter)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .skip(offset)
       .limit(pageSize)
       .exec();
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    return blogs.map((blog) => mapBlogDocumentToBlogType(blog as BlogDocument));
+    return mapBlogDocumentWithPaginationType(
+      blogs,
+      pagesCount,
+      pageNumber,
+      pageSize,
+      totalCount
+    );
   },
   async getAllPostsBlog(
     sortBy: string,
@@ -42,7 +46,7 @@ const blogQueryRepository = {
       .exec();
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    return mapBlogDocumentToBlogWithPaginationType(
+    return mapPostDocumentToBlogWithPaginationType(
       posts,
       pagesCount,
       pageNumber,

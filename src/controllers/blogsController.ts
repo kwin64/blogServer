@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { IBlog } from '../models/BlogModel';
 import blogQueryRepository from '../repositories/queries/blogQueryRepository';
 import blogsService from '../services/blogsService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
