@@ -10,15 +10,15 @@ const blogsRouter = Router({});
 blogsRouter.get('/', blogsController.allBlogs);
 blogsRouter.get('/:id', validateObjectIdParam('id'), blogsController.getBlog);
 blogsRouter.get(
-  '/:id/posts',
-  validateObjectIdParam('id'),
+  '/:blogId/posts',
+  validateObjectIdParam('blogId'),
   errorsMiddleware,
   blogsController.getPostsForBlog
 );
 blogsRouter.post(
-  '/:id/posts',
+  '/:blogId/posts',
   authMiddleware,
-  validateObjectIdParam('id'),
+  validateObjectIdParam('blogId'),
   postsForBlogValidationMiddleware,
   errorsMiddleware,
   blogsController.newPostForBlog

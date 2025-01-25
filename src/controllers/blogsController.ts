@@ -61,7 +61,7 @@ const blogsController = {
   async newPostForBlog(req: Request, res: Response) {
     try {
       const { title, shortDescription, content } = req.body;
-      const { id: blogId } = req.params;
+      const { blogId } = req.params;
 
       const createdPost = await blogsService.createPostForBlog({
         title,
@@ -74,13 +74,7 @@ const blogsController = {
     } catch (error: unknown) {
       console.error('Controller Error:', error);
 
-      if (error instanceof Error && error.message.includes('not found')) {
-        res.status(HTTP_STATUSES.NOT_FOUND).json({ error: error.message });
-      } else {
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ error: 'Failed to create post' });
-      }
+      res.status(HTTP_STATUSES.NOT_FOUND).json({ error: error.message });
     }
   },
   async getBlog(req: Request, res: Response) {
@@ -119,7 +113,7 @@ const blogsController = {
         sortDirection,
         offset,
         pageSize,
-        req.params.id,
+        req.params.blogId,
         pageNumber
       );
 
