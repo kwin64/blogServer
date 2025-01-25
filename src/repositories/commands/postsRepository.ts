@@ -1,6 +1,6 @@
-import { mapPostDocumentToPostType } from "../../mappers/mapPostDocumentToPostType";
-import { IPost } from "../../models/PostModel";
-import { Post } from "../../models/";
+import { mapPostDocumentToPostType } from '../../mappers/mapPostDocumentToPostType';
+import { IPost } from '../../models/PostModel';
+import { Post } from '../../models/';
 
 const postsRepository = {
   async getPosts(): Promise<IPost[]> {
@@ -21,45 +21,56 @@ const postsRepository = {
     return mapPostDocumentToPostType(savedPost);
   },
   async getPost(id: string): Promise<IPost | null> {
-    const post = await Post.findOne({ _id: id }).lean();
-
-    if (!post) {
-      return null;
+    try {
+      const post = await Post.findOne({ _id: id }).lean();
+      if (!post) {
+        return null;
+      }
+      return mapPostDocumentToPostType(post);
+    } catch (error) {
+      console.error('Error fetching post:', error);
+      throw new Error('Database error while fetching post');
     }
-
-    return mapPostDocumentToPostType(post);
   },
   async delete(id: string) {
-    const result = await Post.findByIdAndDelete(id);
-    if (!result) {
-      return null;
+    try {
+      const result = await Post.findByIdAndDelete(id);
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      throw new Error('Database error while deleting post');
     }
-    return true;
   },
   async deletePostsByBlogId(blogId: string) {
-    const result = await Post.deleteMany({ blogId });
-    return result.deletedCount || 0;
+    try {
+      const result = await Post.deleteMany({ blogId });
+      return result.deletedCount || 0;
+    } catch (error) {
+      console.error('Error deleting posts by blog ID:', error);
+      throw new Error('Database error while deleting posts');
+    }
   },
   async change(
     post: Omit<IPost, 'createdAt' | 'updatedAt'>
   ): Promise<IPost | null> {
-    const updatedPost = await Post.findByIdAndUpdate(
-      post.id,
-      {
-        title: post.title,
-        shortDescription: post.shortDescription,
-        content: post.content,
-      },
-      {
-        new: true,
-      }
-    ).lean();
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        post.id,
+        {
+          title: post.title,
+          shortDescription: post.shortDescription,
+          content: post.content,
+        },
+        {
+          new: true,
+        }
+      ).lean();
 
-    if (!updatedPost) {
-      return null;
+      return updatedPost ? mapPostDocumentToPostType(updatedPost) : null;
+    } catch (error) {
+      console.error('Error updating post:', error);
+      throw new Error('Database error while updating post');
     }
-
-    return mapPostDocumentToPostType(updatedPost);
   },
 };
 export default postsRepository;
