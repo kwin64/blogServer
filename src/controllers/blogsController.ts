@@ -8,7 +8,7 @@ const blogsController = {
   async allBlogs(req: Request, res: Response): Promise<void> {
     try {
       const {
-        searchValue,
+        searchNameTerm,
         sortBy,
         sortDirection,
         pageNumber,
@@ -24,7 +24,7 @@ const blogsController = {
       }
 
       const blogs = await blogQueryRepository.getAllBlogs(
-        searchValue,
+        searchNameTerm,
         sortBy,
         sortDirection,
         offset,

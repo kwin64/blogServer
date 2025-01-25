@@ -1,5 +1,5 @@
 export type ParseQueryAllBlogsParamsType = {
-  searchValue?: string;
+  searchNameTerm?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   pageNumber?: string | number;

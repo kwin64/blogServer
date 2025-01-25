@@ -5,7 +5,7 @@ import {
 
 const parseQueryParams = {
   allBlogs(query: ParseQueryAllBlogsParamsType) {
-    const searchValue = query.searchValue?.toString().trim() || null;
+    const searchNameTerm = query.searchNameTerm?.toString().trim() || null;
 
     const sortBy = query.sortBy?.toString().trim() || 'createdAt';
 
@@ -24,7 +24,7 @@ const parseQueryParams = {
 
     const offset = (pageNumber - 1) * pageSize;
 
-    return { searchValue, sortBy, sortDirection, pageNumber, pageSize, offset };
+    return { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, offset };
   },
   postsForBlog(query: ParseQueryPostsForBlogParamsType) {
     const sortBy = query.sortBy?.toString().trim() || 'createdAt';

@@ -4,7 +4,7 @@ import { Blog, Post } from '../../models';
 
 const blogQueryRepository = {
   async getAllBlogs(
-    searchValue: string | null,
+    searchNameTerm: string | null,
     sortBy: string,
     sortDirection: string,
     offset: number,
@@ -12,9 +12,10 @@ const blogQueryRepository = {
     pageNumber: number
   ) {
     const totalCount = await Blog.countDocuments({});
-    const filter = searchValue
-      ? { name: { $regex: searchValue, $options: 'i' } }
+    const filter = searchNameTerm
+      ? { name: { $regex: searchNameTerm, $options: 'i' } }
       : {};
+
     const blogs = await Blog.find(filter)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .skip(offset)
