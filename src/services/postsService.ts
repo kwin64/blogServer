@@ -4,47 +4,94 @@ import postsRepository from '../repositories/commands/postsRepository';
 
 const postsService = {
   async getPosts() {
-    const posts = await postsRepository.getPosts();
-    if (!posts) {
-      console.error('Service error: get posts in DB:', posts);
-      throw new Error('Posts not found');
+    try {
+      const posts = await postsRepository.getPosts();
+      if (!posts || posts.length === 0) {
+        throw new Error('No posts found');
+      }
+      return posts;
+    } catch (error) {
+      console.error('Service error: Failed to fetch posts:', error);
+      throw new Error('Could not retrieve posts');
     }
-    return posts;
   },
   async createPost(
     post: Omit<IPost, 'id' | 'createdAt' | 'updatedAt' | 'blogName'>
   ) {
-    const blog = await blogsRepository.getBlog(post.blogId);
-    if (!blog) {
-      throw new Error('Blog not found');
-    }
+    try {
+      const blog = await blogsRepository.getBlog(post.blogId);
+      if (!blog) {
+        throw new Error(`Blog with ID ${post.blogId} not found`);
+      }
 
-    return await postsRepository.create({
-      ...post,
-      blogId: post.blogId,
-      blogName: blog.name,
-    });
+      const newPost = await postsRepository.create({
+        ...post,
+        blogId: post.blogId,
+        blogName: blog.name,
+      });
+
+      return newPost;
+    } catch (error) {
+      console.error('Service error: Failed to create post:', error);
+      throw new Error('Could not create post');
+    }
   },
   async getPost(id: string) {
-    const post = await postsRepository.getPost(id);
-
-    if (!post) {
-      console.error('Service error: get post from DB:', post);
-      throw new Error('post not found');
+    if (!id) {
+      throw new Error('Post ID must be provided');
     }
-    return post;
+
+    try {
+      const post = await postsRepository.getPost(id);
+      if (!post) {
+        throw new Error(`Post with ID ${id} not found`);
+      }
+      return post;
+    } catch (error) {
+      console.error(
+        `Service error: Failed to fetch post with ID ${id}:`,
+        error
+      );
+      throw new Error('Could not retrieve post');
+    }
   },
   async deletePost(id: string) {
-    const deletedPost = await postsRepository.delete(id);
-
-    if (!deletedPost) {
-      console.error('Service error: delete post in DB:', deletedPost);
-      throw new Error('post not found');
+    if (!id) {
+      throw new Error('Post ID must be provided');
     }
-    return deletedPost;
+
+    try {
+      const deletedPost = await postsRepository.delete(id);
+      if (!deletedPost) {
+        throw new Error(`Post with ID ${id} not found`);
+      }
+      return deletedPost;
+    } catch (error) {
+      console.error(
+        `Service error: Failed to delete post with ID ${id}:`,
+        error
+      );
+      throw new Error('Could not delete post');
+    }
   },
   async changePost(post: Omit<IPost, 'createdAt' | 'updatedAt'>) {
-    return await postsRepository.change(post);
+    if (!post.id) {
+      throw new Error('Post ID must be provided');
+    }
+
+    try {
+      const updatedPost = await postsRepository.change(post);
+      if (!updatedPost) {
+        throw new Error(`Post with ID ${post.id} not found`);
+      }
+      return updatedPost;
+    } catch (error) {
+      console.error(
+        `Service error: Failed to update post with ID ${post.id}:`,
+        error
+      );
+      throw new Error('Could not update post');
+    }
   },
 };
 export default postsService;
