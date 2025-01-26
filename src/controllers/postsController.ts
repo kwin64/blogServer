@@ -12,9 +12,9 @@ const postsController = {
         parseQueryParams.allPosts(req.query);
 
       if (isNaN(pageNumber) || isNaN(pageSize)) {
-        res
-          .status(HTTP_STATUSES.BAD_REQUEST)
-          .json({ error: 'Invalid page or limit parameters' });
+        res.status(HTTP_STATUSES.BAD_REQUEST).json({
+          error: 'Invalid page or limit parameters',
+        });
         return;
       }
 
@@ -29,7 +29,9 @@ const postsController = {
       res.status(HTTP_STATUSES.OK).json(posts);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR);
+      res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR).json({
+        error: 'Internal server error',
+      });
     }
   },
   async newPost(req: Request, res: Response) {
@@ -40,6 +42,7 @@ const postsController = {
         content: req.body.content,
         blogId: req.body.blogId,
       });
+
       if (!createdPost) {
         res
           .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
@@ -59,7 +62,9 @@ const postsController = {
       res.status(HTTP_STATUSES.OK).json(post);
     } catch (error) {
       console.error('Controller Error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+      res.status(HTTP_STATUSES.NOT_FOUND).json({
+        error: error.message || 'Post not found',
+      });
     }
   },
   async deletePost(req: Request, res: Response) {
@@ -68,9 +73,9 @@ const postsController = {
       const deletedPost = await postsService.deletePost(id);
 
       if (!deletedPost) {
-        res
-          .status(HTTP_STATUSES.NOT_FOUND)
-          .json({ error: 'Failed to deleted post' });
+        res.status(HTTP_STATUSES.NOT_FOUND).json({
+          error: 'Post not found',
+        });
         return;
       }
 
@@ -81,20 +86,32 @@ const postsController = {
     }
   },
   async changePost(req: Request, res: Response) {
+    const { id } = req.params;
+    const { title, shortDescription, content, blogId, blogName } = req.body;
+
+    if (!title || !shortDescription || !content || !blogId || !blogName) {
+      res.status(HTTP_STATUSES.BAD_REQUEST).json({
+        error: 'Invalid input data',
+      });
+      return;
+    }
+
     const postData: Omit<IPost, 'createdAt' | 'updatedAt'> = {
-      id: req.params.id,
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      content: req.body.content,
-      blogId: req.body.blogId,
-      blogName: req.body.blogName,
+      id,
+      title,
+      shortDescription,
+      content,
+      blogId,
+      blogName,
     };
+
     try {
       const changedPost = await postsService.changePost(postData);
+
       if (!changedPost) {
-        res
-          .status(HTTP_STATUSES.NOT_FOUND)
-          .json({ error: 'Failed to create post' });
+        res.status(HTTP_STATUSES.NOT_FOUND).json({
+          error: 'Post not found',
+        });
         return;
       }
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedPost);
