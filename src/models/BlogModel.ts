@@ -1,5 +1,4 @@
-import mongoose, { Schema, Document, Model, Types } from 'mongoose';
-import { IPost } from './PostModel';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 
 export interface IBlog {
   id: string;
@@ -12,7 +11,7 @@ export interface IBlog {
 }
 export interface IBlogWithPagination {
   pagesCount: number;
-  page: number;
+  pageNumber: number;
   pageSize: number;
   totalCount: number;
   items: IBlog[];

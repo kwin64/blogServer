@@ -1,5 +1,5 @@
-import { mapBlogDocumentWithPaginationType } from '../../mappers/mapBlogDocumentWithPaginationType';
-import { mapPostDocumentToBlogWithPaginationType } from '../../mappers/mapPostDocumentToBlogWithPaginationType';
+import { mapBlogDocumentWithPagination } from '../../mappers/mapBlogDocumentWithPagination';
+import { mapPostDocumentWithPagination } from '../../mappers/mapPostDocumentWithPagination';
 import { Blog, Post } from '../../models';
 
 const blogQueryRepository = {
@@ -25,7 +25,7 @@ const blogQueryRepository = {
 
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    return mapBlogDocumentWithPaginationType(
+    return mapBlogDocumentWithPagination(
       blogs,
       pagesCount,
       pageNumber,
@@ -56,7 +56,7 @@ const blogQueryRepository = {
 
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    return mapPostDocumentToBlogWithPaginationType(
+    return mapPostDocumentWithPagination(
       posts,
       pagesCount,
       pageNumber,

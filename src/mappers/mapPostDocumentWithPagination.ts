@@ -1,18 +1,20 @@
 import { IPostWithPagination, PostDocument } from '../models/PostModel';
+import { mapDocumentWithPagination } from './mapDocumentWithPagination';
 
-export const mapPostDocumentToBlogWithPaginationType = (
-  postDoc: PostDocument[],
+export const mapPostDocumentWithPagination = (
+  postDocs: PostDocument[],
   pagesCount: number,
   pageNumber: number,
   pageSize: number,
   totalCount: number
 ): IPostWithPagination => {
-  return {
-    pagesCount: pagesCount,
-    page: pageNumber,
-    pageSize: pageSize,
-    totalCount: totalCount,
-    items: postDoc.map((postDoc) => ({
+  return mapDocumentWithPagination(
+    postDocs,
+    pagesCount,
+    pageNumber,
+    pageSize,
+    totalCount,
+    (postDoc) => ({
       id: postDoc._id.toString(),
       title: postDoc.title,
       shortDescription: postDoc.shortDescription,
@@ -20,6 +22,6 @@ export const mapPostDocumentToBlogWithPaginationType = (
       blogId: postDoc.blogId,
       blogName: postDoc.blogName,
       createdAt: postDoc.createdAt,
-    })),
-  };
+    })
+  );
 };

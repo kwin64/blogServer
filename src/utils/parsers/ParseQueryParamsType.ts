@@ -13,7 +13,16 @@ export type ParseQueryPostsForBlogParamsType = {
   sortDirection?: 'asc' | 'desc';
 };
 
-export type ParseQueryAllpostsParamsType = {
+export type ParseQueryAllPostsParamsType = {
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  pageNumber?: string | number;
+  pageSize?: string | number;
+};
+
+export type ParseQueryAllUsersParamsType = {
+  searchLoginTerm?: string;
+  searchEmailTerm?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   pageNumber?: string | number;

@@ -10,6 +10,8 @@ const SETTINGS = {
   PATH: {
     BLOGS: '/blogs',
     POSTS: '/posts',
+    AUTH: '/auth',
+    USERS: '/users',
     TESTS: '/testing',
   },
 };

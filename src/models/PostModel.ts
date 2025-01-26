@@ -13,7 +13,7 @@ export interface IPost {
 
 export interface IPostWithPagination {
   pagesCount: number;
-  page: number;
+  pageNumber: number;
   pageSize: number;
   totalCount: number;
   items: IPost[];
