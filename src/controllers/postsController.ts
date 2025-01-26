@@ -117,7 +117,7 @@ const postsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(changedPost);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(HTTP_STATUSES.NOT_FOUND);
+      res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
 };

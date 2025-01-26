@@ -75,19 +75,20 @@ const postsService = {
     }
   },
   async changePost(post: Omit<IPost, 'createdAt' | 'updatedAt'>) {
-    try {
-      const updatedPost = await postsRepository.change(post);
-      if (!updatedPost) {
-        throw new Error(`Post with ID ${post.id} not found`);
-      }
-      return updatedPost;
-    } catch (error: any) {
-      console.error(
-        `Service error: Failed to update post with ID ${post.id}:`,
-        error
-      );
-      throw new Error('Could not update post');
-    }
+    // try {
+    //   const updatedPost = await postsRepository.change(post);
+    //   if (!updatedPost) {
+    //     throw new Error(`Post with ID ${post.id} not found`);
+    //   }
+    //   return updatedPost;
+    // } catch (error: any) {
+    //   console.error(
+    //     `Service error: Failed to update post with ID ${post.id}:`,
+    //     error
+    //   );
+    //   throw new Error('Could not update post');
+    // }
+    return await postsRepository.change(post);
   },
 };
 export default postsService;
