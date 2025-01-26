@@ -1,6 +1,6 @@
 interface IPagination<T> {
   pagesCount: number;
-  pageNumber: number;
+  page: number;
   pageSize: number;
   totalCount: number;
   items: T[];
@@ -16,7 +16,7 @@ export const mapDocumentWithPagination = <T, U>(
 ): IPagination<U> => {
   return {
     pagesCount,
-    pageNumber,
+    page: pageNumber,
     pageSize,
     totalCount,
     items: documentDocs.map(mapItem),
