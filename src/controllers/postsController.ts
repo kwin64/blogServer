@@ -60,7 +60,7 @@ const postsController = {
     try {
       const post = await postsService.getPost(id);
       res.status(HTTP_STATUSES.OK).json(post);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Controller Error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).json({
         error: error.message || 'Post not found',

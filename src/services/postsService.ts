@@ -75,10 +75,6 @@ const postsService = {
     }
   },
   async changePost(post: Omit<IPost, 'createdAt' | 'updatedAt'>) {
-    if (!post.id) {
-      throw new Error('Post ID must be provided');
-    }
-
     try {
       const updatedPost = await postsRepository.change(post);
       if (!updatedPost) {

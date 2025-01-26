@@ -71,7 +71,7 @@ const blogsController = {
       });
 
       res.status(HTTP_STATUSES.CREATED).json(createdPost);
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Controller Error:', error);
 
       res.status(HTTP_STATUSES.NOT_FOUND).json({ error: error.message });
