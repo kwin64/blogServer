@@ -16,7 +16,8 @@ export const mapUserDocumentWithPagination = (
     totalCount,
     (userDoc) => ({
       id: userDoc._id.toString(),
-      loginOrEmail: userDoc.loginOrEmail,
+      login: userDoc.login,
+      email: userDoc.email,
       password: userDoc.password,
     })
   );

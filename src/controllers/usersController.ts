@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
+import usersService from '../services/usersService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
 
@@ -43,16 +44,15 @@ const usersController = {
   },
   async createUser(req: Request, res: Response) {
     try {
-      const { loginOrEmail, password } = req.body;
+      const { login, email, password } = req.body;
 
-      console.log('sjds');
+      const createdUser = await usersService.createUser({
+        login,
+        email,
+        password,
+      });
 
-      // const createdUser = await authService.createUser({
-      //   loginOrEmail,
-      //   password,
-      // });
-
-      // res.status(HTTP_STATUSES.CREATED).json(createdUser);
+      res.status(HTTP_STATUSES.CREATED).json(createdUser);
     } catch (error: unknown) {
       console.error('Controller Error:', error);
       res

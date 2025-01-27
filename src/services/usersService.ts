@@ -1,12 +1,17 @@
-import testsRepository from '../repositories/commands/testsRepository';
+import usersRepository from '../repositories/commands/usersRepository';
 
 const usersService = {
-  async resetDB() {
+  async createUser(userData: {
+    login: string;
+    email: string;
+    password: string;
+  }) {
     try {
-      return await testsRepository.deleteAllData();
+      const newUser = await usersRepository.create(userData);
+      return newUser;
     } catch (error) {
-      console.error('Service error DB reset:', error);
-      throw error;
+      console.error('Service error while creating user:', error);
+      throw new Error('Failed to create user');
     }
   },
 };

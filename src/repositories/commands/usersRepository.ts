@@ -1,0 +1,23 @@
+import { mapUserDocumentToUserType } from '../../mappers/mapUserDocumentToUserType';
+import { User } from '../../models';
+
+const userRepository = {
+  async create(userData: { login: string; email: string; password: string }) {
+    try {
+      const newUser = new User({
+        login: userData.login,
+        email: userData.email,
+        password: userData.password,
+      });
+      console.log(newUser);
+      
+      const savedUser = await newUser.save();
+      return mapUserDocumentToUserType(savedUser);
+    } catch (error) {
+      console.error('Database error:', error);
+      throw new Error('Database error while creating blog');
+    }
+  },
+};
+
+export default userRepository;
