@@ -43,7 +43,6 @@ const usersService = {
 
     try {
       const deletedUser = await usersRepository.delete(id);
-      console.log('deletedUser', deletedUser);
 
       if (!deletedUser) {
         throw new Error(`User with ID ${id} not found`);
