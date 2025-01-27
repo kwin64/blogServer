@@ -60,5 +60,26 @@ const usersController = {
         .json({ error: 'Failed to create user' });
     }
   },
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const deletedUser = await usersService.deleteUser(id);
+
+      if (!deletedUser) {
+        res.status(HTTP_STATUSES.NOT_FOUND).json({
+          error: 'User not found',
+        });
+        return;
+      }
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedUser);
+    } catch (error: unknown) {
+      console.error('Controller Error:', error);
+      res
+        .status(HTTP_STATUSES.BAD_REQUEST)
+        .json({ error: 'Failed to delete user' });
+    }
+  },
 };
 export default usersController;

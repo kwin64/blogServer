@@ -24,6 +24,18 @@ const userRepository = {
   async findByEmail(email: string) {
     return User.findOne({ email });
   },
+  async delete(id: string) {
+    try {
+      const result = await User.findByIdAndDelete(id);
+      if (!result) {
+        return null;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw new Error('Database error while deleting user');
+    }
+  },
 };
 
 export default userRepository;

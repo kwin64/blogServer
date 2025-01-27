@@ -13,5 +13,6 @@ usersRouter.post(
   errorsMiddleware,
   usersController.createUser
 );
+usersRouter.delete('/:id', authMiddleware, usersController.deleteUser);
 
 export default usersRouter;
