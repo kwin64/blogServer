@@ -1,4 +1,5 @@
 import usersRepository from '../repositories/commands/usersRepository';
+import bcrypt from 'bcrypt';
 
 const usersService = {
   async createUser(userData: {
@@ -7,7 +8,28 @@ const usersService = {
     password: string;
   }) {
     try {
-      const newUser = await usersRepository.create(userData);
+      const existingUserByLogin = await usersRepository.findByLogin(
+        userData.login
+      );
+      if (existingUserByLogin) {
+        throw new Error('Login already exists.');
+      }
+
+      const existingUserByEmail = await usersRepository.findByEmail(
+        userData.email
+      );
+      if (existingUserByEmail) {
+        throw new Error('Email already exists.');
+      }
+
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+      const newUser = await usersRepository.create({
+        login: userData.login,
+        email: userData.email,
+        password: hashedPassword,
+      });
+
       return newUser;
     } catch (error) {
       console.error('Service error while creating user:', error);

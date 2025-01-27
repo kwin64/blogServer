@@ -17,6 +17,13 @@ const userRepository = {
       throw new Error('Database error while creating blog');
     }
   },
+  async findByLogin(login: string) {
+    return User.findOne({ login });
+  },
+
+  async findByEmail(email: string) {
+    return User.findOne({ email });
+  },
 };
 
 export default userRepository;
