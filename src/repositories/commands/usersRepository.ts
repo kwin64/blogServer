@@ -9,8 +9,7 @@ const userRepository = {
         email: userData.email,
         password: userData.password,
       });
-      console.log(newUser);
-      
+
       const savedUser = await newUser.save();
       return mapUserDocumentToUserType(savedUser);
     } catch (error) {
