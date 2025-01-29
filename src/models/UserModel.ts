@@ -3,8 +3,10 @@ import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 export interface IUser {
   id: string;
   login: string;
-  password: string;
+  password?: string;
   email: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IUserWithPagination {
@@ -13,13 +15,17 @@ export interface IUserWithPagination {
   pageSize: number;
   totalCount: number;
   items: IUser[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface UserDocument extends Document {
   _id: Types.ObjectId;
   login: string;
   email: string;
-  password: string;
+  password?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const UsersSchema: Schema<UserDocument> = new Schema(

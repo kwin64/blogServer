@@ -18,7 +18,7 @@ export const mapUserDocumentWithPagination = (
       id: userDoc._id.toString(),
       login: userDoc.login,
       email: userDoc.email,
-      password: userDoc.password,
+      createdAt: userDoc.createdAt,
     })
   );
 };
