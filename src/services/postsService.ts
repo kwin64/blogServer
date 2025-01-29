@@ -17,7 +17,7 @@ const postsService = {
   },
   async createPost(
     post: Omit<IPost, 'id' | 'createdAt' | 'updatedAt' | 'blogName'>
-  ) {
+  ): Promise<IPost> {
     try {
       const blog = await blogsRepository.getBlog(post.blogId);
       if (!blog) {
