@@ -54,9 +54,7 @@ const usersController = {
         createdUser._id.toString()
       );
 
-      console.log('newUser', newUser);
-
-      res.status(HTTP_STATUSES.CREATED).json(createdUser);
+      res.status(HTTP_STATUSES.CREATED).json(newUser);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
