@@ -1,9 +1,30 @@
-// class ApiError extends Error {
-//   constructor(statusCode: string, message: string) {
-//     super(message);
-//     this.statusCode = statusCode;
-//     Error.captureStackTrace(this, this.constructor)
-//   }
-// }
+import { HTTP_STATUSES } from './constants/httpStatuses';
 
-// export default ApiError;
+export default class ApiError extends Error {
+  statusCode: number;
+  constructor(statusCode: number, message: string) {
+    super(message);
+    this.statusCode = statusCode;
+    Error.captureStackTrace(this, this.constructor);
+  }
+
+  static badRequest(msg: string) {
+    return new ApiError(HTTP_STATUSES.BAD_REQUEST, msg);
+  }
+
+  static unauthorized(msg: string) {
+    return new ApiError(HTTP_STATUSES.UNAUTHORIZED, msg);
+  }
+
+  static forbiden(msg: string) {
+    return new ApiError(HTTP_STATUSES.FORBIDDEN, msg);
+  }
+
+  static notFound(msg: string) {
+    return new ApiError(HTTP_STATUSES.NOT_FOUND, msg);
+  }
+
+  static internal(msg: string) {
+    return new ApiError(HTTP_STATUSES.INTERNAL_SERVER_ERROR, msg);
+  }
+}

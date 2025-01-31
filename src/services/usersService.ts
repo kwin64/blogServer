@@ -1,5 +1,7 @@
 import usersRepository from '../repositories/commands/usersRepository';
 import bcrypt from 'bcrypt';
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import ApiError from '../utils/ApiError';
 
 const usersService = {
   async createUser(userData: {
@@ -11,15 +13,17 @@ const usersService = {
       const existingUserByLogin = await usersRepository.findByLogin(
         userData.login
       );
-      if (existingUserByLogin) {
-        throw new Error('Login already exists.');
+
+      if (!existingUserByLogin) {
+        throw ApiError.notFound('Login already exists.');
       }
 
       const existingUserByEmail = await usersRepository.findByEmail(
         userData.email
       );
-      if (existingUserByEmail) {
-        throw new Error('Email already exists.');
+
+      if (!existingUserByEmail) {
+        throw ApiError.notFound('Email already exists');
       }
 
       const hashedPassword = await bcrypt.hash(userData.password, 10);
