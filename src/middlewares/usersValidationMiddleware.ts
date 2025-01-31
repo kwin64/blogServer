@@ -4,8 +4,8 @@ const usersValidationMiddleware = [
   body('login')
     .isString()
     .trim()
-    .matches(/^[a-zA-Z0-9_-]*$/)
-    .withMessage('login must be a string')
+    .matches(/^[a-zA-Z0-9_-]+$/)
+    .withMessage('Login can only contain letters, numbers, "_" and "-"')
     .isLength({ min: 3, max: 10 })
     .withMessage('The login length must be between 3 and 10 characters.'),
 
