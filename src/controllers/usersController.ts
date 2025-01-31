@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import usersService from '../services/usersService';
+import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
 
@@ -17,13 +18,6 @@ const usersController = {
         offset,
       } = parseQueryParams.allUsers(req.query);
 
-      if (isNaN(pageNumber) || isNaN(pageSize)) {
-        res
-          .status(HTTP_STATUSES.BAD_REQUEST)
-          .json({ error: 'Invalid page or limit parameters' });
-        return;
-      }
-
       const users = await userQueryRepository.getAllUsers(
         searchLoginTerm,
         searchEmailTerm,
@@ -36,10 +30,14 @@ const usersController = {
 
       res.status(HTTP_STATUSES.OK).json(users);
     } catch (error: unknown) {
-      console.error('Controller Error:', error);
-      res
-        .status(HTTP_STATUSES.NOT_FOUND)
-        .json({ error: 'Failed to fetch blogs' });
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
     }
   },
   async createUser(req: Request, res: Response) {
@@ -54,10 +52,14 @@ const usersController = {
 
       res.status(HTTP_STATUSES.CREATED).json(createdUser);
     } catch (error: unknown) {
-      console.error('Controller Error:', error);
-      res
-        .status(HTTP_STATUSES.BAD_REQUEST)
-        .json({ error: 'Failed to create user' });
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
     }
   },
   async deleteUser(req: Request, res: Response) {

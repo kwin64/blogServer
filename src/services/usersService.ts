@@ -1,6 +1,6 @@
-import usersRepository from '../repositories/commands/usersRepository';
 import bcrypt from 'bcrypt';
-import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import { User } from '../models';
+import usersRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
 
 const usersService = {
@@ -9,36 +9,33 @@ const usersService = {
     email: string;
     password: string;
   }) {
-    try {
-      const existingUserByLogin = await usersRepository.findByLogin(
-        userData.login
-      );
+    const existingUserByLogin = await usersRepository.findByLogin(
+      userData.login
+    );
 
-      if (!existingUserByLogin) {
-        throw ApiError.notFound('Login already exists.');
-      }
-
-      const existingUserByEmail = await usersRepository.findByEmail(
-        userData.email
-      );
-
-      if (!existingUserByEmail) {
-        throw ApiError.notFound('Email already exists');
-      }
-
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-      const newUser = await usersRepository.create({
-        login: userData.login,
-        email: userData.email,
-        password: hashedPassword,
-      });
-
-      return newUser;
-    } catch (error) {
-      console.error('Service error while creating user:', error);
-      throw new Error('Failed to create user');
+    if (existingUserByLogin) {
+      throw ApiError.notFound('Login already exists');
     }
+
+    const existingUserByEmail = await usersRepository.findByEmail(
+      userData.email
+    );
+
+    if (existingUserByEmail) {
+      throw ApiError.notFound('Email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    const newUser = new User({
+      login: userData.login,
+      email: userData.email,
+      password: hashedPassword,
+    });
+
+    const createdUser = await usersRepository.create(newUser);
+
+    return createdUser;
   },
   async deleteUser(id: string) {
     if (!id) {

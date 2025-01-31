@@ -1,21 +1,11 @@
 import { mapUserDocumentToUserType } from '../../mappers/mapUserDocumentToUserType';
 import { User } from '../../models';
+import { IUser, UserDocument } from '../../models/UserModel';
 
 const userRepository = {
-  async create(userData: { login: string; email: string; password: string }) {
-    try {
-      const newUser = new User({
-        login: userData.login,
-        email: userData.email,
-        password: userData.password,
-      });
-
-      const savedUser = await newUser.save();
-      return mapUserDocumentToUserType(savedUser);
-    } catch (error) {
-      console.error('Database error:', error);
-      throw new Error('Database error while creating blog');
-    }
+  async create(newUser: UserDocument) {
+    const savedUser = await newUser.save();
+    return mapUserDocumentToUserType(savedUser);
   },
   async findByLogin(login: string) {
     return User.findOne({ login });
