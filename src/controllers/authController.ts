@@ -13,7 +13,7 @@ const authController = {
         password,
       });
 
-      res.status(HTTP_STATUSES.CREATED).json(authData);
+      res.status(HTTP_STATUSES.NO_CONTENT).json(authData);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
