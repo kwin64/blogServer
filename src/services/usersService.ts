@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import { User } from '../models';
 import usersRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
@@ -38,6 +39,10 @@ const usersService = {
   async deleteUser(id: string) {
     if (!id) {
       throw ApiError.badRequest('User ID must be provided');
+    }
+
+    if (!mongoose.isValidObjectId(id)) {
+      throw ApiError.badRequest(' Invalid ID user');
     }
 
     const deletedUser = await usersRepository.delete(id);
