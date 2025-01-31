@@ -50,6 +50,12 @@ const usersController = {
         password,
       });
 
+      const newUser = await userQueryRepository.getUserById(
+        createdUser._id.toString()
+      );
+
+      console.log('newUser', newUser);
+
       res.status(HTTP_STATUSES.CREATED).json(createdUser);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
@@ -68,19 +74,16 @@ const usersController = {
 
       const deletedUser = await usersService.deleteUser(id);
 
-      if (!deletedUser) {
-        res.status(HTTP_STATUSES.NOT_FOUND).json({
-          error: 'User not found',
-        });
-        return;
-      }
-
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedUser);
     } catch (error: unknown) {
-      console.error('Controller Error:', error);
-      res
-        .status(HTTP_STATUSES.BAD_REQUEST)
-        .json({ error: 'Failed to delete user' });
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
     }
   },
 };

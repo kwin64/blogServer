@@ -1,30 +1,23 @@
-import { mapUserDocumentToUserType } from '../../mappers/mapUserDocumentToUserType';
 import { User } from '../../models';
-import { IUser, UserDocument } from '../../models/UserModel';
 
 const userRepository = {
-  async create(newUser: UserDocument) {
-    const savedUser = await newUser.save();
-    return mapUserDocumentToUserType(savedUser);
+  async create(userData: { login: string; email: string; password: string }) {
+    const newUser = new User({
+      login: userData.login,
+      email: userData.email,
+      password: userData.password,
+    });
+    return await newUser.save();
   },
   async findByLogin(login: string) {
-    return User.findOne({ login });
+    return await User.findOne({ login });
   },
 
   async findByEmail(email: string) {
-    return User.findOne({ email });
+    return await User.findOne({ email });
   },
   async delete(id: string) {
-    try {
-      const result = await User.findByIdAndDelete(id);
-      if (!result) {
-        return null;
-      }
-      return true;
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      throw new Error('Database error while deleting user');
-    }
+    return await User.findByIdAndDelete(id);
   },
 };
 

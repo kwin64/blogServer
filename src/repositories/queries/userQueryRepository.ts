@@ -1,7 +1,8 @@
 import { FilterQuery } from 'mongoose';
+import { mapUserDocumentToUserType } from '../../mappers/mapUserDocumentToUserType';
 import { mapUserDocumentWithPagination } from '../../mappers/mapUserDocumentWithPagination';
 import { User } from '../../models';
-import { IUser } from '../../models/UserModel';
+import { IUser, UserDocument } from '../../models/UserModel';
 import ApiError from '../../utils/ApiError';
 
 const userQueryRepository = {
@@ -42,6 +43,14 @@ const userQueryRepository = {
       );
     } catch (error) {
       throw ApiError.internal('Failed to fetch users');
+    }
+  },
+  async getUserById(_id: string) {
+    const user = await User.findOne({ _id }).lean<UserDocument>();
+    if (!user) {
+      throw ApiError.internal('Failed to fetch users');
+    } else {
+      return mapUserDocumentToUserType(user);
     }
   },
 };
