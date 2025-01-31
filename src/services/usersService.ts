@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
-import { User } from '../models';
 import usersRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
 
