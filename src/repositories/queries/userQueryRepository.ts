@@ -17,7 +17,7 @@ const userQueryRepository = {
   ) {
     try {
       const filter: FilterQuery<IUser> = {};
-      const totalCount = await User.countDocuments({ filter });
+      const totalCount = await User.countDocuments({});
       const pagesCount = Math.ceil(totalCount / pageSize);
 
       if (searchLoginTerm) {
@@ -28,7 +28,7 @@ const userQueryRepository = {
         filter.email = { $regex: searchEmailTerm, $options: 'i' };
       }
 
-      const users = await User.find({ filter })
+      const users = await User.find({})
         .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
         .skip(offset)
         .limit(pageSize)
