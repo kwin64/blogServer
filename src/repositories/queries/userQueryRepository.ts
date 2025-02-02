@@ -17,18 +17,22 @@ const userQueryRepository = {
   ) {
     try {
       const filter: FilterQuery<IUser> = {};
-      const totalCount = await User.countDocuments({});
-      const pagesCount = Math.ceil(totalCount / pageSize);
 
-      if (searchLoginTerm) {
+      if (searchLoginTerm && searchEmailTerm) {
+        filter.$or = [
+          { login: { $regex: searchLoginTerm, $options: 'i' } },
+          { email: { $regex: searchEmailTerm, $options: 'i' } },
+        ];
+      } else if (searchLoginTerm) {
         filter.login = { $regex: searchLoginTerm, $options: 'i' };
-      }
-
-      if (searchEmailTerm) {
+      } else if (searchEmailTerm) {
         filter.email = { $regex: searchEmailTerm, $options: 'i' };
       }
 
-      const users = await User.find({})
+      const totalCount = await User.countDocuments(filter);
+      const pagesCount = Math.ceil(totalCount / pageSize);
+
+      const users = await User.find(filter)
         .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
         .skip(offset)
         .limit(pageSize)
