@@ -6,17 +6,17 @@ const commentsController = {
   async createComment(req: Request, res: Response) {
     const { content } = req.body;
 
-    const createdUser = await usersService.createUser({
-      login,
-      email,
-      password,
-    });
+    // const createdUser = await usersService.createUser({
+    //   login,
+    //   email,
+    //   password,
+    // });
 
-    const newUser = await userQueryRepository.getUserById(
-      createdUser._id.toString()
-    );
+    // const newUser = await userQueryRepository.getUserById(
+    //   createdUser._id.toString()
+    // );
 
-    res.status(HTTP_STATUSES.CREATED).json(newUser);
+    // res.status(HTTP_STATUSES.CREATED).json(newUser);
     try {
     } catch (error: unknown) {
       if (error instanceof ApiError) {

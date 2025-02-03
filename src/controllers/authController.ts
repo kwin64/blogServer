@@ -13,9 +13,7 @@ const authController = {
         password,
       });
 
-      console.log('token', token);
-
-      res.status(HTTP_STATUSES.NO_CONTENT).json(token);
+      res.status(HTTP_STATUSES.OK).json({ accessToken: token });
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
