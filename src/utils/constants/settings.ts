@@ -12,6 +12,7 @@ const SETTINGS = {
     POSTS: '/posts',
     AUTH: '/auth',
     USERS: '/users',
+    COMMENTS: '/comments',
     TESTS: '/testing',
   },
 };

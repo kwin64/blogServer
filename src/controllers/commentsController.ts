@@ -1,23 +1,40 @@
 import { Request, Response } from 'express';
+import commentQueryRepository from '../repositories/queries/commentQueryRepository';
+import userQueryRepository from '../repositories/queries/userQueryRepository';
+import commentsService from '../services/commentsService';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 
 const commentsController = {
   async createComment(req: Request, res: Response) {
-    const { content } = req.body;
-
-    // const createdUser = await usersService.createUser({
-    //   login,
-    //   email,
-    //   password,
-    // });
-
-    // const newUser = await userQueryRepository.getUserById(
-    //   createdUser._id.toString()
-    // );
-
-    // res.status(HTTP_STATUSES.CREATED).json(newUser);
     try {
+      const { content, userId } = req.body;
+
+      if (!content || !userId) {
+        throw ApiError.notFound('Content and userId are required');
+      }
+
+      const user = await userQueryRepository.getUserById(userId);
+
+      if (!user) {
+        throw ApiError.notFound('User not found');
+      }
+
+      const createComment = await commentsService.createComment(
+        userId,
+        user.login,
+        content
+      );
+
+      if (!createComment) {
+        throw ApiError.badRequest('Failed to create comment');
+      }
+
+      const getMappedComment = await commentQueryRepository.getCommentById(
+        createComment._id.toString()
+      );
+
+      res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });

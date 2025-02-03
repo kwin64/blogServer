@@ -1,6 +1,5 @@
 import { User } from '../../models';
 import ApiError from '../../utils/ApiError';
-import bcrypt from 'bcrypt';
 
 const authRepository = {
   async findByLoginOrEmail(loginOrEmail: string) {
