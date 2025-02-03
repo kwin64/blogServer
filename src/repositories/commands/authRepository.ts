@@ -3,9 +3,7 @@ import ApiError from '../../utils/ApiError';
 import bcrypt from 'bcrypt';
 
 const authRepository = {
-  async login(authData: { loginOrEmail: string; password: string }) {
-    const { loginOrEmail, password } = authData;
-
+  async findByLoginOrEmail(loginOrEmail: string) {
     const user = await User.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
@@ -14,17 +12,12 @@ const authRepository = {
       throw ApiError.unauthorized('Invalid login or email');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password!);
-
-    if (!isPasswordValid) {
-      throw ApiError.unauthorized('Invalid login or password');
-    }
-
     return {
       user: {
         id: user._id,
         login: user.login,
         email: user.email,
+        password: user.password!,
       },
     };
   },
