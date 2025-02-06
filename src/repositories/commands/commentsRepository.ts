@@ -13,7 +13,10 @@ const commentsRepository = {
     const savedComment = await newComment.save();
 
     return savedComment;
-  }
+  },
+  async deleteComment(commentId: string) {
+    return await Comment.findByIdAndDelete(commentId);
+  },
 };
 
 export default commentsRepository;

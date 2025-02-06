@@ -27,7 +27,7 @@ const usersService = {
 
     const hashedPassword = await hashHandler(userData.password, 10);
 
-    const createdUser = await usersRepository.create({
+    const createdUser = await usersRepository.createUser({
       login: userData.login,
       email: userData.email,
       password: hashedPassword,
@@ -44,7 +44,7 @@ const usersService = {
       throw ApiError.badRequest(' Invalid ID user');
     }
 
-    const deletedUser = await usersRepository.delete(id);
+    const deletedUser = await usersRepository.deleteUser(id);
 
     if (!deletedUser) {
       throw ApiError.notFound(`User with ID ${id} not found`);

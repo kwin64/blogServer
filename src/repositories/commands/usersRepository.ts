@@ -1,7 +1,11 @@
 import { User } from '../../models';
 
 const userRepository = {
-  async create(userData: { login: string; email: string; password: string }) {
+  async createUser(userData: {
+    login: string;
+    email: string;
+    password: string;
+  }) {
     const newUser = new User({
       login: userData.login,
       email: userData.email,
@@ -16,7 +20,7 @@ const userRepository = {
   async findByEmail(email: string) {
     return await User.findOne({ email });
   },
-  async delete(id: string) {
+  async deleteUser(id: string) {
     return await User.findByIdAndDelete(id);
   },
 };

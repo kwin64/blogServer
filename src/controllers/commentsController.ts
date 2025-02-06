@@ -61,6 +61,11 @@ const commentsController = {
   },
   async deleteComment(req: Request, res: Response) {
     try {
+      const { commentId } = req.params;
+
+      const deletedUser = await commentsService.deleteComment(commentId);
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedUser);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
