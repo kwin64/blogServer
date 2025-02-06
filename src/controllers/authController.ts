@@ -8,10 +8,7 @@ const authController = {
     try {
       const { loginOrEmail, password } = req.body;
 
-      const token = await authService.login({
-        loginOrEmail,
-        password,
-      });
+      const token = await authService.login(loginOrEmail, password);
 
       res.status(HTTP_STATUSES.OK).json({ accessToken: token });
     } catch (error: unknown) {

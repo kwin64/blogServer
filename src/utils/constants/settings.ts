@@ -7,6 +7,7 @@ const SETTINGS = {
   AUTH_PASSWORD: process.env.AUTH_PASSWORD,
   MONGO_URI: process.env.MONGO_URI,
   MONGO_DB_NAME: process.env.DB_NAME,
+  JWT_SECRET_KEY: process.env.JWT_SECRET || 'jwt_default',
   PATH: {
     BLOGS: '/blogs',
     POSTS: '/posts',
