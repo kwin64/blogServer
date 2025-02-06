@@ -1,10 +1,19 @@
 import { Router } from 'express';
 import commentsController from '../controllers/commentsController';
+import authMiddlewareJWT from '../middlewares/authMiddlewareJWT';
 
 const commentsRouter = Router({});
-commentsRouter.put('/:commentId', commentsController.changeComment);
-commentsRouter.post('/', commentsController.createComment);
-commentsRouter.delete('/:commentId', commentsController.deleteComment);
-commentsRouter.get('/:id', commentsController.getComment);
+commentsRouter.put(
+  '/:commentId',
+  authMiddlewareJWT,
+  commentsController.changeComment
+);
+commentsRouter.post('/', authMiddlewareJWT, commentsController.createComment);
+commentsRouter.delete(
+  '/:commentId',
+  authMiddlewareJWT,
+  commentsController.deleteComment
+);
+commentsRouter.get('/:id', authMiddlewareJWT, commentsController.getComment);
 
 export default commentsRouter;

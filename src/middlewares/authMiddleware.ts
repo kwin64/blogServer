@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import SETTINGS from '../utils/constants/settings';
+
 const authMiddleware = async (
   req: Request,
   res: Response,
