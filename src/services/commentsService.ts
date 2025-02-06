@@ -23,6 +23,9 @@ const commentsService = {
 
     return deletedComment;
   },
+  async changeComment(commentId: string, content: string) {
+    return await commentsRepository.changeComment(commentId, content);
+  },
 };
 
 export default commentsService;

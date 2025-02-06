@@ -2,7 +2,7 @@ import { Router } from 'express';
 import commentsController from '../controllers/commentsController';
 
 const commentsRouter = Router({});
-commentsRouter.put('/:commentsId', commentsController.changeComment);
+commentsRouter.put('/:commentId', commentsController.changeComment);
 commentsRouter.post('/', commentsController.createComment);
 commentsRouter.delete('/:commentId', commentsController.deleteComment);
 commentsRouter.get('/:id', commentsController.getComment);

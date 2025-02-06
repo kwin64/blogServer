@@ -48,6 +48,19 @@ const commentsController = {
   },
   async changeComment(req: Request, res: Response) {
     try {
+      const { commentId } = req.params;
+      const { content } = req.body;
+
+      if (!content) {
+        throw ApiError.badRequest('Invalid input data');
+      }
+
+      const changedComent = await commentsService.changeComment(
+        commentId,
+        content
+      );
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(changedComent);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
@@ -63,9 +76,9 @@ const commentsController = {
     try {
       const { commentId } = req.params;
 
-      const deletedUser = await commentsService.deleteComment(commentId);
+      const deletedComment = await commentsService.deleteComment(commentId);
 
-      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedUser);
+      res.status(HTTP_STATUSES.NO_CONTENT).json(deletedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
