@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import usersRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';

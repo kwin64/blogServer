@@ -74,6 +74,9 @@ const commentsController = {
   },
   async getComment(req: Request, res: Response) {
     try {
+      const { id } = req.params;
+      const getMappedComment = await commentQueryRepository.getCommentById(id);
+      res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });

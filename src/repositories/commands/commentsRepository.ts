@@ -13,7 +13,7 @@ const commentsRepository = {
     const savedComment = await newComment.save();
 
     return savedComment;
-  },
+  }
 };
 
 export default commentsRepository;
