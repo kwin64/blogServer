@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import commentsService from '../services/commentsService';
@@ -12,6 +13,10 @@ const commentsController = {
 
       if (!content || !userId) {
         throw ApiError.notFound('Content and userId are required');
+      }
+
+      if (!mongoose.isValidObjectId(userId)) {
+        throw ApiError.badRequest(' Invalid ID comment');
       }
 
       const user = await userQueryRepository.getUserById(userId);
