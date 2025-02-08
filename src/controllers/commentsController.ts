@@ -5,6 +5,7 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import commentsService from '../services/commentsService';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import validateInputId from '../utils/validations/validateInputId';
 
 const commentsController = {
   async createComment(req: Request, res: Response) {
@@ -15,9 +16,7 @@ const commentsController = {
         throw ApiError.notFound('Content and userId are required');
       }
 
-      if (!mongoose.isValidObjectId(userId)) {
-        throw ApiError.badRequest(' Invalid ID comment');
-      }
+      validateInputId(userId);
 
       const user = await userQueryRepository.getUserById(userId);
 
