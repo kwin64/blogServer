@@ -1,4 +1,5 @@
 import { mapCommentDocumentToCommentType } from '../../mappers/mapCommentDocumentToCommentType';
+import { mapCommentDocumentWithPagination } from '../../mappers/mapCommentDocumentWithPagination';
 import { Comment } from '../../models';
 import { CommentDocument } from '../../models/CommentModel';
 import ApiError from '../../utils/ApiError';
@@ -12,6 +13,35 @@ const commentQueryRepository = {
     }
 
     return mapCommentDocumentToCommentType(comment);
+  },
+  async getAllCommentsForPost(
+    sortBy: string,
+    sortDirection: string,
+    offset: number,
+    pageSize: number,
+    pageNumber: number,
+    postId: string
+  ) {
+    try {
+      const totalCount = await Comment.countDocuments({});
+      const comments = await Comment.find({})
+        .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+        .skip(offset)
+        .limit(pageSize)
+        .exec();
+      const pagesCount = Math.ceil(totalCount / pageSize);
+
+      return mapCommentDocumentWithPagination(
+        comments,
+        pagesCount,
+        pageNumber,
+        pageSize,
+        totalCount
+      );
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      throw new Error('Failed to fetch posts');
+    }
   },
 };
 export default commentQueryRepository;

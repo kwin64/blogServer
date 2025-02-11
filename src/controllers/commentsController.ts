@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';

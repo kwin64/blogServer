@@ -29,7 +29,7 @@ const authController = {
       const userId = req.user?.userId;
 
       if (!userId) {
-        throw ApiError.notFound('userId is required');
+        throw ApiError.notFound('Unauthorized');
       }
 
       const user = await userQueryRepository.getUserById(userId);

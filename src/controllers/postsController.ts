@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import { IPost } from '../models/PostModel';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import postQueryRepository from '../repositories/queries/postQueryRepository';
@@ -122,13 +123,18 @@ const postsController = {
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
     }
   },
-  async newCommentForPost(req: Request, res: Response) {
+  async newCommentForPost(req: AuthRequest, res: Response) {
     try {
       const { content } = req.body;
       const { postId } = req.params;
+      const userId = req.user?.userId;
 
       if (!content || !postId) {
         throw ApiError.notFound('Content and postId are required');
+      }
+
+      if (!userId) {
+        throw ApiError.notFound('Unauthorized');
       }
 
       validateInputId(postId);
@@ -146,8 +152,8 @@ const postsController = {
       }
 
       const createComment = await commentsService.createCommentForPost(
-        postId,
-        post.login,
+        userId,
+        user.login,
         content
       );
 
@@ -160,6 +166,41 @@ const postsController = {
       );
 
       res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
+    }
+  },
+  async getAllCommentsForPost(req: AuthRequest, res: Response) {
+    try {
+      const { postId } = req.params;
+      const { sortBy, sortDirection, pageNumber, pageSize, offset } =
+        parseQueryParams.allPosts(req.query);
+
+      if (isNaN(pageNumber) || isNaN(pageSize)) {
+        throw ApiError.badRequest('Invalid page or limit parameters');
+      }
+
+      validateInputId(postId);
+
+      const comments = await commentQueryRepository.getAllCommentsForPost(
+        sortBy,
+        sortDirection,
+        offset,
+        pageSize,
+        pageNumber,
+        postId
+      );
+
+      console.log(comments);
+
+      res.status(HTTP_STATUSES.OK).json(comments);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
