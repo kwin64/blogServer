@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import commentsService from '../services/commentsService';
@@ -8,9 +9,10 @@ import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import validateInputId from '../utils/validations/validateInputId';
 
 const commentsController = {
-  async createComment(req: Request, res: Response) {
+  async createComment(req: AuthRequest, res: Response) {
     try {
-      const { content, userId } = req.body;
+      const { content } = req.body;
+      const userId = req.user?.userId;
 
       if (!content || !userId) {
         throw ApiError.notFound('Content and userId are required');
@@ -24,7 +26,7 @@ const commentsController = {
         throw ApiError.notFound('User not found');
       }
 
-      const createComment = await commentsService.createComment(
+      const createComment = await commentsService.createCommentForPost(
         userId,
         user.login,
         content

@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddlewareJWT';
+import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
@@ -22,8 +24,21 @@ const authController = {
       }
     }
   },
-  async authMe(req: Request, res: Response) {
+  async authMe(req: AuthRequest, res: Response) {
     try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        throw ApiError.notFound('userId is required');
+      }
+
+      const user = await userQueryRepository.getUserById(userId);
+
+      res.status(HTTP_STATUSES.OK).json({
+        email: user.email,
+        login: user.login,
+        userId: user.id,
+      });
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });

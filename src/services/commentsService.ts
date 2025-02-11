@@ -3,7 +3,11 @@ import commentsRepository from '../repositories/commands/commentsRepository';
 import ApiError from '../utils/ApiError';
 
 const commentsService = {
-  async createComment(userId: string, userLogin: string, content: string) {
+  async createCommentForPost(
+    userId: string,
+    userLogin: string,
+    content: string
+  ) {
     return await commentsRepository.createdCommemt(userId, userLogin, content);
   },
   async deleteComment(commentId: string) {

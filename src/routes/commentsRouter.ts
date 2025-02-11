@@ -8,7 +8,6 @@ commentsRouter.put(
   authMiddlewareJWT,
   commentsController.changeComment
 );
-commentsRouter.post('/', authMiddlewareJWT, commentsController.createComment);
 commentsRouter.delete(
   '/:commentId',
   authMiddlewareJWT,

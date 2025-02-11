@@ -1,9 +1,14 @@
 import { Request, Response } from 'express';
 import { IPost } from '../models/PostModel';
+import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import postQueryRepository from '../repositories/queries/postQueryRepository';
+import userQueryRepository from '../repositories/queries/userQueryRepository';
+import commentsService from '../services/commentsService';
 import postsService from '../services/postsService';
+import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
+import validateInputId from '../utils/validations/validateInputId';
 
 const postsController = {
   async allPosts(req: Request, res: Response) {
@@ -12,10 +17,7 @@ const postsController = {
         parseQueryParams.allPosts(req.query);
 
       if (isNaN(pageNumber) || isNaN(pageSize)) {
-        res.status(HTTP_STATUSES.BAD_REQUEST).json({
-          error: 'Invalid page or limit parameters',
-        });
-        return;
+        throw ApiError.badRequest('Invalid page or limit parameters');
       }
 
       const posts = await postQueryRepository.getAllPosts(
@@ -118,6 +120,55 @@ const postsController = {
     } catch (error) {
       console.error('Controller error:', error);
       res.status(HTTP_STATUSES.NOT_FOUND).send(error);
+    }
+  },
+  async newCommentForPost(req: Request, res: Response) {
+    try {
+      const { content } = req.body;
+      const { postId } = req.params;
+
+      if (!content || !postId) {
+        throw ApiError.notFound('Content and postId are required');
+      }
+
+      validateInputId(postId);
+
+      const post = await postQueryRepository.getPostById(postId);
+
+      if (!post) {
+        throw ApiError.notFound('Post not found');
+      }
+
+      const user = await userQueryRepository.getUserById(userId);
+
+      if (!user) {
+        throw ApiError.notFound('User not found');
+      }
+
+      const createComment = await commentsService.createCommentForPost(
+        postId,
+        post.login,
+        content
+      );
+
+      if (!createComment) {
+        throw ApiError.badRequest('Failed to create comment');
+      }
+
+      const getMappedComment = await commentQueryRepository.getCommentById(
+        createComment._id.toString()
+      );
+
+      res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
     }
   },
 };

@@ -1,10 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import jwtToken from '../utils/jwtToken';
 
+export interface AuthRequest extends Request {
+  user?: {
+    userId: string;
+  };
+}
+
 const authMiddlewareJWT = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -16,11 +23,15 @@ const authMiddlewareJWT = async (
 
     const token = authHeader.split(' ')[1];
 
-    const verifedToken = jwtToken.verifyToken(token);
+    const verifiedToken = jwtToken.verifyToken(token) as JwtPayload;
 
-    if (!verifedToken) {
+    if (!verifiedToken) {
       throw ApiError.unauthorized('Invalid token');
     }
+
+    req.user = {
+      userId: verifiedToken.id,
+    };
 
     next();
   } catch (error: unknown) {

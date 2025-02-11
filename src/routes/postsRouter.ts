@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import postsController from '../controllers/postsController';
 import authMiddleware from '../middlewares/authMiddleware';
+import authMiddlewareJWT from '../middlewares/authMiddlewareJWT';
+import commentsValidationMiddleware from '../middlewares/commentsValidationMiddleware';
 import errorsMiddleware from '../middlewares/errorsMiddleware';
 import postsValidationMiddleware from '../middlewares/postsValidationMiddleware';
 
@@ -20,6 +22,13 @@ postsRouter.put(
   postsValidationMiddleware,
   errorsMiddleware,
   postsController.changePost
+);
+postsRouter.post(
+  '/:postId/comments',
+  authMiddlewareJWT,
+  commentsValidationMiddleware,
+  errorsMiddleware,
+  postsController.newCommentForPost
 );
 postsRouter.delete('/:id', authMiddleware, postsController.deletePost);
 
