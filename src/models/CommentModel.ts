@@ -7,8 +7,8 @@ export interface IComment {
     userId: string;
     userLogin: string;
   };
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ICommentWithPagination {
@@ -17,8 +17,6 @@ export interface ICommentWithPagination {
   pageSize: number;
   totalCount: number;
   items: IComment[];
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface CommentDocument extends Document {

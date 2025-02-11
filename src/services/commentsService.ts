@@ -12,7 +12,7 @@ const commentsService = {
   },
   async deleteComment(commentId: string) {
     if (!commentId) {
-      throw ApiError.badRequest('Comment ID must be provided');
+      throw ApiError.badRequest('Comment ID must be provided')
     }
 
     if (!mongoose.isValidObjectId(commentId)) {

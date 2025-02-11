@@ -198,8 +198,6 @@ const postsController = {
         postId
       );
 
-      console.log(comments);
-
       res.status(HTTP_STATUSES.OK).json(comments);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
