@@ -7,8 +7,8 @@ export interface IComment {
     userId: string;
     userLogin: string;
   };
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ICommentWithPagination {
