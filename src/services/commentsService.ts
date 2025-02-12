@@ -16,10 +16,6 @@ const commentsService = {
       throw ApiError.notFound('Post not found');
     }
 
-    if (post._id.toString() !== userId) {
-      throw ApiError.forbiden('Access denied');
-    }
-
     return await commentsRepository.createdCommemt(
       userId,
       user.login,
