@@ -30,12 +30,7 @@ postsRouter.post(
   errorsMiddleware,
   postsController.newCommentForPost
 );
-postsRouter.get(
-  '/:postId/comments',
-  authMiddlewareJWT,
-  errorsMiddleware,
-  postsController.getAllCommentsForPost
-);
+postsRouter.get('/:postId/comments', postsController.getAllCommentsForPost);
 
 postsRouter.delete('/:id', authMiddleware, postsController.deletePost);
 

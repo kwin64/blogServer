@@ -15,6 +15,6 @@ commentsRouter.delete(
   authMiddlewareJWT,
   commentsController.deleteComment
 );
-commentsRouter.get('/:commentId', authMiddlewareJWT, commentsController.getComment);
+commentsRouter.get('/:commentId', commentsController.getComment);
 
 export default commentsRouter;
