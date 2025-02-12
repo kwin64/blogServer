@@ -72,5 +72,8 @@ const postsRepository = {
       throw new Error('Database error while updating post');
     }
   },
+  async getPostById(_id: string) {
+    return await Post.findOne({ _id }).lean<PostDocument>();
+  },
 };
 export default postsRepository;

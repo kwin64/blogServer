@@ -1,14 +1,23 @@
 import mongoose from 'mongoose';
 import commentsRepository from '../repositories/commands/commentsRepository';
+import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
 
 const commentsService = {
   async createCommentForPost(userId: string, postId: string, content: string) {
     const user = await userRepository.getUserById(userId);
+    const post = await postsRepository.getPostById(postId);
 
     if (!user) {
       throw ApiError.notFound('User not found');
+    }
+    if (!post) {
+      throw ApiError.notFound('Post not found');
+    }
+
+    if (post._id.toString() !== userId) {
+      throw ApiError.forbiden('Access denied');
     }
 
     return await commentsRepository.createdCommemt(
@@ -36,13 +45,13 @@ const commentsService = {
     return deletedComment;
   },
   async changeComment(commentId: string, content: string, userId: string) {
-    const user = await userRepository.getUserById(userId);
+    const comment = await commentsRepository.getCommentById(commentId);
 
-    if (!user) {
-      throw ApiError.notFound('User not found');
+    if (!comment) {
+      throw ApiError.notFound('comment not found');
     }
 
-    if (user._id.toString() !== userId) {
+    if (comment.commentatorInfo.userId.toString() !== userId) {
       throw ApiError.forbiden('Access denied');
     }
 

@@ -1,4 +1,5 @@
 import { Comment } from '../../models';
+import { CommentDocument } from '../../models/CommentModel';
 import ApiError from '../../utils/ApiError';
 
 const commentsRepository = {
@@ -36,6 +37,9 @@ const commentsRepository = {
       throw ApiError.notFound('Comment not found');
     }
     return updatedComment;
+  },
+  async getCommentById(_id: string) {
+    return await Comment.findOne({ _id }).lean<CommentDocument>();
   },
 };
 

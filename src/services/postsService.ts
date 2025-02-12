@@ -43,7 +43,6 @@ const postsService = {
     }
 
     const post = await postsRepository.getPost(id);
-    console.log('post', post);
 
     if (!post) {
       throw ApiError.notFound(`Post with ID ${id} not found`);
