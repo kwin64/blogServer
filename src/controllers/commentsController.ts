@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
-import userQueryRepository from '../repositories/queries/userQueryRepository';
 import commentsService from '../services/commentsService';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
@@ -12,6 +10,8 @@ const commentsController = {
     try {
       const { commentId } = req.params;
       const { content } = req.body;
+
+      validateInputId(commentId);
 
       if (!content) {
         throw ApiError.badRequest('Invalid input data');
@@ -38,6 +38,8 @@ const commentsController = {
     try {
       const { commentId } = req.params;
 
+      validateInputId(commentId);
+
       const deletedComment = await commentsService.deleteComment(commentId);
 
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedComment);
@@ -54,8 +56,12 @@ const commentsController = {
   },
   async getComment(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-      const getMappedComment = await commentQueryRepository.getCommentById(id);
+      const { commentId } = req.params;
+      validateInputId(commentId);
+
+      const getMappedComment = await commentQueryRepository.getCommentById(
+        commentId
+      );
       res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
