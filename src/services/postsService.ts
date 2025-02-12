@@ -1,6 +1,7 @@
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/commands/blogsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
+import ApiError from '../utils/ApiError';
 
 const postsService = {
   async getPosts() {
@@ -41,19 +42,13 @@ const postsService = {
       throw new Error('Post ID must be provided');
     }
 
-    try {
-      const post = await postsRepository.getPost(id);
-      if (!post) {
-        throw new Error(`Post with ID ${id} not found`);
-      }
-      return post;
-    } catch (error) {
-      console.error(
-        `Service error: Failed to fetch post with ID ${id}:`,
-        error
-      );
-      throw new Error('Could not retrieve post');
+    const post = await postsRepository.getPost(id);
+    console.log('post', post);
+
+    if (!post) {
+      throw ApiError.notFound(`Post with ID ${id} not found`);
     }
+    return post;
   },
   async deletePost(id: string) {
     if (!id) {
@@ -63,7 +58,7 @@ const postsService = {
     try {
       const deletedPost = await postsRepository.delete(id);
       if (!deletedPost) {
-        throw new Error(`Post with ID ${id} not found`);
+        throw ApiError.notFound(`Post with ID ${id} not found`);
       }
       return deletedPost;
     } catch (error) {
