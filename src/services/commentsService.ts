@@ -35,7 +35,17 @@ const commentsService = {
 
     return deletedComment;
   },
-  async changeComment(commentId: string, content: string) {
+  async changeComment(commentId: string, content: string, userId: string) {
+    const user = await userRepository.getUserById(userId);
+
+    if (!user) {
+      throw ApiError.notFound('User not found');
+    }
+
+    if (user._id.toString() !== userId) {
+      throw ApiError.forbiden('Access denied');
+    }
+
     return await commentsRepository.changeComment(commentId, content);
   },
 };

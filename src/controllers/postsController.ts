@@ -171,11 +171,15 @@ const postsController = {
       const { sortBy, sortDirection, pageNumber, pageSize, offset } =
         parseQueryParams.allPosts(req.query);
 
-      if (isNaN(pageNumber) || isNaN(pageSize)) {
-        throw ApiError.badRequest('Invalid page or limit parameters');
+      if (!postId) {
+        throw ApiError.notFound('postId are required');
       }
 
       validateInputId(postId);
+
+      if (isNaN(pageNumber) || isNaN(pageSize)) {
+        throw ApiError.badRequest('Invalid page or limit parameters');
+      }
 
       const comments = await commentQueryRepository.getAllCommentsForPost(
         sortBy,
