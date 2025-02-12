@@ -41,13 +41,17 @@ const commentsController = {
       }
     }
   },
-  async deleteComment(req: Request, res: Response) {
+  async deleteComment(req: AuthRequest, res: Response) {
     try {
       const { commentId } = req.params;
+      const userId = req.user!.userId;
 
       validateInputId(commentId);
 
-      const deletedComment = await commentsService.deleteComment(commentId);
+      const deletedComment = await commentsService.deleteComment(
+        commentId,
+        userId
+      );
 
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedComment);
     } catch (error: unknown) {

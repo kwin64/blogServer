@@ -3,6 +3,7 @@ import commentsRepository from '../repositories/commands/commentsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
+import validateInputId from '../utils/validations/validateInputId';
 
 const commentsService = {
   async createCommentForPost(userId: string, postId: string, content: string) {
@@ -23,14 +24,18 @@ const commentsService = {
       content
     );
   },
-  async deleteComment(commentId: string) {
-    if (!commentId) {
-      throw ApiError.badRequest('Comment ID must be provided');
+  async deleteComment(commentId: string, userId: string) {
+    const comment = await commentsRepository.getCommentById(commentId);
+
+    if (!comment) {
+      throw ApiError.notFound('comment not found');
     }
 
-    if (!mongoose.isValidObjectId(commentId)) {
-      throw ApiError.badRequest(' Invalid ID comment');
+    if (comment.commentatorInfo.userId.toString() !== userId) {
+      throw ApiError.forbiden('Access denied');
     }
+
+    validateInputId(commentId);
 
     const deletedComment = await commentsRepository.deleteComment(commentId);
 
