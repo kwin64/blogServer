@@ -2,9 +2,15 @@ import { Comment } from '../../models';
 import ApiError from '../../utils/ApiError';
 
 const commentsRepository = {
-  async createdCommemt(userId: string, userLogin: string, content: string) {
+  async createdCommemt(
+    userId: string,
+    userLogin: string,
+    postId: string,
+    content: string
+  ) {
     const newComment = new Comment({
       content,
+      postId,
       commentatorInfo: {
         userId,
         userLogin,

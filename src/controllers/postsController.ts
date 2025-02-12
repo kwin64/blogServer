@@ -139,26 +139,14 @@ const postsController = {
 
       validateInputId(postId);
 
-      const post = await postQueryRepository.getPostById(postId);
-
-      if (!post) {
-        throw ApiError.notFound('Post not found');
-      }
-
-      const user = await userQueryRepository.getUserById(userId);
-
-      if (!user) {
-        throw ApiError.notFound('User not found');
-      }
-
       const createComment = await commentsService.createCommentForPost(
         userId,
-        user.login,
+        postId,
         content
       );
 
       if (!createComment) {
-        throw ApiError.badRequest('Failed to create comment');
+        throw ApiError.internal('Failed to create comment');
       }
 
       const getMappedComment = await commentQueryRepository.getCommentById(
@@ -182,6 +170,8 @@ const postsController = {
       const { postId } = req.params;
       const { sortBy, sortDirection, pageNumber, pageSize, offset } =
         parseQueryParams.allPosts(req.query);
+
+      console.log('postId', postId);
 
       if (isNaN(pageNumber) || isNaN(pageSize)) {
         throw ApiError.badRequest('Invalid page or limit parameters');

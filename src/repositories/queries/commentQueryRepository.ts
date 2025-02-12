@@ -39,8 +39,8 @@ const commentQueryRepository = {
         totalCount
       );
     } catch (error) {
-      console.error('Error fetching posts:', error);
-      throw new Error('Failed to fetch posts');
+      console.error('Error fetching comments for post:', error);
+      throw new Error('Failed to fetch comments for post');
     }
   },
 };

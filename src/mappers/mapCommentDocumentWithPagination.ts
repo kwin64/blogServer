@@ -24,7 +24,7 @@ export const mapCommentDocumentWithPagination = (
         userId: commentDoc.commentatorInfo.userId.toString(),
         userLogin: commentDoc.commentatorInfo.userLogin,
       },
-      createdAt: commentDoc.createdAt.toISOString(),
+      createdAt: commentDoc.createdAt!.toISOString(),
     })
   );
 };

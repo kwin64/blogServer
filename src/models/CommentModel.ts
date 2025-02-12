@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 export interface IComment {
   id?: string;
   content: string;
+  postId: string;
   commentatorInfo: {
     userId: string;
     userLogin: string;
@@ -22,6 +23,7 @@ export interface ICommentWithPagination {
 export interface CommentDocument extends Document {
   _id: Types.ObjectId;
   content: string;
+  postId: Types.ObjectId;
   commentatorInfo: {
     userId: Types.ObjectId;
     userLogin: string;
@@ -33,6 +35,11 @@ export interface CommentDocument extends Document {
 const CommentSchema: Schema<CommentDocument> = new Schema(
   {
     content: { type: String, required: true },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+      required: true,
+    },
     commentatorInfo: {
       userId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -6,10 +6,11 @@ export const mapCommentDocumentToCommentType = (
   return {
     id: commentDoc._id.toString(),
     content: commentDoc.content,
+    postId: commentDoc.postId.toString(),
     commentatorInfo: {
       userId: commentDoc.commentatorInfo.userId.toString(),
       userLogin: commentDoc.commentatorInfo.userLogin,
     },
-    createdAt: commentDoc.createdAt!.toString(),
+    createdAt: commentDoc.createdAt!.toISOString(),
   };
 };
