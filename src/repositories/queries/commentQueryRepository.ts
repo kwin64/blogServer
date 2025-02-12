@@ -23,8 +23,8 @@ const commentQueryRepository = {
     postId: string
   ) {
     try {
-      const totalCount = await Comment.countDocuments({});
-      const comments = await Comment.find({})
+      const totalCount = await Comment.countDocuments({ postId });
+      const comments = await Comment.find({ postId })
         .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
         .skip(offset)
         .limit(pageSize)

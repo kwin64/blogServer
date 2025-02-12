@@ -171,8 +171,6 @@ const postsController = {
       const { sortBy, sortDirection, pageNumber, pageSize, offset } =
         parseQueryParams.allPosts(req.query);
 
-      console.log('postId', postId);
-
       if (isNaN(pageNumber) || isNaN(pageSize)) {
         throw ApiError.badRequest('Invalid page or limit parameters');
       }
