@@ -170,9 +170,14 @@ const postsController = {
       const { postId } = req.params;
       const { sortBy, sortDirection, pageNumber, pageSize, offset } =
         parseQueryParams.allPosts(req.query);
+      const post = await postsService.getPost(postId);
 
       if (!postId) {
         throw ApiError.notFound('postId are required');
+      }
+
+      if (!post) {
+        throw ApiError.notFound(`Post with ID ${postId} not found`);
       }
 
       validateInputId(postId);
