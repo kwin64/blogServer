@@ -57,5 +57,21 @@ const userQueryRepository = {
       return mapUserDocumentToUserType(user);
     }
   },
+  async findUser(login: string, email: string) {
+    try {
+      const user = await User.findOne({
+        $or: [{ login: login }, { email: email }],
+      });
+
+      if (user) {
+        throw ApiError.badRequest(
+          'The login or email address is already taken.'
+        );
+      }
+      return user;
+    } catch (error) {
+      throw ApiError.internal('Failed to find user');
+    }
+  },
 };
 export default userQueryRepository;

@@ -56,7 +56,7 @@ const commentsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
+        res.status(error.statusCode).json({ message: error.message })
       } else {
         console.error('Unexpected error:', error);
         res

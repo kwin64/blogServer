@@ -50,5 +50,24 @@ const authController = {
       }
     }
   },
+  async registration(req: Request, res: Response) {
+    try {
+      const { login, email, password } = req.body;
+
+      const checkUser = await userQueryRepository.findUser(login, email);
+      if (checkUser === null) {
+        
+      }
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
+    }
+  },
 };
 export default authController;
