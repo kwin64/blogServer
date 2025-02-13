@@ -4,6 +4,7 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import bcryptHandler from '../utils/hashHandler';
 
 const authController = {
   async login(req: Request, res: Response) {
@@ -55,9 +56,12 @@ const authController = {
       const { login, email, password } = req.body;
 
       const checkUser = await userQueryRepository.findUser(login, email);
-      if (checkUser === null) {
-        
+      if (checkUser) {
+        throw ApiError.badRequest(
+          'The login or email address is already taken.'
+        );
       }
+      bcryptHandler.hashedPassword(password, 10);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });

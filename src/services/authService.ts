@@ -1,13 +1,13 @@
-import bcrypt from 'bcrypt';
 import authRepository from '../repositories/commands/authRepository';
 import ApiError from '../utils/ApiError';
+import bcryptHandler from '../utils/hashHandler';
 import jwtToken from '../utils/jwtToken';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
     const loginValue = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    const isPasswordValid = await bcrypt.compare(
+    const isPasswordValid = bcryptHandler.comparePassword(
       password,
       loginValue.user.password
     );

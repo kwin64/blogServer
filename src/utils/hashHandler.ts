@@ -1,6 +1,11 @@
 import bcrypt from 'bcrypt';
 
-const hashHandler = async (password: string, salt: number) => {
-  return await bcrypt.hash(password, salt);
+const bcryptHandler = {
+  async hashedPassword(password: string, salt: number) {
+    return await bcrypt.hash(password, salt);
+  },
+  async comparePassword(password: string, encrypted: string) {
+    return await bcrypt.compare(password, encrypted);
+  },
 };
-export default hashHandler;
+export default bcryptHandler;

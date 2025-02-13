@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import usersRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/ApiError';
-import hashHandler from '../utils/hashHandler';
+import bcryptHandler from '../utils/hashHandler';
 
 const usersService = {
   async createUser(userData: {
@@ -25,7 +25,10 @@ const usersService = {
       throw ApiError.notFound('Email already exists');
     }
 
-    const hashedPassword = await hashHandler(userData.password, 10);
+    const hashedPassword = await bcryptHandler.hashedPassword(
+      userData.password,
+      10
+    );
 
     const createdUser = await usersRepository.createUser({
       login: userData.login,
