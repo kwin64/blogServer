@@ -54,17 +54,12 @@ const authController = {
     try {
       const { login, email, password } = req.body;
 
-      const checkUser = await userQueryRepository.findUser(login, email);
-      if (checkUser) {
-        throw ApiError.badRequest(
-          'The login or email address is already taken.'
-        );
-      }
       const registrationResult = await authService.registration(
         login,
         email,
         password
       );
+      res.status(HTTP_STATUSES.OK).json({ registrationResult });
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
@@ -76,5 +71,8 @@ const authController = {
       }
     }
   },
+  async verifyEmail () {
+    
+  }
 };
 export default authController;
