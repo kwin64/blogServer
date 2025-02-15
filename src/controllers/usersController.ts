@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import usersService from '../services/usersService';
-import ApiError from '../utils/ApiError';
+import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
 

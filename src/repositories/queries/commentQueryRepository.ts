@@ -2,7 +2,7 @@ import { mapCommentDocumentToCommentType } from '../../mappers/mapCommentDocumen
 import { mapCommentDocumentWithPagination } from '../../mappers/mapCommentDocumentWithPagination';
 import { Comment } from '../../models';
 import { CommentDocument } from '../../models/CommentModel';
-import ApiError from '../../utils/ApiError';
+import ApiError from '../../utils/handlers/ApiError';
 
 const commentQueryRepository = {
   async getCommentById(_id: string) {

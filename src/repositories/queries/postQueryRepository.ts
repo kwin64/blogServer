@@ -2,7 +2,7 @@ import { mapPostDocumentToPostType } from '../../mappers/mapPostDocumentToPostTy
 import { mapPostDocumentWithPagination } from '../../mappers/mapPostDocumentWithPagination';
 import { Post } from '../../models';
 import { PostDocument } from '../../models/PostModel';
-import ApiError from '../../utils/ApiError';
+import ApiError from '../../utils/handlers/ApiError';
 
 const postQueryRepository = {
   async getAllPosts(

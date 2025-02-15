@@ -3,11 +3,10 @@ import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import { IPost } from '../models/PostModel';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import postQueryRepository from '../repositories/queries/postQueryRepository';
-import userQueryRepository from '../repositories/queries/userQueryRepository';
 import commentsService from '../services/commentsService';
 import postsService from '../services/postsService';
-import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import ApiError from '../utils/handlers/ApiError';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
 import validateInputId from '../utils/validations/validateInputId';
 

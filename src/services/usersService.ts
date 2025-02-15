@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import usersRepository from '../repositories/commands/usersRepository';
-import ApiError from '../utils/ApiError';
-import bcryptHandler from '../utils/hashHandler';
+import ApiError from '../utils/handlers/ApiError';
+import bcryptHandler from '../utils/handlers/hashHandler';
 
 const usersService = {
   async createUser(userData: {

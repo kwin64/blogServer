@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import SETTINGS from './constants/settings';
+import SETTINGS from '../constants/settings';
 
 const jwtToken = {
   generateToken(id: string) {

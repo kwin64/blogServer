@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import commentsService from '../services/commentsService';
-import ApiError from '../utils/ApiError';
+import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import validateInputId from '../utils/validations/validateInputId';
 

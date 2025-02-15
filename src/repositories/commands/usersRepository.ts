@@ -11,6 +11,7 @@ const userRepository = {
       login: userData.login,
       email: userData.email,
       password: userData.password,
+      isVerified: false,
     });
     return await newUser.save();
   },

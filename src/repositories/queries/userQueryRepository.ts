@@ -3,7 +3,7 @@ import { mapUserDocumentToUserType } from '../../mappers/mapUserDocumentToUserTy
 import { mapUserDocumentWithPagination } from '../../mappers/mapUserDocumentWithPagination';
 import { User } from '../../models';
 import { IUser, UserDocument } from '../../models/UserModel';
-import ApiError from '../../utils/ApiError';
+import ApiError from '../../utils/handlers/ApiError';
 
 const userQueryRepository = {
   async getAllUsers(

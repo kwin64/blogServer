@@ -1,6 +1,6 @@
 import { Comment } from '../../models';
 import { CommentDocument } from '../../models/CommentModel';
-import ApiError from '../../utils/ApiError';
+import ApiError from '../../utils/handlers/ApiError';
 
 const commentsRepository = {
   async createdCommemt(

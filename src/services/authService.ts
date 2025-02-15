@@ -1,7 +1,8 @@
 import authRepository from '../repositories/commands/authRepository';
-import ApiError from '../utils/ApiError';
-import bcryptHandler from '../utils/hashHandler';
-import jwtToken from '../utils/jwtToken';
+import userRepository from '../repositories/commands/usersRepository';
+import ApiError from '../utils/handlers/ApiError';
+import bcryptHandler from '../utils/handlers/hashHandler';
+import jwtToken from '../utils/handlers/jwtToken';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -19,6 +20,24 @@ const authService = {
     const token = jwtToken.generateToken(loginValue.user.id.toString());
 
     return token;
+  },
+  async registration(login: string, email: string, password: string) {
+    const hashedPassword = await bcryptHandler.hashedPassword(password, 10);
+
+    const newUser = await userRepository.createUser({
+      login,
+      email,
+      password: hashedPassword,
+    });
+
+    if (!newUser) {
+      throw ApiError.internal('failed created newUser');
+    }
+
+    const token = jwtToken.generateToken(newUser._id.toString());
+
+    // Отправляем письмо с подтверждением
+    // await sendVerificationEmail(email, token);
   },
 };
 

@@ -2,9 +2,8 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
-import ApiError from '../utils/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import bcryptHandler from '../utils/hashHandler';
+import ApiError from '../utils/handlers/ApiError';
 
 const authController = {
   async login(req: Request, res: Response) {
@@ -61,7 +60,11 @@ const authController = {
           'The login or email address is already taken.'
         );
       }
-      bcryptHandler.hashedPassword(password, 10);
+      const registrationResult = await authService.registration(
+        login,
+        email,
+        password
+      );
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });

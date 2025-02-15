@@ -1,7 +1,7 @@
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/commands/blogsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
-import ApiError from '../utils/ApiError';
+import ApiError from '../utils/handlers/ApiError';
 
 const postsService = {
   async getPosts() {

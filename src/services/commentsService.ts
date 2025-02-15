@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import commentsRepository from '../repositories/commands/commentsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
-import ApiError from '../utils/ApiError';
+import ApiError from '../utils/handlers/ApiError';
 import validateInputId from '../utils/validations/validateInputId';
 
 const commentsService = {

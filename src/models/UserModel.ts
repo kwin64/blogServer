@@ -23,6 +23,7 @@ export interface UserDocument extends Document {
   _id: Types.ObjectId;
   login: string;
   email: string;
+  isVerified: boolean;
   password?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -33,6 +34,7 @@ const UsersSchema: Schema<UserDocument> = new Schema(
     login: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    isVerified: { type: Boolean, required: true },
   },
   { timestamps: true }
 );

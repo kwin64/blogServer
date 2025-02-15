@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import ApiError from '../ApiError';
+import ApiError from '../handlers/ApiError';
 
 const validateInputId = (id: string): void => {
   if (!mongoose.isValidObjectId(id)) {

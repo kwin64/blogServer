@@ -1,5 +1,5 @@
 import { User } from '../../models';
-import ApiError from '../../utils/ApiError';
+import ApiError from '../../utils/handlers/ApiError';
 
 const authRepository = {
   async findByLoginOrEmail(loginOrEmail: string) {

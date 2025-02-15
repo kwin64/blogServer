@@ -1,4 +1,4 @@
-import { HTTP_STATUSES } from './constants/httpStatuses';
+import { HTTP_STATUSES } from '../constants/httpStatuses';
 
 export default class ApiError extends Error {
   statusCode: number;
