@@ -5,6 +5,8 @@ import ApiError from '../utils/handlers/ApiError';
 import bcryptHandler from '../utils/handlers/hashHandler';
 import jwtToken from '../utils/handlers/jwtToken';
 import sendEmail from '../utils/handlers/sendEmail';
+import nodemailer from 'nodemailer';
+import emailTemplates from '../utils/handlers/emailTemplates';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -43,14 +45,12 @@ const authService = {
     const token = jwtToken.generateToken(newUser._id.toString());
 
     const result = await sendEmail(
-      'kwin649011@gmail.com',
-      'Привет от Node.js!',
-      `<h2>Добро пожаловать!</h2><p>Это письмо отправлено через Gmail SMTP.</p>`
+      email,
+      'Подтвердите почту',
+      emailTemplates.registrationEmail(token)
     );
 
     return result;
-    // Отправляем письмо с подтверждением
-    // await sendVerificationEmail(email, token);
   },
 };
 

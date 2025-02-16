@@ -4,6 +4,7 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import ApiError from '../utils/handlers/ApiError';
+import jwtToken from '../utils/handlers/jwtToken';
 
 const authController = {
   async login(req: Request, res: Response) {
@@ -71,8 +72,14 @@ const authController = {
       }
     }
   },
-  async verifyEmail () {
-    
-  }
+  async verifyEmail(req: Request, res: Response) {
+    const { token } = req.query;
+
+    if (!token) {
+      throw ApiError.notFound('token not founded');
+    }
+
+    const decoded = jwtToken.verifyToken(token.toString());
+  },
 };
 export default authController;
