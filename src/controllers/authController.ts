@@ -60,7 +60,11 @@ const authController = {
         email,
         password
       );
-      res.status(HTTP_STATUSES.OK).json({ registrationResult });
+
+      if (!registrationResult) {
+        throw ApiError.internal('error server');
+      }
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
@@ -80,8 +84,37 @@ const authController = {
         throw ApiError.notFound('code not founded');
       }
 
-      await authService.verify(code as string);
+      const verifyResult = await authService.verify(code as string);
 
+      if (!verifyResult) {
+        throw ApiError.internal('error verifyResult');
+      }
+
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
+    }
+  },
+  async resendConfirmationEmail(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        throw ApiError.notFound('email not founded');
+      }
+
+      const resendResult = await authService.resendEmail(email as string);
+
+      if (!resendResult) {
+        throw ApiError.internal('error resendResult');
+      }
       res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error: unknown) {
       if (error instanceof ApiError) {

@@ -65,6 +65,26 @@ const authService = {
 
     return verificationStatus;
   },
+  async resendEmail(email: string) {
+    const user = await authRepository.findUser(email);
+
+    if (!user) {
+      throw ApiError.notFound('user not found');
+    }
+
+    if (user.isVerified) {
+      throw ApiError.notFound('email in confirmation');
+    }
+
+    const token = jwtToken.generateToken(user._id.toString());
+
+    const result = sendEmail(
+      email,
+      'Подтвердите почту',
+      emailTemplates.registrationConfirmationEmail(token)
+    );
+    return result;
+  },
 };
 
 export default authService;

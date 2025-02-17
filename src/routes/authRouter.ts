@@ -13,7 +13,10 @@ authRouter.post(
   errorsMiddleware,
   authController.registration
 );
-authRouter.post('/registration-confirmation/', authController.verifyEmail)
-authRouter.post('/registration-email-resending', authController.authMe);
+authRouter.post('/registration-confirmation/', authController.verifyEmail);
+authRouter.post(
+  '/registration-email-resending',
+  authController.resendConfirmationEmail
+);
 
 export default authRouter;

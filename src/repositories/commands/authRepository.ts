@@ -34,7 +34,14 @@ const authRepository = {
       }
       return updateVerificationdStatus;
     } catch (error) {
-      throw ApiError.internal('Database error');
+      throw ApiError.internal('Database error updateVerificationStatus');
+    }
+  },
+  async findUser(email: string) {
+    try {
+      return await User.findOne({ email });
+    } catch (error) {
+      throw ApiError.internal('Database error findUser');
     }
   },
 };
