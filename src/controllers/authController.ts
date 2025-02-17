@@ -73,13 +73,26 @@ const authController = {
     }
   },
   async verifyEmail(req: Request, res: Response) {
-    const { token } = req.query;
+    try {
+      const { code } = req.query;
 
-    if (!token) {
-      throw ApiError.notFound('token not founded');
+      if (!code) {
+        throw ApiError.notFound('code not founded');
+      }
+
+      await authService.verify(code as string);
+
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        console.error('Unexpected error:', error);
+        res
+          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Internal Server Error' });
+      }
     }
-
-    const decoded = jwtToken.verifyToken(token.toString());
   },
 };
 export default authController;

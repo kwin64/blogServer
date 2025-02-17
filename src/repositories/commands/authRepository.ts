@@ -22,6 +22,21 @@ const authRepository = {
       throw ApiError.unauthorized('Invalid login or email');
     }
   },
+  async updateVerificationStatus(userId: string) {
+    try {
+      const updateVerificationdStatus = await User.findByIdAndUpdate(
+        userId,
+        { isVerified: true },
+        { new: true }
+      ).lean();
+      if (!updateVerificationdStatus) {
+        throw ApiError.notFound('User not found');
+      }
+      return updateVerificationdStatus;
+    } catch (error) {
+      throw ApiError.internal('Database error');
+    }
+  },
 };
 
 export default authRepository;

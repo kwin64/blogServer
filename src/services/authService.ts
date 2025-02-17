@@ -5,8 +5,8 @@ import ApiError from '../utils/handlers/ApiError';
 import bcryptHandler from '../utils/handlers/hashHandler';
 import jwtToken from '../utils/handlers/jwtToken';
 import sendEmail from '../utils/handlers/sendEmail';
-import nodemailer from 'nodemailer';
 import emailTemplates from '../utils/handlers/emailTemplates';
+import { JwtPayload } from 'jsonwebtoken';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -44,13 +44,26 @@ const authService = {
 
     const token = jwtToken.generateToken(newUser._id.toString());
 
-    const result = await sendEmail(
+    const result = sendEmail(
       email,
       'Подтвердите почту',
-      emailTemplates.registrationEmail(token)
+      emailTemplates.registrationConfirmationEmail(token)
     );
 
     return result;
+  },
+  async verify(token: string) {
+    const decoded = jwtToken.verifyToken(token.toString()) as JwtPayload;
+
+    if (!decoded) {
+      throw ApiError.badRequest('Invalid or expired token');
+    }
+
+    const verificationStatus = await authRepository.updateVerificationStatus(
+      decoded.id
+    );
+
+    return verificationStatus;
   },
 };
 
