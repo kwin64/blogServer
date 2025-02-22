@@ -62,7 +62,16 @@ const userQueryRepository = {
       $or: [{ login: login }, { email: email }],
     });
 
-    return user;
+    if (!user) return [];
+
+    const matches: { field: string; value: string }[] = [];
+
+    if (user.login === login)
+      matches.push({ field: 'login', value: user.login });
+    if (user.email === email)
+      matches.push({ field: 'email', value: user.email });
+
+    return matches;
   },
 };
 export default userQueryRepository;

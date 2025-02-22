@@ -7,6 +7,12 @@ import jwtToken from '../utils/handlers/jwtToken';
 import sendEmail from '../utils/handlers/sendEmail';
 import emailTemplates from '../utils/handlers/emailTemplates';
 import { JwtPayload } from 'jsonwebtoken';
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+
+interface IUser {
+  login?: string;
+  email?: string;
+}
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -27,9 +33,30 @@ const authService = {
   },
   async registration(login: string, email: string, password: string) {
     const checkUser = await userQueryRepository.findUser(login, email);
-    if (checkUser) {
-      throw ApiError.badRequest('The login or email address is already taken.');
-    }
+
+    // if (checkUser.length > 0) {
+    //   const errorsMessages: { message: string; field: string }[] = [];
+
+    //   if (checkUser.some((user: any) => user.login === login)) {
+    //     errorsMessages.push({
+    //       message: 'Login is already taken',
+    //       field: 'login',
+    //     });
+    //   }
+
+    //   if (checkUser.some((user: any) => user.email === email)) {
+    //     errorsMessages.push({
+    //       message: 'Email is already taken',
+    //       field: 'email',
+    //     });
+    //   }
+
+    //   throw new ApiError(
+    //     HTTP_STATUSES.BAD_REQUEST,
+    //     JSON.stringify({ errorsMessages })
+    //   );
+    // }
+
     const hashedPassword = await bcryptHandler.hashedPassword(password, 10);
 
     const newUser = await userRepository.createUser({

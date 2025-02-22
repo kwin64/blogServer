@@ -4,7 +4,6 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import ApiError from '../utils/handlers/ApiError';
-import jwtToken from '../utils/handlers/jwtToken';
 
 const authController = {
   async login(req: Request, res: Response) {
@@ -81,7 +80,7 @@ const authController = {
       const { code } = req.query;
 
       if (!code) {
-        throw ApiError.notFound('code not founded');
+        throw ApiError.badRequest('Code is required');
       }
 
       const verifyResult = await authService.verify(code as string);
