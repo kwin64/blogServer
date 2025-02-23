@@ -33,6 +33,7 @@ const authService = {
   },
   async registration(login: string, email: string, password: string) {
     const checkUser = await userQueryRepository.findUser(login, email);
+    console.log('checkUser', checkUser);
 
     // if (checkUser.length > 0) {
     //   const errorsMessages: { message: string; field: string }[] = [];

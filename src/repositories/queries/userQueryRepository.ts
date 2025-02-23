@@ -58,18 +58,16 @@ const userQueryRepository = {
     }
   },
   async findUser(login: string, email: string) {
-    const user = await User.findOne({
+    const users = await User.find({
       $or: [{ login: login }, { email: email }],
     });
 
-    if (!user) return [];
+    const matches: { login?: string; email?: string } = {};
 
-    const matches: { field: string; value: string }[] = [];
-
-    if (user.login === login)
-      matches.push({ field: 'login', value: user.login });
-    if (user.email === email)
-      matches.push({ field: 'email', value: user.email });
+    users.forEach((user) => {
+      if (user.login === login) matches.login = user.login;
+      if (user.email === email) matches.email = user.email;
+    });
 
     return matches;
   },
