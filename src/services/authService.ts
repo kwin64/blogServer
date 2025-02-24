@@ -8,6 +8,7 @@ import sendEmail from '../utils/handlers/sendEmail';
 import emailTemplates from '../utils/handlers/emailTemplates';
 import { JwtPayload } from 'jsonwebtoken';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import { CustomError } from '../utils/errors/CustomError ';
 
 interface IUser {
   login?: string;
@@ -33,30 +34,21 @@ const authService = {
   },
   async registration(login: string, email: string, password: string) {
     const checkUser = await userQueryRepository.findUser(login, email);
-    console.log('checkUser', checkUser);
 
-    // if (checkUser.length > 0) {
-    //   const errorsMessages: { message: string; field: string }[] = [];
+    if (checkUser) {
+      const errors = [];
 
-    //   if (checkUser.some((user: any) => user.login === login)) {
-    //     errorsMessages.push({
-    //       message: 'Login is already taken',
-    //       field: 'login',
-    //     });
-    //   }
+      if (checkUser.email) {
+        errors.push({ message: 'Email is already taken', field: 'email' });
+      }
+      if (checkUser.login) {
+        errors.push({ message: 'Login is already taken', field: 'login' });
+      }
 
-    //   if (checkUser.some((user: any) => user.email === email)) {
-    //     errorsMessages.push({
-    //       message: 'Email is already taken',
-    //       field: 'email',
-    //     });
-    //   }
-
-    //   throw new ApiError(
-    //     HTTP_STATUSES.BAD_REQUEST,
-    //     JSON.stringify({ errorsMessages })
-    //   );
-    // }
+      if (errors.length > 0) {
+        throw new CustomError(errors, HTTP_STATUSES.BAD_REQUEST);
+      }
+    }
 
     const hashedPassword = await bcryptHandler.hashedPassword(password, 10);
 
@@ -67,7 +59,7 @@ const authService = {
     });
 
     if (!newUser) {
-      throw ApiError.internal('failed created newUser');
+      throw new CustomError('User creation failed', HTTP_STATUSES.BAD_REQUEST);
     }
 
     const token = jwtToken.generateToken(newUser._id.toString());

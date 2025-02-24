@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
@@ -50,29 +50,13 @@ const authController = {
       }
     }
   },
-  async registration(req: Request, res: Response) {
+  async registration(req: Request, res: Response, next: NextFunction) {
     try {
       const { login, email, password } = req.body;
-
-      const registrationResult = await authService.registration(
-        login,
-        email,
-        password
-      );
-
-      if (!registrationResult) {
-        throw ApiError.internal('error server');
-      }
-      res.status(HTTP_STATUSES.NO_CONTENT).send();
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        console.error('Unexpected error:', error);
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+      const user = await authService.registration(login, email, password);
+      res.status(HTTP_STATUSES.CREATED).json(user);
+    } catch (error) {
+      next(error);
     }
   },
   async verifyEmail(req: Request, res: Response) {

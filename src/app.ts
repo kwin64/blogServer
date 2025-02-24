@@ -9,7 +9,7 @@ import connectToDatabase from './utils/DB/database';
 import usersRouter from './routes/usersRouter';
 import commentsRouter from './routes/commentsRouter';
 import { HTTP_STATUSES } from './utils/constants/httpStatuses';
-import ApiError from './utils/handlers/ApiError';
+import { errorHandler } from './middlewares/errorHandler';
 
 connectToDatabase();
 
@@ -27,3 +27,5 @@ app.use(SETTINGS.PATH.USERS, usersRouter);
 app.use(SETTINGS.PATH.AUTH, authRouter);
 app.use(SETTINGS.PATH.COMMENTS, commentsRouter);
 app.use(SETTINGS.PATH.TESTS, testsRouter);
+
+app.use(errorHandler);
