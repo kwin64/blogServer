@@ -10,11 +10,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 
-interface IUser {
-  login?: string;
-  email?: string;
-}
-
 const authService = {
   async login(loginOrEmail: string, password: string) {
     const loginValue = await authRepository.findByLoginOrEmail(loginOrEmail);
@@ -76,7 +71,10 @@ const authService = {
     const decoded = jwtToken.verifyToken(token.toString()) as JwtPayload;
 
     if (!decoded) {
-      throw ApiError.badRequest('Invalid or expired token');
+      throw new CustomError(
+        'Invalid or expired token',
+        HTTP_STATUSES.BAD_REQUEST
+      );
     }
 
     const verificationStatus = await authRepository.updateVerificationStatus(

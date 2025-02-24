@@ -4,6 +4,7 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import ApiError from '../utils/handlers/ApiError';
+import { CustomError } from '../utils/errors/CustomError ';
 
 const authController = {
   async login(req: Request, res: Response) {
@@ -64,13 +65,16 @@ const authController = {
       const { code } = req.query;
 
       if (!code) {
-        throw ApiError.badRequest('Code is required');
+        throw new CustomError('Code is required', HTTP_STATUSES.BAD_REQUEST);
       }
 
       const verifyResult = await authService.verify(code as string);
 
       if (!verifyResult) {
-        throw ApiError.internal('error verifyResult');
+        throw new CustomError(
+          'error verifyResult',
+          HTTP_STATUSES.INTERNAL_SERVER_ERROR
+        );
       }
 
       res.status(HTTP_STATUSES.NO_CONTENT).send();
