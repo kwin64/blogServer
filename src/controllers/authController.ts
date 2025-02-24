@@ -53,8 +53,8 @@ const authController = {
   async registration(req: Request, res: Response, next: NextFunction) {
     try {
       const { login, email, password } = req.body;
-      const user = await authService.registration(login, email, password);
-      res.status(HTTP_STATUSES.CREATED).json(user);
+      await authService.registration(login, email, password);
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error) {
       next(error);
     }
