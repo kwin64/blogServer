@@ -59,7 +59,7 @@ const authService = {
 
     const token = jwtToken.generateToken(newUser._id.toString());
 
-    sendEmail(
+    await sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(token)
@@ -96,7 +96,7 @@ const authService = {
 
     const token = jwtToken.generateToken(user._id.toString());
 
-    sendEmail(
+    await sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(token)
