@@ -66,7 +66,7 @@ const authController = {
 
       if (!code) {
         throw new CustomError(
-          [{ message: 'Code is required', field: 'email' }],
+          [{ message: 'Code is required', field: code }],
           HTTP_STATUSES.BAD_REQUEST
         );
       }
@@ -99,7 +99,7 @@ const authController = {
 
       await authService.resendEmail(email as string);
 
-      res.status(HTTP_STATUSES.NO_CONTENT).send();
+      res.status(HTTP_STATUSES.NO_CONTENT).send()
     } catch (error) {
       next(error);
     }

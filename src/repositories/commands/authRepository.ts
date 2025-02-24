@@ -1,47 +1,44 @@
 import { User } from '../../models';
-import ApiError from '../../utils/handlers/ApiError';
+import { HTTP_STATUSES } from '../../utils/constants/httpStatuses';
+import { CustomError } from '../../utils/errors/CustomError ';
 
 const authRepository = {
   async findByLoginOrEmail(loginOrEmail: string) {
-    try {
-      const user = await User.findOne({
-        $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
-      });
-      if (!user) {
-        throw ApiError.notFound('user not found');
-      }
-      return {
-        user: {
-          id: user._id,
-          login: user.login,
-          email: user.email,
-          password: user.password!,
-        },
-      };
-    } catch (error) {
-      throw ApiError.unauthorized('Invalid login or email');
+    const user = await User.findOne({
+      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+    });
+
+    if (!user) {
+      throw new CustomError('User not found', HTTP_STATUSES.NOT_FOUND);
     }
+
+    return {
+      user: {
+        id: user._id,
+        login: user.login,
+        email: user.email,
+        password: user.password!,
+      },
+    };
   },
   async updateVerificationStatus(userId: string) {
-    try {
-      const updateVerificationdStatus = await User.findByIdAndUpdate(
-        userId,
-        { isVerified: true },
-        { new: true }
-      ).lean();
-      if (!updateVerificationdStatus) {
-        throw ApiError.notFound('User not found');
-      }
-      return updateVerificationdStatus;
-    } catch (error) {
-      throw ApiError.internal('Database error updateVerificationStatus');
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { isVerified: true },
+      { new: true }
+    ).lean();
+
+    if (!updatedUser) {
+      throw new CustomError('User not found', HTTP_STATUSES.NOT_FOUND);
     }
+
+    return updatedUser;
   },
   async findUser(email: string) {
     try {
       return await User.findOne({ email });
     } catch (error) {
-      throw ApiError.internal('Database error findUser');
+      throw new CustomError('Database error findUser', HTTP_STATUSES.NOT_FOUND);
     }
   },
 };

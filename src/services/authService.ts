@@ -84,12 +84,14 @@ const authService = {
   async resendEmail(email: string) {
     const user = await authRepository.findUser(email);
 
+    console.log('user', user);
+
     if (!user) {
-      throw ApiError.notFound('user not found');
+      throw new CustomError('user not found', HTTP_STATUSES.NOT_FOUND);
     }
 
     if (user.isVerified) {
-      throw ApiError.notFound('email in confirmation');
+      throw new CustomError('user not found', HTTP_STATUSES.NOT_FOUND);
     }
 
     const token = jwtToken.generateToken(user._id.toString());
