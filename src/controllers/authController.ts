@@ -65,7 +65,10 @@ const authController = {
       const { code } = req.query;
 
       if (!code) {
-        throw new CustomError('Code is required', HTTP_STATUSES.BAD_REQUEST);
+        throw new CustomError(
+          [{ message: 'Code is required', field: 'email' }],
+          HTTP_STATUSES.BAD_REQUEST
+        );
       }
 
       const verifyResult = await authService.verify(code as string);
