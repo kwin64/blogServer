@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import blogsRouter from './routes/blogsRouter';
 import postsRouter from './routes/postsRouter';
 import testsRouter from './routes/testsRouter';
@@ -8,6 +8,8 @@ import SETTINGS from './utils/constants/settings';
 import connectToDatabase from './utils/DB/database';
 import usersRouter from './routes/usersRouter';
 import commentsRouter from './routes/commentsRouter';
+import { HTTP_STATUSES } from './utils/constants/httpStatuses';
+import ApiError from './utils/handlers/ApiError';
 
 connectToDatabase();
 
@@ -17,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.status(200).send('server start');
+  res.status(HTTP_STATUSES.OK).send('server start');
 });
 app.use(SETTINGS.PATH.BLOGS, blogsRouter);
 app.use(SETTINGS.PATH.POSTS, postsRouter);
