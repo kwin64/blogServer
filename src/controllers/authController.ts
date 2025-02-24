@@ -60,7 +60,7 @@ const authController = {
       next(error);
     }
   },
-  async verifyEmail(req: Request, res: Response) {
+  async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
       const { code } = req.query;
 
@@ -78,40 +78,27 @@ const authController = {
       }
 
       res.status(HTTP_STATUSES.NO_CONTENT).send();
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        console.error('Unexpected error:', error);
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+    } catch (error) {
+      next(error);
     }
   },
-  async resendConfirmationEmail(req: Request, res: Response) {
+  async resendConfirmationEmail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { email } = req.body;
 
       if (!email) {
-        throw ApiError.notFound('email not founded');
+        throw new CustomError('email not founded', HTTP_STATUSES.NOT_FOUND);
       }
 
-      const resendResult = await authService.resendEmail(email as string);
+      await authService.resendEmail(email as string);
 
-      if (!resendResult) {
-        throw ApiError.internal('error resendResult');
-      }
       res.status(HTTP_STATUSES.NO_CONTENT).send();
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        console.error('Unexpected error:', error);
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+    } catch (error) {
+      next(error);
     }
   },
 };

@@ -59,13 +59,11 @@ const authService = {
 
     const token = jwtToken.generateToken(newUser._id.toString());
 
-    const result = sendEmail(
+    sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(token)
     );
-
-    return result;
   },
   async verify(token: string) {
     const decoded = jwtToken.verifyToken(token.toString()) as JwtPayload;
@@ -96,12 +94,11 @@ const authService = {
 
     const token = jwtToken.generateToken(user._id.toString());
 
-    const result = sendEmail(
+    sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(token)
     );
-    return result;
   },
 };
 
