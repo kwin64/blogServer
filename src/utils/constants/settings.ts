@@ -7,7 +7,10 @@ const SETTINGS = {
   AUTH_PASSWORD: process.env.AUTH_PASSWORD,
   MONGO_URI: process.env.MONGO_URI,
   MONGO_DB_NAME: process.env.DB_NAME,
-  JWT_SECRET_KEY: process.env.JWT_SECRET || 'jwt_default',
+  JWT_ACCESS_KEY: process.env.JWT_ACCESS_KEY || 'jwt_access_key',
+  JWT_REFRESH_KEY: process.env.JWT_REFRESH_KEY || 'jwt_refresh_key',
+  ACCESS_EXPIRES_IN: process.env.ACCESS_EXPIRES_IN || 900,
+  REFRESH_EXPIRES_IN: process.env.REFRESH_EXPIRES_IN || 1800,
   TRANSPORTER_GMAIL_USER: process.env.TRANSPORTER_GMAIL_USER,
   TRANSPORTER_GENERATE_PASSWORD_APP:
     process.env.TRANSPORTER_GENERATE_PASSWORD_APP,

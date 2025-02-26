@@ -7,22 +7,15 @@ import ApiError from '../utils/handlers/ApiError';
 import { CustomError } from '../utils/errors/CustomError ';
 
 const authController = {
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { loginOrEmail, password } = req.body;
 
       const token = await authService.login(loginOrEmail, password);
 
       res.status(HTTP_STATUSES.OK).json({ accessToken: token });
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        console.error('Unexpected error:', error);
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+    } catch (error) {
+      next(error);
     }
   },
   async authMe(req: AuthRequest, res: Response) {
@@ -99,7 +92,38 @@ const authController = {
 
       await authService.resendEmail(email as string);
 
-      res.status(HTTP_STATUSES.NO_CONTENT).send()
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
+    } catch (error) {
+      next(error);
+    }
+  },
+  async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+    } catch (error) {
+      next(error);
+    }
+  },
+  async refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
+      }
+
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET!) as {
+        userId: string;
+      };
+      const { accessToken, refreshToken: newRefreshToken } = generateTokens(
+        decoded.userId
+      );
+
+      res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      });
+
+      res.json({ accessToken });
     } catch (error) {
       next(error);
     }

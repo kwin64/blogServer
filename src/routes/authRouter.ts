@@ -18,5 +18,7 @@ authRouter.post(
   '/registration-email-resending',
   authController.resendConfirmationEmail
 );
+authRouter.post('/logout', authController.logout);
+authRouter.post('/refresh-token', authController.refreshToken);
 
 export default authRouter;

@@ -10,6 +10,7 @@ import usersRouter from './routes/usersRouter';
 import commentsRouter from './routes/commentsRouter';
 import { HTTP_STATUSES } from './utils/constants/httpStatuses';
 import { errorHandler } from './middlewares/errorHandler';
+import cookieParser from 'cookie-parser';
 
 connectToDatabase();
 
@@ -17,6 +18,7 @@ export const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.status(HTTP_STATUSES.OK).send('server start');

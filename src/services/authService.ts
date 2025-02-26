@@ -9,23 +9,38 @@ import emailTemplates from '../utils/handlers/emailTemplates';
 import { JwtPayload } from 'jsonwebtoken';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
+import SETTINGS from '../utils/constants/settings';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
-    const loginValue = await authRepository.findByLoginOrEmail(loginOrEmail);
+    const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
-      loginValue.user.password
+      user.password
     );
 
     if (!isPasswordValid) {
       throw ApiError.unauthorized('Invalid password');
     }
 
-    const token = jwtToken.generateToken(loginValue.user.id.toString());
+    const accessToken = jwtToken.generateToken(
+      user.id.toString(),
+      user.login,
+      SETTINGS.JWT_ACCESS_KEY,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
+    );
 
-    return token;
+    const refreshToken = jwtToken.generateToken(
+      user.id.toString(),
+      user.login,
+      SETTINGS.JWT_REFRESH_KEY,
+      Number(SETTINGS.REFRESH_EXPIRES_IN)
+    );
+
+    // await authRepository.saveRefreshToken().
+
+    return { accessToken, refreshToken };
   },
   async registration(login: string, email: string, password: string) {
     const checkUser = await userQueryRepository.findUser(login, email);
