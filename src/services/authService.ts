@@ -72,12 +72,17 @@ const authService = {
       throw new CustomError('User creation failed', HTTP_STATUSES.BAD_REQUEST);
     }
 
-    const token = jwtToken.generateToken(newUser._id.toString());
+    const accessToken = jwtToken.generateToken(
+      newUser._id.toString(),
+      newUser.login,
+      SETTINGS.JWT_ACCESS_KEY,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
+    );
 
     await sendEmail(
       email,
       'Подтвердите почту',
-      emailTemplates.registrationConfirmationEmail(token)
+      emailTemplates.registrationConfirmationEmail(accessToken)
     );
   },
   async verify(token: string) {
@@ -109,12 +114,17 @@ const authService = {
       throw new CustomError('user not found', HTTP_STATUSES.NOT_FOUND);
     }
 
-    const token = jwtToken.generateToken(user._id.toString());
+    const accessToken = jwtToken.generateToken(
+      user._id.toString(),
+      user.login,
+      SETTINGS.JWT_ACCESS_KEY,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
+    );
 
     await sendEmail(
       email,
       'Подтвердите почту',
-      emailTemplates.registrationConfirmationEmail(token)
+      emailTemplates.registrationConfirmationEmail(accessToken)
     );
   },
 };
