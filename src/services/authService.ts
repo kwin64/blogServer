@@ -90,7 +90,12 @@ const authService = {
 
     if (!decoded) {
       throw new CustomError(
-        'Invalid or expired token',
+        [
+          {
+            message: `token ${token} not decoded, invalid or expired token`,
+            field: 'token',
+          },
+        ],
         HTTP_STATUSES.BAD_REQUEST
       );
     }
@@ -104,14 +109,15 @@ const authService = {
   async resendEmail(email: string) {
     const user = await authRepository.findUser(email);
 
-    console.log('user', user);
-
     if (!user) {
-      throw new CustomError('user not found', HTTP_STATUSES.NOT_FOUND);
+      throw new CustomError(
+        [{ message: `user ${email} not found`, field: 'email' }],
+        HTTP_STATUSES.NOT_FOUND
+      );
     }
 
     if (user.isVerified) {
-      throw new CustomError('user not found', HTTP_STATUSES.NOT_FOUND);
+      throw new CustomError('user not verified', HTTP_STATUSES.NOT_FOUND);
     }
 
     const accessToken = jwtToken.generateToken(
