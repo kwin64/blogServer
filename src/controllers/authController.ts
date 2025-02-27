@@ -105,25 +105,25 @@ const authController = {
   },
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) {
-        throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
-      }
+      // const refreshToken = req.cookies.refreshToken;
+      // if (!refreshToken) {
+      //   throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
+      // }
 
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET!) as {
-        userId: string;
-      };
-      const { accessToken, refreshToken: newRefreshToken } = generateTokens(
-        decoded.userId
-      );
+      // const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET!) as {
+      //   userId: string;
+      // };
+      // const { accessToken, refreshToken: newRefreshToken } = generateTokens(
+      //   decoded.userId
+      // );
 
-      res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-      });
+      // res.cookie('refreshToken', newRefreshToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'strict',
+      // });
 
-      res.json({ accessToken });
+      // res.json({ accessToken });
     } catch (error) {
       next(error);
     }

@@ -112,12 +112,12 @@ const authService = {
     if (!user) {
       throw new CustomError(
         [{ message: `user ${email} not found`, field: 'email' }],
-        HTTP_STATUSES.NOT_FOUND
+        HTTP_STATUSES.BAD_REQUEST
       );
     }
 
     if (user.isVerified) {
-      throw new CustomError('user not verified', HTTP_STATUSES.NOT_FOUND);
+      throw new CustomError('user verified', HTTP_STATUSES.NOT_FOUND);
     }
 
     const accessToken = jwtToken.generateToken(
