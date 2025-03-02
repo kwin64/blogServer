@@ -127,8 +127,6 @@ const authService = {
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
-    console.log('accessToken',accessToken);
-    
     sendEmail(
       email,
       'Подтвердите почту',

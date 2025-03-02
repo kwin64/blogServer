@@ -11,8 +11,9 @@ const SETTINGS = {
   JWT_REFRESH_KEY: process.env.JWT_REFRESH_KEY || 'jwt_refresh_key',
   ACCESS_EXPIRES_IN: process.env.ACCESS_EXPIRES_IN || 900,
   REFRESH_EXPIRES_IN: process.env.REFRESH_EXPIRES_IN || 1800,
-  EMAIL: process.env.EMAIL,
-  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  EMAIL: process.env.TRANSPORTER_GMAIL_USER,
+  EMAIL_PASSWORD: process.env.TRANSPORTER_GENERATE_PASSWORD_APP,
+  HTTP_PROD: process.env.HTTP_PROD,
   PATH: {
     BLOGS: '/blogs',
     POSTS: '/posts',

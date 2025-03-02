@@ -5,6 +5,8 @@ import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import ApiError from '../utils/handlers/ApiError';
 import { CustomError } from '../utils/errors/CustomError ';
+import emailTemplates from '../utils/handlers/emailTemplates';
+import SETTINGS from '../utils/constants/settings';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -55,7 +57,7 @@ const authController = {
   },
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code } = req.query;
+      const { code } = req.body;
 
       if (!code) {
         throw new CustomError(
@@ -74,6 +76,22 @@ const authController = {
       }
 
       res.status(HTTP_STATUSES.NO_CONTENT).send();
+    } catch (error) {
+      next(error);
+    }
+  },
+  confirmEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { code } = req.query;
+
+      if (!code) {
+        throw new CustomError(
+          [{ message: 'Code is required', field: code }],
+          HTTP_STATUSES.BAD_REQUEST
+        );
+      }
+
+      res.send(emailTemplates.confirmEmailTemplate(code.toString()));
     } catch (error) {
       next(error);
     }
@@ -109,20 +127,17 @@ const authController = {
       // if (!refreshToken) {
       //   throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
       // }
-
       // const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET!) as {
       //   userId: string;
       // };
       // const { accessToken, refreshToken: newRefreshToken } = generateTokens(
       //   decoded.userId
       // );
-
       // res.cookie('refreshToken', newRefreshToken, {
       //   httpOnly: true,
       //   secure: true,
       //   sameSite: 'strict',
       // });
-
       // res.json({ accessToken });
     } catch (error) {
       next(error);
