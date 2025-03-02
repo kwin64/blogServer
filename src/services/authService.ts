@@ -79,7 +79,7 @@ const authService = {
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
-    await sendEmail(
+    sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(accessToken)
@@ -127,7 +127,9 @@ const authService = {
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
-    await sendEmail(
+    console.log('accessToken',accessToken);
+    
+    sendEmail(
       email,
       'Подтвердите почту',
       emailTemplates.registrationConfirmationEmail(accessToken)
