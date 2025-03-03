@@ -3,10 +3,8 @@ import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import ApiError from '../utils/handlers/ApiError';
 import { CustomError } from '../utils/errors/CustomError ';
-import emailTemplates from '../utils/handlers/emailTemplates';
-import SETTINGS from '../utils/constants/settings';
+import ApiError from '../utils/handlers/ApiError';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {

@@ -43,15 +43,15 @@ const authService = {
     return { accessToken, refreshToken };
   },
   async registration(login: string, email: string, password: string) {
-    const checkUser = await userQueryRepository.findUser(login, email);
+    const user = await userQueryRepository.findUser(login, email);
 
-    if (checkUser) {
+    if (user) {
       const errors = [];
 
-      if (checkUser.email) {
+      if (user.email) {
         errors.push({ message: 'Email is already taken', field: 'email' });
       }
-      if (checkUser.login) {
+      if (user.login) {
         errors.push({ message: 'Login is already taken', field: 'login' });
       }
 
