@@ -13,12 +13,11 @@ authRouter.post(
   errorsMiddleware,
   authController.registration
 );
-authRouter.post('/registration-confirmation/', authController.verifyEmail);
+authRouter.post('/registration-confirmation/', authController.confirmationEmail);
 authRouter.post(
   '/registration-email-resending',
   authController.resendConfirmationEmail
 );
-authRouter.get('/confirm-email', authController.confirmEmail);
 authRouter.post('/logout', authController.logout);
 authRouter.post('/refresh-token', authController.refreshToken);
 

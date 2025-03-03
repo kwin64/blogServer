@@ -55,18 +55,18 @@ const authController = {
       next(error);
     }
   },
-  async verifyEmail(req: Request, res: Response, next: NextFunction) {
+  async confirmationEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code } = req.body;
+      const { code } = req.query;
 
       if (!code) {
         throw new CustomError(
-          [{ message: 'Code is required', field: code }],
+          [{ message: 'Code is required', field: 'code' }],
           HTTP_STATUSES.BAD_REQUEST
         );
       }
 
-      const verifyResult = await authService.verify(code as string);
+      const verifyResult = await authService.confirmation(code as string);
 
       if (!verifyResult) {
         throw new CustomError(
@@ -76,22 +76,6 @@ const authController = {
       }
 
       res.status(HTTP_STATUSES.NO_CONTENT).send();
-    } catch (error) {
-      next(error);
-    }
-  },
-  confirmEmail(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { code } = req.query;
-
-      if (!code) {
-        throw new CustomError(
-          [{ message: 'Code is required', field: code }],
-          HTTP_STATUSES.BAD_REQUEST
-        );
-      }
-
-      res.send(emailTemplates.confirmEmailTemplate(code.toString()));
     } catch (error) {
       next(error);
     }

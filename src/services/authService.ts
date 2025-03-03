@@ -85,7 +85,7 @@ const authService = {
       emailTemplates.registrationConfirmationEmail(accessToken)
     );
   },
-  async verify(token: string) {
+  async confirmation(token: string) {
     const decoded = jwtToken.verifyToken(token.toString()) as JwtPayload;
 
     if (!decoded) {
@@ -117,7 +117,15 @@ const authService = {
     }
 
     if (user.isVerified) {
-      throw new CustomError('user verified', HTTP_STATUSES.NOT_FOUND);
+      throw new CustomError(
+        [
+          {
+            message: `user verified`,
+            field: 'email',
+          },
+        ],
+        HTTP_STATUSES.BAD_REQUEST
+      );
     }
 
     const accessToken = jwtToken.generateToken(
