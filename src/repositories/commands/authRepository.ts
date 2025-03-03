@@ -18,6 +18,7 @@ const authRepository = {
         login: user.login,
         email: user.email,
         password: user.password!,
+        isVerified: user.isVerified
       },
     };
   },

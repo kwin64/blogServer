@@ -15,6 +15,18 @@ const authService = {
   async login(loginOrEmail: string, password: string) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
+    if (user.isVerified) {
+      throw new CustomError(
+        [
+          {
+            message: `user verified`,
+            field: 'email',
+          },
+        ],
+        HTTP_STATUSES.BAD_REQUEST
+      );
+    }
+
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
       user.password
