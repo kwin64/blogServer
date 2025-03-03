@@ -13,7 +13,7 @@ const authController = {
 
       const token = await authService.login(loginOrEmail, password);
 
-      res.status(HTTP_STATUSES.OK).json({ accessToken: token });
+      res.status(HTTP_STATUSES.OK).json({ token });
     } catch (error) {
       next(error);
     }
