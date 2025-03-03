@@ -11,9 +11,9 @@ const authController = {
     try {
       const { loginOrEmail, password } = req.body;
 
-      const token = await authService.login(loginOrEmail, password);
+      const accessToken = await authService.login(loginOrEmail, password);
 
-      res.status(HTTP_STATUSES.OK).json({ token });
+      res.status(HTTP_STATUSES.OK).json({ accessToken });
     } catch (error) {
       next(error);
     }
@@ -55,7 +55,7 @@ const authController = {
   },
   async confirmationEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code } = req.query;
+      const { code } = req.body;
 
       if (!code) {
         throw new CustomError(

@@ -52,7 +52,7 @@ const authService = {
 
     // await authRepository.saveRefreshToken().
 
-    return { accessToken };
+    return accessToken;
   },
   async registration(login: string, email: string, password: string) {
     const user = await userQueryRepository.findUser(login, email);
