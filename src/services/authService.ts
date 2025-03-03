@@ -85,15 +85,15 @@ const authService = {
       emailTemplates.registrationConfirmationEmail(accessToken)
     );
   },
-  async confirmation(token: string) {
-    const decoded = jwtToken.verifyToken(token.toString()) as JwtPayload;
+  async confirmation(code: string) {
+    const decoded = jwtToken.verifyToken(code.toString()) as JwtPayload;
 
     if (!decoded) {
       throw new CustomError(
         [
           {
-            message: `token ${token} not decoded, invalid or expired token`,
-            field: 'token',
+            message: `code ${code} not decoded, invalid or expired code`,
+            field: 'code',
           },
         ],
         HTTP_STATUSES.BAD_REQUEST
