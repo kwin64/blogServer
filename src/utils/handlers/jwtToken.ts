@@ -1,4 +1,5 @@
-import jwt from 'jsonwebtoken';
+import jwt, { VerifyErrors } from 'jsonwebtoken';
+import ApiError from './ApiError';
 
 const jwtToken = {
   generateToken(id: string, login: string, secretKey: string, expires: number) {
@@ -9,10 +10,17 @@ const jwtToken = {
 
   verifyToken(token: string, secretKey: string) {
     try {
-      const decoded = jwt.verify(token, secretKey);
-      return decoded;
-    } catch (err) {
-      return null;
+      return jwt.verify(token, secretKey);
+    } catch (error) {
+      const jwtError = error as VerifyErrors;
+
+      if (jwtError.name === 'TokenExpiredError') {
+        throw ApiError.unauthorized(jwtError.message);
+      } else if (jwtError.name === 'JsonWebTokenError') {
+        throw ApiError.unauthorized(jwtError.message);
+      } else {
+        throw ApiError.unauthorized(jwtError.message);
+      }
     }
   },
 };

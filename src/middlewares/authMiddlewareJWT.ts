@@ -29,16 +29,6 @@ const authMiddlewareJWT = async (
       SETTINGS.JWT_ACCESS_KEY
     ) as JwtPayload;
 
-    if (!verifiedToken) {
-      throw ApiError.unauthorized('Invalid token');
-    }
-
-    const now = Math.floor(Date.now() / 1000);
-
-    if (verifiedToken.exp && verifiedToken.exp < now) {
-      throw ApiError.unauthorized('Token expired');
-    }
-
     req.user = {
       userId: verifiedToken.id,
     };
