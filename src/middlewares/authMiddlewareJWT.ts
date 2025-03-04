@@ -3,6 +3,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import jwtToken from '../utils/handlers/jwtToken';
+import SETTINGS from '../utils/constants/settings';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -23,7 +24,10 @@ const authMiddlewareJWT = async (
 
     const token = authHeader.split(' ')[1];
 
-    const verifiedToken = jwtToken.verifyToken(token) as JwtPayload;
+    const verifiedToken = jwtToken.verifyToken(
+      token,
+      SETTINGS.JWT_ACCESS_KEY
+    ) as JwtPayload;
 
     if (!verifiedToken) {
       throw ApiError.unauthorized('Invalid token');

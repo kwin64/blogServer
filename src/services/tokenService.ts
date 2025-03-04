@@ -12,6 +12,18 @@ const tokenService = {
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
+    if (!decoded) {
+      throw new CustomError(
+        [
+          {
+            message: `refreshToken ${refreshToken} not decoded, invalid or expired code`,
+            field: 'refreshToken',
+          },
+        ],
+        HTTP_STATUSES.UNAUTHORIZED
+      );
+    }
+
     const accessToken = jwtToken.generateToken(
       decoded.id,
       decoded.login,
