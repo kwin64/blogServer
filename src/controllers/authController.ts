@@ -116,6 +116,7 @@ const authController = {
       }
 
       await authService.logout(refreshToken);
+      res.clearCookie('refreshToken');
 
       res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error) {

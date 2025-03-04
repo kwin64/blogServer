@@ -1,16 +1,16 @@
+import { JwtPayload } from 'jsonwebtoken';
 import authRepository from '../repositories/commands/authRepository';
+import tokenRepository from '../repositories/commands/tokenRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import SETTINGS from '../utils/constants/settings';
+import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
+import emailTemplates from '../utils/handlers/emailTemplates';
 import bcryptHandler from '../utils/handlers/hashHandler';
 import jwtToken from '../utils/handlers/jwtToken';
 import sendEmail from '../utils/handlers/sendEmail';
-import emailTemplates from '../utils/handlers/emailTemplates';
-import { JwtPayload } from 'jsonwebtoken';
-import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import { CustomError } from '../utils/errors/CustomError ';
-import SETTINGS from '../utils/constants/settings';
-import tokenRepository from '../repositories/commands/tokenRepository';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -195,8 +195,8 @@ const authService = {
   async logout(refreshToken: string) {
     const decoded = jwtToken.verifyToken(
       refreshToken.toString(),
-      SETTINGS.JWT_ACCESS_KEY
-    ) as JwtPayload;
+      SETTINGS.JWT_REFRESH_KEY
+    );
 
     if (!decoded) {
       throw new CustomError(
@@ -209,6 +209,7 @@ const authService = {
         HTTP_STATUSES.BAD_REQUEST
       );
     }
+
     await tokenRepository.deleteToken(refreshToken);
   },
 };

@@ -1,18 +1,18 @@
 import { JwtPayload } from 'jsonwebtoken';
-import SETTINGS from '../utils/constants/settings';
-import jwtToken from '../utils/handlers/jwtToken';
 import tokenRepository from '../repositories/commands/tokenRepository';
-import { CustomError } from '../utils/errors/CustomError ';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import SETTINGS from '../utils/constants/settings';
+import { CustomError } from '../utils/errors/CustomError ';
+import jwtToken from '../utils/handlers/jwtToken';
 
 const tokenService = {
   async refresh(refreshToken: string) {
-    const decoded = jwtToken.verifyToken(
+    const decodedRefreshToken = jwtToken.verifyToken(
       refreshToken.toString(),
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
-    if (!decoded) {
+    if (!decodedRefreshToken) {
       throw new CustomError(
         [
           {
@@ -25,15 +25,15 @@ const tokenService = {
     }
 
     const accessToken = jwtToken.generateToken(
-      decoded.id,
-      decoded.login,
+      decodedRefreshToken.id,
+      decodedRefreshToken.login,
       SETTINGS.JWT_ACCESS_KEY,
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
     const newRefreshToken = jwtToken.generateToken(
-      decoded.id,
-      decoded.login,
+      decodedRefreshToken.id,
+      decodedRefreshToken.login,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
@@ -41,9 +41,9 @@ const tokenService = {
     await tokenRepository.deleteToken(refreshToken);
 
     const savedRT = await tokenRepository.saveRTtoWhiteList(
-      decoded.id,
+      decodedRefreshToken.id,
       newRefreshToken,
-      +SETTINGS.ACCESS_EXPIRES_IN
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
     //надо ли это?
