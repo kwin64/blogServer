@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import SETTINGS from '../constants/settings';
 
 const jwtToken = {
   generateToken(id: string, login: string, secretKey: string, expires: number) {
@@ -8,9 +7,9 @@ const jwtToken = {
     });
   },
 
-  verifyToken(token: string) {
+  verifyToken(token: string, secretKey: string) {
     try {
-      const decoded = jwt.verify(token, SETTINGS.JWT_ACCESS_KEY);
+      const decoded = jwt.verify(token, secretKey);
       return decoded;
     } catch (err) {
       return null;

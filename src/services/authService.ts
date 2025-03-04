@@ -10,6 +10,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import SETTINGS from '../utils/constants/settings';
+import tokenRepository from '../repositories/commands/tokenRepository';
 
 const authService = {
   async login(loginOrEmail: string, password: string) {
@@ -38,9 +39,42 @@ const authService = {
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    // await authRepository.saveRefreshToken().
+    //надо ли это?
+    // const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
+    //   user.id.toString()
+    // );
 
-    return accessToken;
+    // if (!checkTokenInWhiteList) {
+    //   throw new CustomError(
+    //     [
+    //       {
+    //         message: `refreshToken to whiteList`,
+    //         field: 'refreshToken',
+    //       },
+    //     ],
+    //     HTTP_STATUSES.BAD_REQUEST
+    //   );
+    // }
+
+    const savedRT = await tokenRepository.saveRTtoWhiteList(
+      user.id.toString(),
+      refreshToken,
+      +SETTINGS.ACCESS_EXPIRES_IN
+    );
+
+    if (!savedRT) {
+      throw new CustomError(
+        [
+          {
+            message: `Error saving refresh token to whitelist.`,
+            field: 'refreshToken',
+          },
+        ],
+        HTTP_STATUSES.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return { accessToken, refreshToken: savedRT.refreshToken };
   },
   async registration(login: string, email: string, password: string) {
     const user = await userQueryRepository.findUser(login, email);
@@ -86,7 +120,10 @@ const authService = {
     );
   },
   async confirmation(code: string) {
-    const decoded = jwtToken.verifyToken(code.toString()) as JwtPayload;
+    const decoded = jwtToken.verifyToken(
+      code.toString(),
+      SETTINGS.JWT_ACCESS_KEY
+    ) as JwtPayload;
 
     if (!decoded) {
       throw new CustomError(

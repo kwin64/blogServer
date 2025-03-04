@@ -5,15 +5,25 @@ import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
+import tokenService from '../services/tokenService';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { loginOrEmail, password } = req.body;
 
-      const accessToken = await authService.login(loginOrEmail, password);
+      const { accessToken, refreshToken } = await authService.login(
+        loginOrEmail,
+        password
+      );
 
-      res.status(HTTP_STATUSES.OK).json({ accessToken });
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 20 * 1000,
+      });
+
+      res.json({ accessToken });
     } catch (error) {
       next(error);
     }
@@ -105,22 +115,23 @@ const authController = {
   },
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      // const refreshToken = req.cookies.refreshToken;
-      // if (!refreshToken) {
-      //   throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
-      // }
-      // const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET!) as {
-      //   userId: string;
-      // };
-      // const { accessToken, refreshToken: newRefreshToken } = generateTokens(
-      //   decoded.userId
-      // );
-      // res.cookie('refreshToken', newRefreshToken, {
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: 'strict',
-      // });
-      // res.json({ accessToken });
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) {
+        throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
+      }
+
+      const { accessToken, newRefreshToken } = await tokenService.refresh(
+        refreshToken
+      );
+
+      res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 20 * 1000,
+      });
+
+      res.json({ accessToken });
     } catch (error) {
       next(error);
     }

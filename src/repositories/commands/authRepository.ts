@@ -1,4 +1,4 @@
-import { User } from '../../models';
+import { User, WhiteListToken } from '../../models';
 import { HTTP_STATUSES } from '../../utils/constants/httpStatuses';
 import { CustomError } from '../../utils/errors/CustomError ';
 
@@ -18,7 +18,7 @@ const authRepository = {
         login: user.login,
         email: user.email,
         password: user.password!,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
       },
     };
   },
