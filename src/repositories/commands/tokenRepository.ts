@@ -20,7 +20,9 @@ const tokenRepository = {
   async deleteToken(oldRefreshToken: string) {
     return await WhiteListToken.deleteOne({ refreshToken: oldRefreshToken });
   },
-  
+  async deleteTokenByUserId(userId: string) {
+    return await WhiteListToken.deleteMany({ userId });
+  },
 };
 
 export default tokenRepository;

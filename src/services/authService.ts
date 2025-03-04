@@ -39,27 +39,18 @@ const authService = {
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    //надо ли это?
-    // const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
-    //   user.id.toString()
-    // );
+    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
+      user.id.toString()
+    );
 
-    // if (!checkTokenInWhiteList) {
-    //   throw new CustomError(
-    //     [
-    //       {
-    //         message: `refreshToken to whiteList`,
-    //         field: 'refreshToken',
-    //       },
-    //     ],
-    //     HTTP_STATUSES.BAD_REQUEST
-    //   );
-    // }
+    if (checkTokenInWhiteList) {
+      await tokenRepository.deleteTokenByUserId(user.id.toString());
+    }
 
     const savedRT = await tokenRepository.saveRTtoWhiteList(
       user.id.toString(),
       refreshToken,
-      +SETTINGS.ACCESS_EXPIRES_IN
+      Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
     if (!savedRT) {

@@ -25,43 +25,34 @@ const tokenService = {
     }
 
     const accessToken = jwtToken.generateToken(
-      decodedRefreshToken.id,
+      decodedRefreshToken.id.toString(),
       decodedRefreshToken.login,
       SETTINGS.JWT_ACCESS_KEY,
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
     const newRefreshToken = jwtToken.generateToken(
-      decodedRefreshToken.id,
+      decodedRefreshToken.id.toString(),
       decodedRefreshToken.login,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    await tokenRepository.deleteToken(refreshToken);
+    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
+      decodedRefreshToken.toString()
+    );
+
+    if (checkTokenInWhiteList) {
+      await tokenRepository.deleteTokenByUserId(
+        decodedRefreshToken.id.toString()
+      );
+    }
 
     const savedRT = await tokenRepository.saveRTtoWhiteList(
-      decodedRefreshToken.id,
+      decodedRefreshToken.id.toString(),
       newRefreshToken,
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
-
-    //надо ли это?
-    // const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
-    //   user.id.toString()
-    // );
-
-    // if (!checkTokenInWhiteList) {
-    //   throw new CustomError(
-    //     [
-    //       {
-    //         message: `refreshToken to whiteList`,
-    //         field: 'refreshToken',
-    //       },
-    //     ],
-    //     HTTP_STATUSES.BAD_REQUEST
-    //   );
-    // }
 
     if (!savedRT) {
       throw new CustomError(
