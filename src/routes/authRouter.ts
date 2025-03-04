@@ -13,7 +13,10 @@ authRouter.post(
   errorsMiddleware,
   authController.registration
 );
-authRouter.post('/registration-confirmation/', authController.confirmationEmail);
+authRouter.post(
+  '/registration-confirmation/',
+  authController.confirmationEmail
+);
 authRouter.post(
   '/registration-email-resending',
   authController.resendConfirmationEmail
