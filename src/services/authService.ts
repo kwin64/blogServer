@@ -206,7 +206,7 @@ const authService = {
             field: 'refreshToken',
           },
         ],
-        HTTP_STATUSES.BAD_REQUEST
+        HTTP_STATUSES.UNAUTHORIZED
       );
     }
 
