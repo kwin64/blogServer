@@ -13,7 +13,6 @@ const SETTINGS = {
   REFRESH_EXPIRES_IN: process.env.REFRESH_EXPIRES_IN || 1800,
   EMAIL: process.env.TRANSPORTER_GMAIL_USER,
   EMAIL_PASSWORD: process.env.TRANSPORTER_GENERATE_PASSWORD_APP,
-  HTTP_PROD: process.env.HTTP_PROD,
   PATH: {
     BLOGS: '/blogs',
     POSTS: '/posts',

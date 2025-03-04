@@ -15,18 +15,6 @@ const authService = {
   async login(loginOrEmail: string, password: string) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    if (user.isVerified) {
-      throw new CustomError(
-        [
-          {
-            message: `user verified`,
-            field: 'email',
-          },
-        ],
-        HTTP_STATUSES.BAD_REQUEST
-      );
-    }
-
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
       user.password
@@ -105,6 +93,20 @@ const authService = {
         [
           {
             message: `code ${code} not decoded, invalid or expired code`,
+            field: 'code',
+          },
+        ],
+        HTTP_STATUSES.BAD_REQUEST
+      );
+    }
+
+    const { user } = await authRepository.findByLoginOrEmail(decoded.login);
+
+    if (user.isVerified) {
+      throw new CustomError(
+        [
+          {
+            message: `user verified`,
             field: 'code',
           },
         ],
