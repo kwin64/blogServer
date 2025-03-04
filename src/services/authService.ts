@@ -193,6 +193,22 @@ const authService = {
     );
   },
   async logout(refreshToken: string) {
+    const decoded = jwtToken.verifyToken(
+      refreshToken.toString(),
+      SETTINGS.JWT_ACCESS_KEY
+    ) as JwtPayload;
+
+    if (!decoded) {
+      throw new CustomError(
+        [
+          {
+            message: `refreshToken ${refreshToken} not decoded, invalid or expired code`,
+            field: 'refreshToken',
+          },
+        ],
+        HTTP_STATUSES.BAD_REQUEST
+      );
+    }
     await tokenRepository.deleteToken(refreshToken);
   },
 };
