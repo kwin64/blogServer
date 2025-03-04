@@ -109,6 +109,15 @@ const authController = {
   },
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) {
+        throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
+      }
+
+      await authService.logout(refreshToken);
+
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error) {
       next(error);
     }

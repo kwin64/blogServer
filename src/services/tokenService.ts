@@ -26,7 +26,7 @@ const tokenService = {
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    await tokenRepository.deleteOldToken(refreshToken);
+    await tokenRepository.deleteToken(refreshToken);
 
     const savedRT = await tokenRepository.saveRTtoWhiteList(
       decoded.id,

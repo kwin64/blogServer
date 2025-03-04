@@ -17,9 +17,10 @@ const tokenRepository = {
   async findTokenByUserId(userId: string) {
     return await WhiteListToken.findOne({ userId });
   },
-  async deleteOldToken(oldRefreshToken: string) {
+  async deleteToken(oldRefreshToken: string) {
     return await WhiteListToken.deleteOne({ refreshToken: oldRefreshToken });
   },
+  
 };
 
 export default tokenRepository;

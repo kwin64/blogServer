@@ -192,6 +192,9 @@ const authService = {
       emailTemplates.registrationConfirmationEmail(accessToken)
     );
   },
+  async logout(refreshToken: string) {
+    await tokenRepository.deleteToken(refreshToken);
+  },
 };
 
 export default authService;
