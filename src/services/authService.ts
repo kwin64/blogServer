@@ -188,6 +188,11 @@ const authService = {
       refreshToken
     );
 
+    jwtToken.verifyToken(
+      refreshToken.toString(),
+      SETTINGS.JWT_REFRESH_KEY
+    ) as JwtPayload;
+
     if (!checkTokenInWhiteList) {
       throw new CustomError(
         'refreshToken not founded in white list',
