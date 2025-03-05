@@ -184,13 +184,8 @@ const authService = {
     );
   },
   async logout(refreshToken: string) {
-    const decodedRefreshToken = jwtToken.verifyToken(
-      refreshToken.toString(),
-      SETTINGS.JWT_REFRESH_KEY
-    ) as JwtPayload;
-
-    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
-      decodedRefreshToken.id
+    const checkTokenInWhiteList = await tokenRepository.findTokenByRT(
+      refreshToken
     );
 
     if (!checkTokenInWhiteList) {
@@ -200,6 +195,58 @@ const authService = {
       );
     }
     await tokenRepository.deleteToken(refreshToken);
+  },
+  async refresh(refreshToken: string) {
+    const checkTokenInWhiteList = await tokenRepository.findTokenByRT(
+      refreshToken
+    );
+
+    if (!checkTokenInWhiteList) {
+      throw new CustomError(
+        'refreshToken not founded in white list',
+        HTTP_STATUSES.UNAUTHORIZED
+      );
+    }
+    await tokenRepository.deleteToken(refreshToken);
+
+    const decodedRefreshToken = jwtToken.verifyToken(
+      refreshToken.toString(),
+      SETTINGS.JWT_REFRESH_KEY
+    ) as JwtPayload;
+
+    const accessToken = jwtToken.generateToken(
+      decodedRefreshToken.id.toString(),
+      decodedRefreshToken.login,
+      SETTINGS.JWT_ACCESS_KEY,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
+    );
+
+    const newRefreshToken = jwtToken.generateToken(
+      decodedRefreshToken.id.toString(),
+      decodedRefreshToken.login,
+      SETTINGS.JWT_REFRESH_KEY,
+      Number(SETTINGS.REFRESH_EXPIRES_IN)
+    );
+
+    const savedRT = await tokenRepository.saveRTtoWhiteList(
+      decodedRefreshToken.id.toString(),
+      newRefreshToken,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
+    );
+
+    if (!savedRT) {
+      throw new CustomError(
+        [
+          {
+            message: `Error saving new refresh token to whitelist.`,
+            field: 'newRefreshToken',
+          },
+        ],
+        HTTP_STATUSES.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return { accessToken, newRefreshToken: savedRT.refreshToken };
   },
 };
 

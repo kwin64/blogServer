@@ -5,7 +5,6 @@ import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
-import tokenService from '../services/tokenService';
 import { AuthRequestRT } from '../middlewares/checkRefreshToken';
 
 const authController = {
@@ -128,7 +127,7 @@ const authController = {
     try {
       const refreshToken = req.refreshToken!;
 
-      const { accessToken, newRefreshToken } = await tokenService.refresh(
+      const { accessToken, newRefreshToken } = await authService.refresh(
         refreshToken
       );
 
