@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
-import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
-import jwtToken from '../utils/handlers/jwtToken';
 import SETTINGS from '../utils/constants/settings';
+import { CustomError } from '../utils/errors/CustomError ';
+import jwtToken from '../utils/handlers/jwtToken';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -19,7 +19,7 @@ const authMiddlewareJWT = async (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      throw ApiError.unauthorized('No token provided');
+      throw new CustomError('No token provided', HTTP_STATUSES.UNAUTHORIZED);
     }
 
     const token = authHeader.split(' ')[1];
@@ -29,24 +29,13 @@ const authMiddlewareJWT = async (
       SETTINGS.JWT_ACCESS_KEY
     ) as JwtPayload;
 
-    if (!verifiedToken) {
-      throw ApiError.unauthorized('token no valid');
-    }
-
     req.user = {
       userId: verifiedToken.id,
     };
 
     next();
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      res.status(error.statusCode).json({ message: error.message });
-    } else {
-      console.error('Unexpected error:', error);
-      res
-        .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-        .json({ message: 'Internal Server Error' });
-    }
+  } catch (error) {
+    next(error);
   }
 };
 export default authMiddlewareJWT;
