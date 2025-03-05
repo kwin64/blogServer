@@ -184,6 +184,21 @@ const authService = {
     );
   },
   async logout(refreshToken: string) {
+    const decodedRefreshToken = jwtToken.verifyToken(
+      refreshToken.toString(),
+      SETTINGS.JWT_REFRESH_KEY
+    ) as JwtPayload;
+
+    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
+      decodedRefreshToken.id
+    );
+
+    if (!checkTokenInWhiteList) {
+      throw new CustomError(
+        'refreshToken not founded in white list',
+        HTTP_STATUSES.UNAUTHORIZED
+      );
+    }
     await tokenRepository.deleteToken(refreshToken);
   },
 };
