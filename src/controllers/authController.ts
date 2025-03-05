@@ -6,6 +6,7 @@ import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
 import tokenService from '../services/tokenService';
+import { AuthRequestRT } from '../middlewares/checkRefreshToken';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -107,9 +108,9 @@ const authController = {
       next(error);
     }
   },
-  async logout(req: Request, res: Response, next: NextFunction) {
+  async logout(req: AuthRequestRT, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.cookies.refreshToken;
+      const refreshToken = req.refreshToken!;
 
       if (!refreshToken) {
         throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
@@ -123,13 +124,9 @@ const authController = {
       next(error);
     }
   },
-  async refreshToken(req: Request, res: Response, next: NextFunction) {
+  async refreshToken(req: AuthRequestRT, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.cookies.refreshToken;
-
-      if (!refreshToken) {
-        throw new CustomError('No refresh token', HTTP_STATUSES.UNAUTHORIZED);
-      }
+      const refreshToken = req.refreshToken!;
 
       const { accessToken, newRefreshToken } = await tokenService.refresh(
         refreshToken
