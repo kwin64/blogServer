@@ -16,6 +16,14 @@ const authService = {
   async login(loginOrEmail: string, password: string) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
+    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
+      user.id.toString()
+    );
+
+    if (checkTokenInWhiteList) {
+      await tokenRepository.deleteTokenByUserId(user.id.toString());
+    }
+
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
       user.password
@@ -38,14 +46,6 @@ const authService = {
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
-
-    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
-      user.id.toString()
-    );
-
-    if (checkTokenInWhiteList) {
-      await tokenRepository.deleteTokenByUserId(user.id.toString());
-    }
 
     const savedRT = await tokenRepository.saveRTtoWhiteList(
       user.id.toString(),
@@ -201,6 +201,11 @@ const authService = {
       refreshToken
     );
 
+    const decodedRefreshToken = jwtToken.verifyToken(
+      refreshToken.toString(),
+      SETTINGS.JWT_REFRESH_KEY
+    ) as JwtPayload;
+
     if (!checkTokenInWhiteList) {
       throw new CustomError(
         'refreshToken not founded in white list',
@@ -208,11 +213,6 @@ const authService = {
       );
     }
     await tokenRepository.deleteToken(refreshToken);
-
-    const decodedRefreshToken = jwtToken.verifyToken(
-      refreshToken.toString(),
-      SETTINGS.JWT_REFRESH_KEY
-    ) as JwtPayload;
 
     const accessToken = jwtToken.generateToken(
       decodedRefreshToken.id.toString(),
