@@ -1,9 +1,22 @@
 import { Router } from 'express';
-import authController from '../controllers/authController';
-import authMiddlewareJWT from '../middlewares/authMiddlewareJWT';
+import securityController from '../controllers/securityController';
+import checkRefreshToken from '../middlewares/checkRefreshToken';
 
 const securityRouter = Router({});
-securityRouter.get('/me', authMiddlewareJWT, authController.authMe);
-
+securityRouter.get(
+  '/devices',
+  checkRefreshToken,
+  securityController.getAllDevices
+);
+securityRouter.delete(
+  '/devices',
+  checkRefreshToken,
+  securityController.terminateAllDevices
+);
+securityRouter.delete(
+  '/devices/:deviceId',
+  checkRefreshToken,
+  securityController.terminateDevice
+);
 
 export default securityRouter;
