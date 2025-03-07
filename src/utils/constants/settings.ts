@@ -20,6 +20,7 @@ const SETTINGS = {
     USERS: '/users',
     COMMENTS: '/comments',
     TESTS: '/testing',
+    SECURITY: '/security',
   },
 };
 
