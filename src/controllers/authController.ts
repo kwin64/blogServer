@@ -6,15 +6,22 @@ import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
 import { AuthRequestRT } from '../middlewares/checkRefreshToken';
+import mongoose from 'mongoose';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { loginOrEmail, password } = req.body;
+      const ip = req.ip || req.headers['x-forwarded-for'] || '0.0.0.0';
+      const title = req.headers['user-agent'] || 'unknown';
+      const deviceId = new mongoose.Types.ObjectId().toString();
 
       const { accessToken, refreshToken } = await authService.login(
         loginOrEmail,
-        password
+        password,
+        ip,
+        title,
+        deviceId
       );
 
       res.cookie('refreshToken', refreshToken, {

@@ -4,8 +4,6 @@ import { AuthRequestRT } from '../middlewares/checkRefreshToken';
 const securityController = {
   async getAllDevices(req: AuthRequestRT, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.refreshToken!;
-      console.log('refreshToken', refreshToken);
     } catch (error) {
       next(error);
     }

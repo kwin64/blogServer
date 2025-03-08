@@ -1,5 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
+import { ObjectId } from 'mongoose';
 import authRepository from '../repositories/commands/authRepository';
+import deviceSessionRepository from '../repositories/commands/deviceSessionRepository';
 import tokenRepository from '../repositories/commands/tokenRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
@@ -13,12 +15,17 @@ import jwtToken from '../utils/handlers/jwtToken';
 import sendEmail from '../utils/handlers/sendEmail';
 
 const authService = {
-  async login(loginOrEmail: string, password: string) {
+  async login(
+    loginOrEmail: string,
+    password: string,
+    ip: string | string[],
+    title: string,
+    deviceId: string
+  ) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    const checkTokenInWhiteList = await tokenRepository.findTokenByUserId(
-      user.id.toString()
-    );
+    const checkDeviceSession =
+      await deviceSessionRepository.findSessionByDeviceId(deviceId);
 
     if (checkTokenInWhiteList) {
       await tokenRepository.deleteTokenByUserId(user.id.toString());
