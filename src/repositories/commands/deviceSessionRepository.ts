@@ -39,6 +39,9 @@ const deviceSessionRepository = {
   async deleteDeviceSession(deviceName: string, userId: string) {
     return await DeviceSession.deleteMany({ userId, deviceName });
   },
+  async deleteDeviceSessionByDeviceId(userId: string, deviceId: string) {
+    return await DeviceSession.deleteMany({ userId, deviceId });
+  },
 };
 
 export default deviceSessionRepository;
