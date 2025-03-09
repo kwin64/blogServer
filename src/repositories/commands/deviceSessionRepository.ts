@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DeviceSession, WhiteListToken } from '../../models';
+import { DeviceSession } from '../../models';
 import { DeviceSessionDocument } from '../../models/DeviceSessionModel';
 
 const deviceSessionRepository = {
@@ -8,8 +8,11 @@ const deviceSessionRepository = {
       deviceId,
     }).lean<DeviceSessionDocument>();
   },
-  async deleteTokenByUserId(userId: string) {
-    return await WhiteListToken.deleteMany({ userId });
+  async findSessionByDeviceName(deviceName: string, userId: string) {
+    return await DeviceSession.findOne({
+      deviceName,
+      userId,
+    }).lean<DeviceSessionDocument>();
   },
   async saveDeviceSession(
     userId: string,
@@ -26,11 +29,15 @@ const deviceSessionRepository = {
       userId,
       ip,
       deviceName,
-      lastActiveDate: expiresAt,
+      lastActiveDate: now,
+      expiresAt,
       deviceId,
     });
 
     return await newSession.save();
+  },
+  async deleteDeviceSession(deviceName: string, userId: string) {
+    return await DeviceSession.deleteMany({ userId, deviceName });
   },
 };
 

@@ -5,6 +5,7 @@ export interface IDeviceSession {
   ip: string;
   deviceName: string;
   lastActiveDate: Date;
+  expiresAt: Date;
   deviceId: string;
 }
 
@@ -14,6 +15,7 @@ export interface DeviceSessionDocument extends Document {
   ip: string;
   deviceName: string;
   lastActiveDate: Date;
+  expiresAt: Date;
   deviceId: string;
 }
 
@@ -27,6 +29,7 @@ const DeviceSessionSchema: Schema<DeviceSessionDocument> = new Schema(
     deviceName: { type: String, required: true },
     lastActiveDate: { type: Date, required: true },
     deviceId: { type: String, required: true, unique: true },
+    expiresAt: { type: Date, required: true },
   },
   { timestamps: true }
 );

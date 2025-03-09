@@ -22,13 +22,18 @@ const authService = {
   ) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    // const checkDeviceSession =
-    //   await deviceSessionRepository.findSessionByDeviceId(deviceId);
+    const checkDeviceSession =
+      await deviceSessionRepository.findSessionByDeviceName(
+        title,
+        user.id.toString()
+      );
 
-    // if (checkDeviceSession) {
-    //   await tokenRepository.deleteTokenByUserId(user.id.toString());
-    //   // await tokenRepository.deleteTokenByUserId(user.id.toString());
-    // }
+    if (checkDeviceSession) {
+      await deviceSessionRepository.deleteDeviceSession(
+        title,
+        user.id.toString()
+      );
+    }
 
     const isPasswordValid = bcryptHandler.comparePassword(
       password,

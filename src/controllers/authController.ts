@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
+import { AuthRequestRT } from '../middlewares/checkRefreshToken';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import authService from '../services/authService';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
-import { AuthRequestRT } from '../middlewares/checkRefreshToken';
-import mongoose from 'mongoose';
 
 const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
