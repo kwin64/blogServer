@@ -14,14 +14,12 @@ const authController = {
       const { loginOrEmail, password } = req.body;
       const ip = req.ip || req.headers['x-forwarded-for'] || '0.0.0.0';
       const title = req.headers['user-agent'] || 'unknown';
-      const deviceId = new mongoose.Types.ObjectId().toString();
 
       const { accessToken, refreshToken } = await authService.login(
         loginOrEmail,
         password,
         ip,
-        title,
-        deviceId
+        title
       );
 
       res.cookie('refreshToken', refreshToken, {

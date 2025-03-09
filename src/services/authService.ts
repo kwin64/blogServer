@@ -1,5 +1,4 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { ObjectId } from 'mongoose';
 import authRepository from '../repositories/commands/authRepository';
 import deviceSessionRepository from '../repositories/commands/deviceSessionRepository';
 import tokenRepository from '../repositories/commands/tokenRepository';
@@ -19,17 +18,17 @@ const authService = {
     loginOrEmail: string,
     password: string,
     ip: string | string[],
-    title: string,
-    deviceId: string
+    title: string
   ) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    const checkDeviceSession =
-      await deviceSessionRepository.findSessionByDeviceId(deviceId);
+    // const checkDeviceSession =
+    //   await deviceSessionRepository.findSessionByDeviceId(deviceId);
 
-    if (checkTokenInWhiteList) {
-      await tokenRepository.deleteTokenByUserId(user.id.toString());
-    }
+    // if (checkDeviceSession) {
+    //   await tokenRepository.deleteTokenByUserId(user.id.toString());
+    //   // await tokenRepository.deleteTokenByUserId(user.id.toString());
+    // }
 
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
@@ -40,39 +39,40 @@ const authService = {
       throw ApiError.unauthorized('Invalid password');
     }
 
-    const accessToken = jwtToken.generateToken(
+    const savedDeviceSession = await deviceSessionRepository.saveDeviceSession(
       user.id.toString(),
-      user.login,
-      SETTINGS.JWT_ACCESS_KEY,
-      Number(SETTINGS.ACCESS_EXPIRES_IN)
+      title,
+      ip,
+      Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
     const refreshToken = jwtToken.generateToken(
-      user.id.toString(),
-      user.login,
+      savedDeviceSession.userId,
+      savedDeviceSession.deviceId,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    const savedRT = await tokenRepository.saveRTtoWhiteList(
-      user.id.toString(),
-      refreshToken,
-      Number(SETTINGS.REFRESH_EXPIRES_IN)
+    const accessToken = jwtToken.generateToken(
+      savedDeviceSession.userId,
+      savedDeviceSession.deviceId,
+      SETTINGS.JWT_ACCESS_KEY,
+      Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
-    if (!savedRT) {
+    if (!savedDeviceSession) {
       throw new CustomError(
         [
           {
-            message: `Error saving refresh token to whitelist.`,
-            field: 'refreshToken',
+            message: `Error  deviceSession .`,
+            field: 'deviceSession',
           },
         ],
         HTTP_STATUSES.INTERNAL_SERVER_ERROR
       );
     }
 
-    return { accessToken, refreshToken: savedRT.refreshToken };
+    return { accessToken, refreshToken };
   },
   async registration(login: string, email: string, password: string) {
     const user = await userQueryRepository.findUser(login, email);

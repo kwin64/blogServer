@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 export interface IDeviceSession {
   userId: string;
   ip: string;
-  title: string;
+  deviceName: string;
   lastActiveDate: Date;
   deviceId: string;
 }
@@ -12,7 +12,7 @@ export interface DeviceSessionDocument extends Document {
   _id: Types.ObjectId;
   userId: string;
   ip: string;
-  title: string;
+  deviceName: string;
   lastActiveDate: Date;
   deviceId: string;
 }
@@ -24,7 +24,7 @@ const DeviceSessionSchema: Schema<DeviceSessionDocument> = new Schema(
       required: true,
     },
     ip: { type: String, required: true },
-    title: { type: String, required: true },
+    deviceName: { type: String, required: true },
     lastActiveDate: { type: Date, required: true },
     deviceId: { type: String, required: true, unique: true },
   },
