@@ -200,15 +200,7 @@ const authService = {
       refreshToken,
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
-    const userId = decodedRefreshToken.param1;
-    const deviceId = decodedRefreshToken.param2;
 
-    // if (!checkTokenInWhiteList) {
-    //   throw new CustomError(
-    //     'refreshToken not founded in white list',
-    //     HTTP_STATUSES.UNAUTHORIZED
-    //   );
-    // }
     await deviceSessionRepository.deleteDeviceSessionByDeviceId(
       decodedRefreshToken.param1,
       decodedRefreshToken.param2
