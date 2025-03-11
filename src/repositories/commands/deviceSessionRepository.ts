@@ -8,6 +8,9 @@ const deviceSessionRepository = {
       deviceId,
     }).lean<DeviceSessionDocument>();
   },
+  async findSessionByDeviceIdAndUserId(deviceId: string, userId: string) {
+    return DeviceSession.findOne({ deviceId, userId });
+  },
   async findSessionByDeviceName(deviceName: string, userId: string) {
     return await DeviceSession.findOne({
       deviceName,
@@ -41,6 +44,15 @@ const deviceSessionRepository = {
   },
   async deleteDeviceSessionByDeviceId(userId: string, deviceId: string) {
     return await DeviceSession.deleteMany({ userId, deviceId });
+  },
+  async terminateAllDeviceSessions(userId: string, deviceId: string) {
+    return await DeviceSession.deleteMany({
+      userId,
+      deviceId: { $ne: deviceId },
+    });
+  },
+  async terminateDeviceSession(userId: string, deviceId: string) {
+    return await DeviceSession.deleteOne({ userId, deviceId });
   },
 };
 
