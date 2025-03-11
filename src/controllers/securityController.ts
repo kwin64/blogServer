@@ -21,7 +21,7 @@ const securityController = {
         userId
       );
 
-      res.status(HTTP_STATUSES.OK).json(activeSessions);
+      res.status(HTTP_STATUSES.OK).json(activeSessions)
     } catch (error) {
       next(error);
     }
