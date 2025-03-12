@@ -12,12 +12,10 @@ const securityController = {
   async getAllDevices(req: AuthRequestRT, res: Response, next: NextFunction) {
     try {
       const refreshToken = req.refreshToken!;
-      const decodedRefreshToken = jwtToken.verifyToken(
+      const { userId } = jwtToken.verifyToken(
         refreshToken,
         SETTINGS.JWT_REFRESH_KEY
       ) as JwtPayload;
-
-      const userId = decodedRefreshToken.param1;
 
       const activeSessions = await securityQueryRepository.getAllDevices(
         userId

@@ -3,17 +3,11 @@ import { CustomError } from '../errors/CustomError ';
 import { HTTP_STATUSES } from '../constants/httpStatuses';
 
 const jwtToken = {
-  generateToken(
-    param1: string,
-    param2: string,
-    secretKey: string,
-    expires: number
-  ) {
-    return jwt.sign({ param1, param2 }, secretKey, {
+  generateToken(id: string, login: string, secretKey: string, expires: number) {
+    return jwt.sign({ id, login }, secretKey, {
       expiresIn: expires,
     });
   },
-
   verifyToken(token: string, secretKey: string): JwtPayload {
     try {
       return jwt.verify(token, secretKey) as JwtPayload;
@@ -29,6 +23,16 @@ const jwtToken = {
         );
       }
     }
+  },
+  generateSessionToken(
+    userId: string,
+    deviceId: string,
+    secretKey: string,
+    expires: number
+  ) {
+    return jwt.sign({ userId, deviceId }, secretKey, {
+      expiresIn: expires,
+    });
   },
 };
 

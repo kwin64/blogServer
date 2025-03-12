@@ -22,19 +22,6 @@ const authService = {
   ) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    const checkDeviceSession =
-      await deviceSessionRepository.findSessionByDeviceName(
-        title,
-        user.id.toString()
-      );
-
-    if (checkDeviceSession) {
-      await deviceSessionRepository.deleteDeviceSession(
-        title,
-        user.id.toString()
-      );
-    }
-
     const isPasswordValid = bcryptHandler.comparePassword(
       password,
       user.password
@@ -51,14 +38,14 @@ const authService = {
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    const refreshToken = jwtToken.generateToken(
+    const refreshToken = jwtToken.generateSessionToken(
       savedDeviceSession.userId,
       savedDeviceSession.deviceId,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    const accessToken = jwtToken.generateToken(
+    const accessToken = jwtToken.generateSessionToken(
       savedDeviceSession.userId,
       savedDeviceSession.deviceId,
       SETTINGS.JWT_ACCESS_KEY,

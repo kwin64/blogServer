@@ -7,24 +7,18 @@ import { CustomError } from '../utils/errors/CustomError ';
 
 const securityService = {
   async terminateAllDevices(refreshToken: string) {
-    const decodedRefreshToken = jwtToken.verifyToken(
+    const { userId, deviceId } = jwtToken.verifyToken(
       refreshToken,
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
-
-    const userId = decodedRefreshToken.param1;
-    const deviceId = decodedRefreshToken.param2;
 
     await deviceSessionRepository.terminateAllDeviceSessions(userId, deviceId);
   },
   async terminateDevice(refreshToken: string, deviceId: string) {
-    const decodedRefreshToken = jwtToken.verifyToken(
+    const { userId } = jwtToken.verifyToken(
       refreshToken,
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
-
-    const userId = decodedRefreshToken.param1;
-    const currentDeviceId = decodedRefreshToken.param2;
 
     const deviceSession =
       await deviceSessionRepository.findSessionByDeviceIdAndUserId(
