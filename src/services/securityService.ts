@@ -20,6 +20,19 @@ const securityService = {
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
+    const user = await deviceSessionRepository.findSessionByDeviceId(deviceId);
+    if (!user) {
+      throw new CustomError(
+        [
+          {
+            message: 'device session not found',
+            field: 'device session',
+          },
+        ],
+        HTTP_STATUSES.NOT_FOUND
+      );
+    }
+
     const deviceSession =
       await deviceSessionRepository.findSessionByDeviceIdAndUserId(
         deviceId,

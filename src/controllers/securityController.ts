@@ -42,14 +42,14 @@ const securityController = {
   async terminateDevice(req: AuthRequestRT, res: Response, next: NextFunction) {
     try {
       const refreshToken = req.refreshToken!;
-      const { deviceId } = req.body;
+      const { deviceId } = req.params;
 
       if (!deviceId) {
         throw new CustomError(
           [
             {
-              message: 'currentDeviceId is required',
-              field: 'currentDeviceId',
+              message: 'deviceId is required',
+              field: 'deviceId',
             },
           ],
           HTTP_STATUSES.BAD_REQUEST
