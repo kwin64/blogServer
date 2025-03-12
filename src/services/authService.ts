@@ -1,7 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken';
 import authRepository from '../repositories/commands/authRepository';
 import deviceSessionRepository from '../repositories/commands/deviceSessionRepository';
-import tokenRepository from '../repositories/commands/tokenRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import userQueryRepository from '../repositories/queries/userQueryRepository';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
@@ -31,38 +30,52 @@ const authService = {
       throw ApiError.unauthorized('Invalid password');
     }
 
-    const savedDeviceSession = await deviceSessionRepository.saveDeviceSession(
-      user.id.toString(),
-      title,
-      ip,
-      Number(SETTINGS.REFRESH_EXPIRES_IN)
-    );
+    const foundedDeviceSession =
+      await deviceSessionRepository.findSessionByDeviceName(
+        title,
+        user.id.toString()
+      );
+
+    let savedDeviceSession;
+
+    if (foundedDeviceSession) {
+      savedDeviceSession = await deviceSessionRepository.updateLastActive(
+        foundedDeviceSession.deviceId
+      );
+    } else {
+      savedDeviceSession = await deviceSessionRepository.saveDeviceSession(
+        user.id.toString(),
+        title,
+        ip,
+        Number(SETTINGS.REFRESH_EXPIRES_IN)
+      );
+
+      if (!savedDeviceSession) {
+        throw new CustomError(
+          [
+            {
+              message: `Error  deviceSession`,
+              field: 'deviceSession',
+            },
+          ],
+          HTTP_STATUSES.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
 
     const refreshToken = jwtToken.generateSessionToken(
-      savedDeviceSession.userId,
-      savedDeviceSession.deviceId,
+      savedDeviceSession!.userId,
+      savedDeviceSession!.deviceId,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
     const accessToken = jwtToken.generateSessionToken(
-      savedDeviceSession.userId,
-      savedDeviceSession.deviceId,
+      savedDeviceSession!.userId,
+      savedDeviceSession!.deviceId,
       SETTINGS.JWT_ACCESS_KEY,
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
-
-    if (!savedDeviceSession) {
-      throw new CustomError(
-        [
-          {
-            message: `Error  deviceSession .`,
-            field: 'deviceSession',
-          },
-        ],
-        HTTP_STATUSES.INTERNAL_SERVER_ERROR
-      );
-    }
 
     return { accessToken, refreshToken };
   },
@@ -183,14 +196,14 @@ const authService = {
     );
   },
   async logout(refreshToken: string) {
-    const decodedRefreshToken = jwtToken.verifyToken(
-      refreshToken,
+    const { userId, deviceId } = jwtToken.verifyToken(
+      refreshToken.toString(),
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
     await deviceSessionRepository.deleteDeviceSessionByDeviceId(
-      decodedRefreshToken.param1,
-      decodedRefreshToken.param2
+      userId,
+      deviceId
     );
   },
   async refresh(refreshToken: string) {
@@ -208,6 +221,11 @@ const authService = {
     if (!checkDeviceSession) {
       throw new CustomError('dont active session', HTTP_STATUSES.FORBIDDEN);
     }
+
+    await deviceSessionRepository.deleteDeviceSessionByDeviceId(
+      deviceId,
+      userId
+    );
 
     const newRefreshToken = jwtToken.generateSessionToken(
       userId,

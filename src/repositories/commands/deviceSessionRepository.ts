@@ -77,6 +77,15 @@ const deviceSessionRepository = {
       { new: true }
     );
   },
+  async updateLastActive(deviceId: string) {
+    const now = new Date();
+
+    return await DeviceSession.findOneAndUpdate(
+      { deviceId: deviceId },
+      { lastActiveDate: now },
+      { new: true }
+    ).lean<DeviceSessionDocument>();
+  },
 };
 
 export default deviceSessionRepository;
