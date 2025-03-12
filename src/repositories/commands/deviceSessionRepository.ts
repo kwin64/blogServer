@@ -9,7 +9,13 @@ const deviceSessionRepository = {
     }).lean<DeviceSessionDocument>();
   },
   async findSessionByDeviceIdAndUserId(deviceId: string, userId: string) {
-    return DeviceSession.findOne({ deviceId, userId });
+    const session = await DeviceSession.findOne({
+      userId,
+      deviceId,
+      expiresAt: { $gt: new Date() },
+    });
+
+    return session;
   },
   async findSessionByDeviceName(deviceName: string, userId: string) {
     return await DeviceSession.findOne({
@@ -53,6 +59,23 @@ const deviceSessionRepository = {
   },
   async terminateDeviceSession(userId: string, deviceId: string) {
     return await DeviceSession.deleteOne({ userId, deviceId });
+  },
+  async updateSessionToken(
+    userId: string,
+    deviceId: string,
+    expiresIn: number
+  ) {
+    const newExpiresAt = new Date(Date.now() + expiresIn * 1000);
+    const newLastActiveDate = new Date();
+
+    return await DeviceSession.findOneAndUpdate(
+      { userId, deviceId },
+      {
+        expiresAt: newExpiresAt,
+        lastActiveDate: newLastActiveDate,
+      },
+      { new: true }
+    );
   },
 };
 

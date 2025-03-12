@@ -194,44 +194,43 @@ const authService = {
     );
   },
   async refresh(refreshToken: string) {
-    const checkTokenInWhiteList = await tokenRepository.findTokenByRT(
-      refreshToken
-    );
-
-    const decodedRefreshToken = jwtToken.verifyToken(
+    const { userId, deviceId } = jwtToken.verifyToken(
       refreshToken.toString(),
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
-    if (!checkTokenInWhiteList) {
-      throw new CustomError(
-        'refreshToken not founded in white list',
-        HTTP_STATUSES.UNAUTHORIZED
+    const checkDeviceSession =
+      await deviceSessionRepository.findSessionByDeviceIdAndUserId(
+        deviceId,
+        userId
       );
+
+    if (!checkDeviceSession) {
+      throw new CustomError('dont active session', HTTP_STATUSES.FORBIDDEN);
     }
-    await tokenRepository.deleteToken(refreshToken);
 
-    const accessToken = jwtToken.generateToken(
-      decodedRefreshToken.id.toString(),
-      decodedRefreshToken.login,
-      SETTINGS.JWT_ACCESS_KEY,
-      Number(SETTINGS.ACCESS_EXPIRES_IN)
-    );
-
-    const newRefreshToken = jwtToken.generateToken(
-      decodedRefreshToken.id.toString(),
-      decodedRefreshToken.login,
+    const newRefreshToken = jwtToken.generateSessionToken(
+      userId,
+      deviceId,
       SETTINGS.JWT_REFRESH_KEY,
       Number(SETTINGS.REFRESH_EXPIRES_IN)
     );
 
-    const savedRT = await tokenRepository.saveRTtoWhiteList(
-      decodedRefreshToken.id.toString(),
-      newRefreshToken,
+    const accessToken = jwtToken.generateSessionToken(
+      userId,
+      deviceId,
+      SETTINGS.JWT_ACCESS_KEY,
       Number(SETTINGS.ACCESS_EXPIRES_IN)
     );
 
-    if (!savedRT) {
+    const upodatedDeviceSession =
+      await deviceSessionRepository.updateSessionToken(
+        userId,
+        deviceId,
+        Number(SETTINGS.REFRESH_EXPIRES_IN)
+      );
+
+    if (!upodatedDeviceSession) {
       throw new CustomError(
         [
           {
@@ -243,7 +242,7 @@ const authService = {
       );
     }
 
-    return { accessToken, newRefreshToken: savedRT.refreshToken };
+    return { accessToken, newRefreshToken };
   },
 };
 
