@@ -196,10 +196,38 @@ const authService = {
     );
   },
   async logout(refreshToken: string) {
-    const { userId, deviceId } = jwtToken.verifyToken(
+    const { userId, deviceId, exp } = jwtToken.verifyToken(
       refreshToken.toString(),
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
+
+    const checkDeviceSession =
+      await deviceSessionRepository.findSessionByDeviceId(deviceId);
+
+    if (!checkDeviceSession) {
+      throw new CustomError('Session not found', HTTP_STATUSES.UNAUTHORIZED);
+    }
+
+    if (checkDeviceSession.userId !== userId) {
+      throw new CustomError('Access denied', HTTP_STATUSES.FORBIDDEN);
+    }
+
+    if (exp! * 1000 < Date.now()) {
+      throw new CustomError('Session expired', HTTP_STATUSES.UNAUTHORIZED);
+    }
+
+    const currentSession =
+      await deviceSessionRepository.findSessionByUserIdAndDeviceId(
+        userId,
+        deviceId
+      );
+
+    if (currentSession && currentSession.updatedAt.getTime() > exp! * 1000) {
+      throw new CustomError(
+        'Refresh token already used or expired',
+        HTTP_STATUSES.UNAUTHORIZED
+      );
+    }
 
     await deviceSessionRepository.deleteDeviceSessionByDeviceId(
       userId,
@@ -221,11 +249,6 @@ const authService = {
     if (!checkDeviceSession) {
       throw new CustomError('dont active session', HTTP_STATUSES.FORBIDDEN);
     }
-
-    await deviceSessionRepository.deleteDeviceSessionByDeviceId(
-      deviceId,
-      userId
-    );
 
     const newRefreshToken = jwtToken.generateSessionToken(
       userId,

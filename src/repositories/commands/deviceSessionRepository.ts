@@ -17,6 +17,12 @@ const deviceSessionRepository = {
 
     return session;
   },
+  async findSessionByUserIdAndDeviceId(userId: string, deviceId: string) {
+    return await DeviceSession.findOne({
+      userId,
+      deviceId,
+    });
+  },
   async findSessionByDeviceName(deviceName: string, userId: string) {
     return await DeviceSession.findOne({
       deviceName,

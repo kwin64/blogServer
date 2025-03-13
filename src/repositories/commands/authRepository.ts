@@ -1,4 +1,4 @@
-import { User, WhiteListToken } from '../../models';
+import { User } from '../../models';
 import { HTTP_STATUSES } from '../../utils/constants/httpStatuses';
 import { CustomError } from '../../utils/errors/CustomError ';
 
