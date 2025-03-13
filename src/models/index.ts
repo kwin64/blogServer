@@ -3,3 +3,4 @@ export { default as Post } from './PostModel';
 export { default as User } from './UserModel';
 export { default as Comment } from './CommentModel';
 export { default as DeviceSession } from './DeviceSessionModel';
+export { default as ApiRequest } from './DeviceSessionModel';
