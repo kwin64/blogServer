@@ -218,7 +218,7 @@ const authService = {
     );
   },
   async refresh(refreshToken: string) {
-    const { userId, deviceId } = jwtToken.verifyToken(
+    const { userId, deviceId, exp } = jwtToken.verifyToken(
       refreshToken.toString(),
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
@@ -231,6 +231,17 @@ const authService = {
 
     if (!checkDeviceSession) {
       throw new CustomError('dont active session', HTTP_STATUSES.UNAUTHORIZED);
+    }
+
+    const date = new Date(checkDeviceSession.expiresAt);
+
+    const timeFoundedCurrentSession = Math.floor(date.getTime() / 1000);
+
+    if (exp !== timeFoundedCurrentSession) {
+      throw new CustomError(
+        'Session expiration mismatch',
+        HTTP_STATUSES.UNAUTHORIZED
+      );
     }
 
     const newRefreshToken = jwtToken.generateSessionToken(
