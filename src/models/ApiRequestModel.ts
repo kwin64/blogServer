@@ -11,6 +11,7 @@ export interface ApiRequestDocument extends Document {
   ip: string;
   url: string;
   date: Date;
+  expiresAt: Date;
 }
 
 const ApiRequestSchema: Schema<ApiRequestDocument> = new Schema(
@@ -18,6 +19,7 @@ const ApiRequestSchema: Schema<ApiRequestDocument> = new Schema(
     ip: { type: String, required: true },
     url: { type: String, required: true },
     date: { type: Date, default: Date.now },
+    expiresAt: { type: Date, index: { expires: '10s' } },
   },
   { timestamps: true }
 );

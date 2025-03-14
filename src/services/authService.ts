@@ -208,26 +208,26 @@ const authService = {
       throw new CustomError('Session not found', HTTP_STATUSES.UNAUTHORIZED);
     }
 
-    if (checkDeviceSession.userId !== userId) {
-      throw new CustomError('Access denied', HTTP_STATUSES.FORBIDDEN);
-    }
+    // if (checkDeviceSession.userId !== userId) {
+    //   throw new CustomError('Access denied', HTTP_STATUSES.FORBIDDEN);
+    // }
 
-    if (exp! * 1000 < Date.now()) {
-      throw new CustomError('Session expired', HTTP_STATUSES.UNAUTHORIZED);
-    }
+    // if (exp! * 1000 < Date.now()) {
+    //   throw new CustomError('Session expired', HTTP_STATUSES.UNAUTHORIZED);
+    // }
 
-    const currentSession =
-      await deviceSessionRepository.findSessionByUserIdAndDeviceId(
-        userId,
-        deviceId
-      );
+    // const currentSession =
+    //   await deviceSessionRepository.findSessionByUserIdAndDeviceId(
+    //     userId,
+    //     deviceId
+    //   );
 
-    if (currentSession && currentSession.updatedAt.getTime() > exp! * 1000) {
-      throw new CustomError(
-        'Refresh token already used or expired',
-        HTTP_STATUSES.UNAUTHORIZED
-      );
-    }
+    // if (currentSession && currentSession.updatedAt.getTime() > exp! * 1000) {
+    //   throw new CustomError(
+    //     'Refresh token already used or expired',
+    //     HTTP_STATUSES.UNAUTHORIZED
+    //   );
+    // }
 
     await deviceSessionRepository.deleteDeviceSessionByDeviceId(
       userId,
