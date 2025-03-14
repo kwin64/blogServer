@@ -74,7 +74,7 @@ const authController = {
       if (!code) {
         throw new CustomError(
           [{ message: 'Code is required', field: 'code' }],
-          HTTP_STATUSES.UNAUTHORIZED
+          HTTP_STATUSES.BAD_REQUEST
         );
       }
 
