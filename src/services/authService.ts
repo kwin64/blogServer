@@ -103,7 +103,7 @@ const authService = {
       newUser._id.toString(),
       newUser.login,
       SETTINGS.JWT_ACCESS_KEY,
-      Number(SETTINGS.ACCESS_EXPIRES_IN)
+      1000000000000000000000
     );
 
     sendEmail(
@@ -113,12 +113,15 @@ const authService = {
     );
   },
   async confirmation(code: string) {
-    const decoded = jwtToken.verifyToken(
-      code.toString(),
-      SETTINGS.JWT_ACCESS_KEY
-    ) as JwtPayload;
+    let decoded;
 
-    if (!decoded) {
+    // какая то хуета
+    try {
+      decoded = jwtToken.verifyToken(
+        code.toString(),
+        SETTINGS.JWT_ACCESS_KEY
+      ) as JwtPayload;
+    } catch (error) {
       throw new CustomError(
         [
           {
@@ -130,7 +133,7 @@ const authService = {
       );
     }
 
-    const { user } = await authRepository.findByLoginOrEmail(decoded.login);
+    const { user } = await authRepository.findByLoginOrEmail(decoded!.login);
 
     if (user.isVerified) {
       throw new CustomError(
@@ -145,7 +148,7 @@ const authService = {
     }
 
     const verificationStatus = await authRepository.updateVerificationStatus(
-      decoded.id
+      decoded!.id
     );
 
     return verificationStatus;
