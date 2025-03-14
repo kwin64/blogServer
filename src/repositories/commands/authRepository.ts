@@ -9,7 +9,7 @@ const authRepository = {
     });
 
     if (!user) {
-      throw new CustomError('User not found', HTTP_STATUSES.BAD_REQUEST);
+      throw new CustomError('User not found', HTTP_STATUSES.UNAUTHORIZED);
     }
 
     return {
