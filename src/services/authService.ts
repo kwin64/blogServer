@@ -30,17 +30,19 @@ const authService = {
       throw ApiError.unauthorized('Invalid password');
     }
 
-    const foundedDeviceSession =
+    let savedDeviceSession;
+
+    const currentSession =
       await deviceSessionRepository.findSessionByDeviceName(
         title,
         user.id.toString()
       );
 
-    let savedDeviceSession;
-
-    if (foundedDeviceSession) {
-      savedDeviceSession = await deviceSessionRepository.updateLastActive(
-        foundedDeviceSession.deviceId
+    if (currentSession) {
+      savedDeviceSession = await deviceSessionRepository.updateSessionToken(
+        user.id.toString(),
+        currentSession.deviceId,
+        Number(SETTINGS.REFRESH_EXPIRES_IN)
       );
     } else {
       savedDeviceSession = await deviceSessionRepository.saveDeviceSession(
@@ -49,18 +51,6 @@ const authService = {
         ip,
         Number(SETTINGS.REFRESH_EXPIRES_IN)
       );
-
-      if (!savedDeviceSession) {
-        throw new CustomError(
-          [
-            {
-              message: `Error  deviceSession`,
-              field: 'deviceSession',
-            },
-          ],
-          HTTP_STATUSES.INTERNAL_SERVER_ERROR
-        );
-      }
     }
 
     const refreshToken = jwtToken.generateSessionToken(
@@ -201,33 +191,26 @@ const authService = {
       SETTINGS.JWT_REFRESH_KEY
     ) as JwtPayload;
 
-    const checkDeviceSession =
-      await deviceSessionRepository.findSessionByDeviceId(deviceId);
+    const foundedCurrentSession =
+      await deviceSessionRepository.findSessionByUserIdAndDeviceId(
+        userId,
+        deviceId
+      );
 
-    if (!checkDeviceSession) {
+    if (!foundedCurrentSession) {
       throw new CustomError('Session not found', HTTP_STATUSES.UNAUTHORIZED);
     }
 
-    // if (checkDeviceSession.userId !== userId) {
-    //   throw new CustomError('Access denied', HTTP_STATUSES.FORBIDDEN);
-    // }
+    const date = new Date(foundedCurrentSession.expiresAt);
 
-    // if (exp! * 1000 < Date.now()) {
-    //   throw new CustomError('Session expired', HTTP_STATUSES.UNAUTHORIZED);
-    // }
+    const timeFoundedCurrentSession = Math.floor(date.getTime() / 1000);
 
-    // const currentSession =
-    //   await deviceSessionRepository.findSessionByUserIdAndDeviceId(
-    //     userId,
-    //     deviceId
-    //   );
-
-    // if (currentSession && currentSession.updatedAt.getTime() > exp! * 1000) {
-    //   throw new CustomError(
-    //     'Refresh token already used or expired',
-    //     HTTP_STATUSES.UNAUTHORIZED
-    //   );
-    // }
+    if (exp !== timeFoundedCurrentSession) {
+      throw new CustomError(
+        'Session expiration mismatch',
+        HTTP_STATUSES.UNAUTHORIZED
+      );
+    }
 
     await deviceSessionRepository.deleteDeviceSessionByDeviceId(
       userId,
