@@ -230,7 +230,7 @@ const authService = {
       );
 
     if (!checkDeviceSession) {
-      throw new CustomError('dont active session', HTTP_STATUSES.FORBIDDEN);
+      throw new CustomError('dont active session', HTTP_STATUSES.UNAUTHORIZED);
     }
 
     const newRefreshToken = jwtToken.generateSessionToken(
