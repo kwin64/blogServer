@@ -34,6 +34,9 @@ const jwtToken = {
       expiresIn: expires,
     });
   },
+  generateRecoveryCode(email: string, recoverySecretKey: string) {
+    return jwt.sign({ email }, recoverySecretKey);
+  },
 };
 
 export default jwtToken;

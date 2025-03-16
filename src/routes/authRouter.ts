@@ -5,6 +5,7 @@ import errorsMiddleware from '../middlewares/errorsMiddleware';
 import usersValidationMiddleware from '../middlewares/usersValidationMiddleware';
 import checkRefreshToken from '../middlewares/checkRefreshToken';
 import rateLimitMiddleware from '../middlewares/rateLimitMiddleware';
+import recoveryPasswordValidationEmail from '../middlewares/recoveryPasswordValidationEmail';
 
 const authRouter = Router({});
 authRouter.post('/login', rateLimitMiddleware, authController.login);
@@ -32,5 +33,16 @@ authRouter.post(
   checkRefreshToken,
   authController.refreshToken
 );
-
+authRouter.post(
+  '/password-recovery',
+  recoveryPasswordValidationEmail,
+  rateLimitMiddleware,
+  errorsMiddleware,
+  authController.passwordRecovery
+);
+authRouter.post(
+  '/new-password',
+  rateLimitMiddleware,
+  authController.newPassword
+);
 export default authRouter;

@@ -146,5 +146,28 @@ const authController = {
       next(error);
     }
   },
+  async passwordRecovery(
+    req: AuthRequestRT,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        throw new CustomError('email not founded', HTTP_STATUSES.NOT_FOUND);
+      }
+      await authService.recovery(email);
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
+    } catch (error) {
+      next(error);
+    }
+  },
+  async newPassword(req: AuthRequestRT, res: Response, next: NextFunction) {
+    const { loginOrEmail, password } = req.body;
+    try {
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 export default authController;

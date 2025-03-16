@@ -282,6 +282,24 @@ const authService = {
 
     return { accessToken, newRefreshToken };
   },
+  async recovery(email: string) {
+    const user = await authRepository.findUser(email);
+
+    if (!user) {
+      throw new CustomError('not founded user', HTTP_STATUSES.NO_CONTENT);
+    }
+
+    const recoveryCode = jwtToken.generateRecoveryCode(
+      email,
+      SETTINGS.JWT_RECOVERY_CODE
+    );
+
+    sendEmail(
+      email,
+      'Восстановить пароль',
+      emailTemplates.registrationConfirmationEmail(recoveryCode)
+    );
+  },
 };
 
 export default authService;
