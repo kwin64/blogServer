@@ -1,4 +1,3 @@
-import { JwtPayload } from 'jsonwebtoken';
 import authRepository from '../repositories/commands/authRepository';
 import deviceSessionRepository from '../repositories/commands/deviceSessionRepository';
 import userRepository from '../repositories/commands/usersRepository';
@@ -9,8 +8,9 @@ import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
 import emailTemplates from '../utils/handlers/emailTemplates';
 import bcryptHandler from '../utils/handlers/hashHandler';
-import jwtToken from '../utils/handlers/jwtToken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import sendEmail from '../utils/handlers/sendEmail';
+import jwtToken from '../utils/handlers/jwtToken';
 
 const authService = {
   async login(
@@ -21,13 +21,13 @@ const authService = {
   ) {
     const { user } = await authRepository.findByLoginOrEmail(loginOrEmail);
 
-    const isPasswordValid = bcryptHandler.comparePassword(
+    const isPasswordValid = await bcryptHandler.comparePassword(
       password,
       user.password
     );
 
     if (!isPasswordValid) {
-      throw ApiError.unauthorized('Invalid password');
+      throw new CustomError('Invalid password', HTTP_STATUSES.UNAUTHORIZED);
     }
 
     let savedDeviceSession;
@@ -301,21 +301,48 @@ const authService = {
     );
   },
   async confirmNewPassword(newPassword: string, recoveryCode: string) {
-    const { email } = jwtToken.verifyToken(
+    let decoded;
+
+    // try {
+    decoded = jwtToken.decodeCode(
       recoveryCode.toString(),
       SETTINGS.JWT_RECOVERY_CODE
     ) as JwtPayload;
+    // } catch (error) {
+    //
+    // }
 
-    const { user } = await authRepository.findByLoginOrEmail(email);
+    if (decoded === null) {
+      throw new CustomError(
+        [
+          {
+            message: `recoveryCode ${recoveryCode} not decoded, invalid or expired recoveryCode`,
+            field: 'recoveryCode',
+          },
+        ],
+        HTTP_STATUSES.BAD_REQUEST
+      );
+    }
+
+    const { user } = await authRepository.findByLoginOrEmail(decoded!.email);
+
+    const isPasswordValid = await bcryptHandler.comparePassword(
+      newPassword,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      throw new CustomError('Invalid password', HTTP_STATUSES.UNAUTHORIZED);
+    }
 
     const hashedPassword = await bcryptHandler.hashedPassword(newPassword, 10);
 
-    const verificationStatus = await authRepository.updatePassword(
+    const updatedPassword = await authRepository.updatePassword(
       user!.id.toString(),
       hashedPassword
     );
 
-    return verificationStatus;
+    return updatedPassword;
   },
 };
 

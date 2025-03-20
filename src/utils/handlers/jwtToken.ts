@@ -37,6 +37,13 @@ const jwtToken = {
   generateRecoveryCode(email: string, recoverySecretKey: string) {
     return jwt.sign({ email }, recoverySecretKey);
   },
+  decodeCode(token: string, secretKey: string) {
+    try {
+      return jwt.verify(token, secretKey) as JwtPayload;
+    } catch (error) {
+      return error;
+    }
+  },
 };
 
 export default jwtToken;

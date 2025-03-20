@@ -173,12 +173,12 @@ const authController = {
         );
       }
 
-      const confirmNewPasswordResult = authService.confirmNewPassword(
+      const newPasswordResult = await authService.confirmNewPassword(
         newPassword,
         recoveryCode
       );
 
-      if (!confirmNewPasswordResult) {
+      if (!newPasswordResult) {
         throw new CustomError(
           'error verifyResult',
           HTTP_STATUSES.INTERNAL_SERVER_ERROR

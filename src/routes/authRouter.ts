@@ -45,6 +45,7 @@ authRouter.post(
   '/new-password',
   rateLimitMiddleware,
   newPasswordValidation,
+  errorsMiddleware,
   authController.newPassword
 );
 export default authRouter;
