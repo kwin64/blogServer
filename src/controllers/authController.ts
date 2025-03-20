@@ -163,8 +163,29 @@ const authController = {
     }
   },
   async newPassword(req: AuthRequestRT, res: Response, next: NextFunction) {
-    const { loginOrEmail, password } = req.body;
     try {
+      const { newPassword, recoveryCode } = req.body;
+
+      if (!recoveryCode) {
+        throw new CustomError(
+          [{ message: 'recoveryCode is required', field: 'recoveryCode' }],
+          HTTP_STATUSES.BAD_REQUEST
+        );
+      }
+
+      const confirmNewPasswordResult = authService.confirmNewPassword(
+        newPassword,
+        recoveryCode
+      );
+
+      if (!confirmNewPasswordResult) {
+        throw new CustomError(
+          'error verifyResult',
+          HTTP_STATUSES.INTERNAL_SERVER_ERROR
+        );
+      }
+
+      res.status(HTTP_STATUSES.NO_CONTENT).send();
     } catch (error) {
       next(error);
     }

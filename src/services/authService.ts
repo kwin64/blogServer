@@ -300,6 +300,23 @@ const authService = {
       emailTemplates.registrationConfirmationEmail(recoveryCode)
     );
   },
+  async confirmNewPassword(newPassword: string, recoveryCode: string) {
+    const { email } = jwtToken.verifyToken(
+      recoveryCode.toString(),
+      SETTINGS.JWT_RECOVERY_CODE
+    ) as JwtPayload;
+
+    const { user } = await authRepository.findByLoginOrEmail(email);
+
+    const hashedPassword = await bcryptHandler.hashedPassword(newPassword, 10);
+
+    const verificationStatus = await authRepository.updatePassword(
+      user!.id.toString(),
+      hashedPassword
+    );
+
+    return verificationStatus;
+  },
 };
 
 export default authService;

@@ -42,6 +42,19 @@ const authRepository = {
       throw new CustomError('Database error findUser', HTTP_STATUSES.NOT_FOUND);
     }
   },
+  async updatePassword(userId: string, newPassword: string) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { password: newPassword },
+      { new: true }
+    ).lean();
+
+    if (!updatedUser) {
+      throw new CustomError('User not found', HTTP_STATUSES.NOT_FOUND);
+    }
+
+    return updatedUser;
+  },
 };
 
 export default authRepository;

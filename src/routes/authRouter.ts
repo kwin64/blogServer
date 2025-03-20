@@ -6,6 +6,7 @@ import usersValidationMiddleware from '../middlewares/usersValidationMiddleware'
 import checkRefreshToken from '../middlewares/checkRefreshToken';
 import rateLimitMiddleware from '../middlewares/rateLimitMiddleware';
 import recoveryPasswordValidationEmail from '../middlewares/recoveryPasswordValidationEmail';
+import newPasswordValidation from '../middlewares/newPasswordValidation';
 
 const authRouter = Router({});
 authRouter.post('/login', rateLimitMiddleware, authController.login);
@@ -43,6 +44,7 @@ authRouter.post(
 authRouter.post(
   '/new-password',
   rateLimitMiddleware,
+  newPasswordValidation,
   authController.newPassword
 );
 export default authRouter;
