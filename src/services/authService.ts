@@ -301,18 +301,12 @@ const authService = {
     );
   },
   async confirmNewPassword(newPassword: string, recoveryCode: string) {
-    let decoded;
-
-    // try {
-    decoded = jwtToken.decodeCode(
+    const decoded = jwtToken.decodeCode(
       recoveryCode.toString(),
       SETTINGS.JWT_RECOVERY_CODE
     ) as JwtPayload;
-    // } catch (error) {
-    //
-    // }
 
-    if (decoded === null) {
+    if (!decoded) {
       throw new CustomError(
         [
           {

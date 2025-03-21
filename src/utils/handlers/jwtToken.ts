@@ -41,7 +41,7 @@ const jwtToken = {
     try {
       return jwt.verify(token, secretKey) as JwtPayload;
     } catch (error) {
-      return error;
+      return undefined;
     }
   },
 };
