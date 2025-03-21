@@ -11,7 +11,7 @@ export class BlogService {
 
   async createBlog(
     blog: Omit<IBlog, 'id' | 'createdAt' | 'updatedAt' | 'isMembership'>
-  ): Promise<BlogDocument> {
+  ): Promise<IBlog> {
     try {
       return await this.blogRepository.createBlog(blog);
     } catch (error) {
