@@ -5,9 +5,22 @@ import blogsValidationMiddleware from '../middlewares/blogsValidationMiddleware'
 import errorsMiddleware from '../middlewares/errorsMiddleware';
 import postsForBlogValidationMiddleware from '../middlewares/postsForBlogValidationMiddleware';
 import validateObjectIdParam from '../utils/validations/validateObjectIdParam';
+import { container } from '../config/container';
+import { BlogController } from '../controllers/BlogControllerClass';
+
+const blogController = container.get(BlogController);
 
 const blogsRouter = Router({});
-blogsRouter.get('/', blogsController.allBlogs);
+
+blogsRouter.get('/', blogController.allBlogs.bind(blogController));
+blogsRouter.post(
+  '/',
+  authMiddleware,
+  blogsValidationMiddleware,
+  errorsMiddleware,
+  blogController.newBlog.bind(blogController)
+);
+
 blogsRouter.get('/:id', validateObjectIdParam('id'), blogsController.getBlog);
 blogsRouter.get(
   '/:blogId/posts',
@@ -23,13 +36,13 @@ blogsRouter.post(
   errorsMiddleware,
   blogsController.newPostForBlog
 );
-blogsRouter.post(
-  '/',
-  authMiddleware,
-  blogsValidationMiddleware,
-  errorsMiddleware,
-  blogsController.newBlog
-);
+// blogsRouter.post(
+//   '/',
+//   authMiddleware,
+//   blogsValidationMiddleware,
+//   errorsMiddleware,
+//   blogsController.newBlog
+// );
 blogsRouter.put(
   '/:id',
   authMiddleware,
