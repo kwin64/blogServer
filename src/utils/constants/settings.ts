@@ -10,8 +10,8 @@ const SETTINGS = {
   JWT_ACCESS_KEY: process.env.JWT_ACCESS_KEY || 'jwt_access_key',
   JWT_REFRESH_KEY: process.env.JWT_REFRESH_KEY || 'jwt_refresh_key',
   JWT_RECOVERY_CODE: 'jwt_recovery_code',
-  ACCESS_EXPIRES_IN: process.env.ACCESS_EXPIRES_IN || 10,
-  REFRESH_EXPIRES_IN: process.env.REFRESH_EXPIRES_IN || 20,
+  ACCESS_EXPIRES_IN: 10000,
+  REFRESH_EXPIRES_IN: 10000,
   EMAIL: process.env.TRANSPORTER_GMAIL_USER,
   EMAIL_PASSWORD: process.env.TRANSPORTER_GENERATE_PASSWORD_APP,
   PATH: {

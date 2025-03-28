@@ -18,5 +18,10 @@ commentsRouter.delete(
   commentsController.deleteComment
 );
 commentsRouter.get('/:commentId', commentsController.getComment);
+commentsRouter.put(
+  '/:commentId/like-status',
+  authMiddlewareJWT,
+  commentsController.changeLikeStatus
+);
 
 export default commentsRouter;

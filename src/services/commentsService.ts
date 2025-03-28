@@ -58,6 +58,36 @@ const commentsService = {
 
     return await commentsRepository.changeComment(commentId, content);
   },
+  async updateLikeStatus(
+    commentId: string,
+    likeStatus: string,
+    userId: string
+  ) {
+    const existingLike = await commentsRepository.findCommendByIdAndUserId(
+      commentId,
+      userId
+    );
+
+    if (!existingLike) {
+      throw ApiError.notFound('id doesnt exists');
+    }
+
+    //отсюда , еще схему лайков нужно
+
+    if (likeStatus === "None") {
+      await db.comment_likes.destroy({ where: { comment_id: commentId, user_id: userId } });
+    } else {
+      await db.comment_likes.upsert({ comment_id: commentId, user_id: userId, status: likeStatus });
+    }
+
+    // Пересчитываем лайки/дизлайки
+    const likesCount = await db.comment_likes.count({ where: { comment_id: commentId, status: "Like" } });
+    const dislikesCount = await db.comment_likes.count({ where: { comment_id: commentId, status: "Dislike" } });
+
+    await db.comments.update({ likesCount, dislikesCount }, { where: { id: commentId } });
+
+    return res.status(204).send();
+  },
 };
 
 export default commentsService;

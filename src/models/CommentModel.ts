@@ -27,6 +27,11 @@ export interface CommentDocument extends Document {
     userId: Types.ObjectId;
     userLogin: string;
   };
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: 'None' | 'Like' | 'Dislike';
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -49,6 +54,11 @@ const CommentSchema: Schema<CommentDocument> = new Schema(
         type: String,
         required: true,
       },
+    },
+    likesInfo: {
+      likesCount: Number,
+      dislikesCount: Number,
+      myStatus: String,
     },
   },
   { timestamps: true }

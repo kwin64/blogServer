@@ -16,6 +16,11 @@ const commentsRepository = {
         userId,
         userLogin,
       },
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 'None',
+      },
     });
 
     const savedComment = await newComment.save();
@@ -40,6 +45,11 @@ const commentsRepository = {
   },
   async getCommentById(_id: string) {
     return await Comment.findOne({ _id }).lean<CommentDocument>();
+  },
+  async findCommendByIdAndUserId(_id: string, userId: string) {
+    return await Comment.findOne({
+      where: { _id, 'commentatorInfo.userId': userId },
+    });
   },
 };
 

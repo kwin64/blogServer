@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
 import commentsService from '../services/commentsService';
 import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import validateInputId from '../utils/validations/validateInputId';
+import { CustomError } from '../utils/errors/CustomError ';
 
 const commentsController = {
   async changeComment(req: AuthRequest, res: Response) {
@@ -56,7 +57,7 @@ const commentsController = {
       res.status(HTTP_STATUSES.NO_CONTENT).json(deletedComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message })
+        res.status(error.statusCode).json({ message: error.message });
       } else {
         console.error('Unexpected error:', error);
         res
@@ -83,6 +84,25 @@ const commentsController = {
           .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
           .json({ message: 'Internal Server Error' });
       }
+    }
+  },
+  async changeLikeStatus(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const { commentId } = req.params;
+      const { likeStatus } = req.body;
+      const userId = req.user!.userId;
+
+      if (!['Like', 'Dislike', 'None'].includes(likeStatus)) {
+        throw ApiError.badRequest('Invalid like status');
+      }
+
+      const result = await commentsService.updateLikeStatus(
+        commentId,
+        likeStatus,
+        userId
+      );
+    } catch (error) {
+      next(error);
     }
   },
 };

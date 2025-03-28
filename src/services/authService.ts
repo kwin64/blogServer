@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import authRepository from '../repositories/commands/authRepository';
 import deviceSessionRepository from '../repositories/commands/deviceSessionRepository';
 import userRepository from '../repositories/commands/usersRepository';
@@ -5,12 +6,10 @@ import userQueryRepository from '../repositories/queries/userQueryRepository';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import SETTINGS from '../utils/constants/settings';
 import { CustomError } from '../utils/errors/CustomError ';
-import ApiError from '../utils/handlers/ApiError';
 import emailTemplates from '../utils/handlers/emailTemplates';
 import bcryptHandler from '../utils/handlers/hashHandler';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import sendEmail from '../utils/handlers/sendEmail';
 import jwtToken from '../utils/handlers/jwtToken';
+import sendEmail from '../utils/handlers/sendEmail';
 
 const authService = {
   async login(
@@ -297,7 +296,7 @@ const authService = {
     sendEmail(
       email,
       'Восстановить пароль',
-      emailTemplates.registrationConfirmationEmail(recoveryCode)
+      emailTemplates.recoveryEmail(recoveryCode)
     );
   },
   async confirmNewPassword(newPassword: string, recoveryCode: string) {
@@ -325,7 +324,7 @@ const authService = {
       user.password
     );
 
-    if (!isPasswordValid) {
+    if (isPasswordValid) {
       throw new CustomError('Invalid password', HTTP_STATUSES.UNAUTHORIZED);
     }
 
