@@ -71,7 +71,6 @@ export class BlogController {
       const { title, shortDescription, content } = req.body;
       const { blogId } = req.params;
 
-      //отсюда надо продорлжить рефакторинг
       const createdPost = await this.blogService.createPostForBlog({
         title,
         shortDescription,
