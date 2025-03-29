@@ -4,6 +4,7 @@ import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import ApiError from '../utils/handlers/ApiError';
 import validateInputId from '../utils/validations/validateInputId';
+import likesRepository from '../repositories/commands/likesRepository';
 
 const commentsService = {
   async createCommentForPost(userId: string, postId: string, content: string) {
@@ -60,33 +61,32 @@ const commentsService = {
   },
   async updateLikeStatus(
     commentId: string,
-    likeStatus: string,
+    likeStatus: 'Like' | 'Dislike' | 'None',
     userId: string
   ) {
-    const existingLike = await commentsRepository.findCommendByIdAndUserId(
+    const existingLike = await likesRepository.findLikeByUserIdAndCommentId(
       commentId,
       userId
     );
 
-    if (!existingLike) {
-      throw ApiError.notFound('id doesnt exists');
-    }
-
-    //отсюда , еще схему лайков нужно
-
-    if (likeStatus === "None") {
-      await db.comment_likes.destroy({ where: { comment_id: commentId, user_id: userId } });
+    if (existingLike === null) {
+      await likesRepository.createLike(commentId, userId, likeStatus);
     } else {
-      await db.comment_likes.upsert({ comment_id: commentId, user_id: userId, status: likeStatus });
+      if (likeStatus === 'None') {
+        await likesRepository.deleteLike(commentId, userId);
+      } else {
+        await likesRepository.updateLikeStatus(commentId, userId, likeStatus);
+      }
     }
 
-    // Пересчитываем лайки/дизлайки
-    const likesCount = await db.comment_likes.count({ where: { comment_id: commentId, status: "Like" } });
-    const dislikesCount = await db.comment_likes.count({ where: { comment_id: commentId, status: "Dislike" } });
+    const likesCount = await likesRepository.countLikes(commentId);
+    const dislikesCount = await likesRepository.countDislikes(commentId);
 
-    await db.comments.update({ likesCount, dislikesCount }, { where: { id: commentId } });
-
-    return res.status(204).send();
+    return await commentsRepository.findCommentAndUpdate(
+      commentId,
+      likesCount,
+      dislikesCount
+    );
   },
 };
 

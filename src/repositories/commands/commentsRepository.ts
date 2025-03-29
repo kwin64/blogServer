@@ -46,9 +46,14 @@ const commentsRepository = {
   async getCommentById(_id: string) {
     return await Comment.findOne({ _id }).lean<CommentDocument>();
   },
-  async findCommendByIdAndUserId(_id: string, userId: string) {
-    return await Comment.findOne({
-      where: { _id, 'commentatorInfo.userId': userId },
+  async findCommentAndUpdate(
+    commentId: string,
+    likesCount: number,
+    dislikesCount: number
+  ) {
+    return await Comment.findByIdAndUpdate(commentId, {
+      'likesInfo.likesCount': likesCount,
+      'likesInfo.dislikesCount': dislikesCount,
     });
   },
 };

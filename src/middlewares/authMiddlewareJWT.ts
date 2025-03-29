@@ -30,7 +30,7 @@ const authMiddlewareJWT = async (
     ) as JwtPayload;
 
     req.user = {
-      userId: verifiedToken.id,
+      userId: verifiedToken.userId,
     };
 
     next();

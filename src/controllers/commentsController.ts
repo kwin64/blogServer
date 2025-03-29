@@ -93,7 +93,7 @@ const commentsController = {
       const userId = req.user!.userId;
 
       if (!['Like', 'Dislike', 'None'].includes(likeStatus)) {
-        throw ApiError.badRequest('Invalid like status');
+        throw new CustomError('Invalid like status', HTTP_STATUSES.BAD_REQUEST);
       }
 
       const result = await commentsService.updateLikeStatus(
@@ -101,6 +101,8 @@ const commentsController = {
         likeStatus,
         userId
       );
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(result);
     } catch (error) {
       next(error);
     }
