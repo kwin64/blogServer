@@ -24,6 +24,11 @@ export const mapCommentDocumentWithPagination = (
         userId: commentDoc.commentatorInfo.userId.toString(),
         userLogin: commentDoc.commentatorInfo.userLogin,
       },
+      likesInfo: {
+        likesCount: commentDoc.likesInfo.likesCount,
+        dislikesCount: commentDoc.likesInfo.dislikesCount,
+        myStatus: commentDoc.likesInfo.myStatus,
+      },
       createdAt: commentDoc.createdAt!.toISOString(),
     })
   );

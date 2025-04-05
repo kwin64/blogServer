@@ -169,6 +169,7 @@ const postsController = {
       const { postId } = req.params;
       const { sortBy, sortDirection, pageNumber, pageSize, offset } =
         parseQueryParams.allPosts(req.query);
+
       const post = await postsService.getPost(postId);
 
       if (!postId) {

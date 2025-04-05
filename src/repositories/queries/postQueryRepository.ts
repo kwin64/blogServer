@@ -19,6 +19,7 @@ const postQueryRepository = {
         .skip(offset)
         .limit(pageSize)
         .exec();
+
       const pagesCount = Math.ceil(totalCount / pageSize);
 
       return mapPostDocumentWithPagination(

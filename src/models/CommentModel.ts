@@ -7,6 +7,11 @@ export interface IComment {
     userId: string;
     userLogin: string;
   };
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: 'None' | 'Like' | 'Dislike';
+  };
   createdAt?: string;
   updatedAt?: string;
 }
