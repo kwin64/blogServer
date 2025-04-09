@@ -8,18 +8,18 @@ import validateObjectIdParam from '../utils/validations/validateObjectIdParam';
 import { container } from '../config/container';
 import { BlogController } from '../controllers/BlogControllerClass';
 
-const blogController = container.get(BlogController);
+// const blogController = container.get(BlogController);
 
 const blogsRouter = Router({});
 
-blogsRouter.get('/', blogController.allBlogs.bind(blogController));
-blogsRouter.post(
-  '/',
-  authMiddleware,
-  blogsValidationMiddleware,
-  errorsMiddleware,
-  blogController.newBlog.bind(blogController)
-);
+blogsRouter.get('/', blogsController.allBlogs);
+// blogsRouter.post(
+//   '/',
+//   authMiddleware,
+//   blogsValidationMiddleware,
+//   errorsMiddleware,
+//   blogController.newBlog.bind(blogController)
+// );
 
 blogsRouter.get('/:id', validateObjectIdParam('id'), blogsController.getBlog);
 blogsRouter.get(
@@ -36,13 +36,13 @@ blogsRouter.post(
   errorsMiddleware,
   blogsController.newPostForBlog
 );
-// blogsRouter.post(
-//   '/',
-//   authMiddleware,
-//   blogsValidationMiddleware,
-//   errorsMiddleware,
-//   blogsController.newBlog
-// );
+blogsRouter.post(
+  '/',
+  authMiddleware,
+  blogsValidationMiddleware,
+  errorsMiddleware,
+  blogsController.newBlog
+);
 blogsRouter.put(
   '/:id',
   authMiddleware,
