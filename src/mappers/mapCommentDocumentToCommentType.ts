@@ -15,5 +15,6 @@ export const mapCommentDocumentToCommentType = (
       dislikesCount: commentDoc.likesInfo.dislikesCount,
       myStatus: commentDoc.likesInfo.myStatus,
     },
+    createdAt: commentDoc.createdAt!.toISOString(),
   };
 };
