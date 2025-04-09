@@ -148,11 +148,7 @@ const postsController = {
         throw ApiError.internal('Failed to create comment');
       }
 
-      const getMappedComment = await commentQueryRepository.getCommentById(
-        createComment._id.toString()
-      );
-
-      res.status(HTTP_STATUSES.CREATED).json(getMappedComment);
+      res.status(HTTP_STATUSES.CREATED).json(createComment);
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({ message: error.message });
