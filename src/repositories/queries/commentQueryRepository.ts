@@ -31,8 +31,6 @@ const commentQueryRepository = {
         .exec();
       const pagesCount = Math.ceil(totalCount / pageSize);
 
-      console.log('comments', comments);
-
       return mapCommentDocumentWithPagination(
         comments,
         pagesCount,

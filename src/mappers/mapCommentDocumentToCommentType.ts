@@ -10,6 +10,10 @@ export const mapCommentDocumentToCommentType = (
       userId: commentDoc.commentatorInfo.userId.toString(),
       userLogin: commentDoc.commentatorInfo.userLogin,
     },
-    createdAt: commentDoc.createdAt!.toISOString(),
+    likesInfo: {
+      likesCount: commentDoc.likesInfo.likesCount,
+      dislikesCount: commentDoc.likesInfo.dislikesCount,
+      myStatus: commentDoc.likesInfo.myStatus,
+    },
   };
 };
