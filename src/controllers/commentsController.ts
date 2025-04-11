@@ -95,7 +95,10 @@ const commentsController = {
       validateInputId(commentId);
 
       if (!['Like', 'Dislike', 'None'].includes(likeStatus)) {
-        throw new CustomError('Invalid like status', HTTP_STATUSES.BAD_REQUEST);
+        throw new CustomError(
+          [{ message: 'Invalid like status', field: 'likeStatus' }],
+          HTTP_STATUSES.BAD_REQUEST
+        );
       }
 
       const result = await commentsService.updateLikeStatus(
