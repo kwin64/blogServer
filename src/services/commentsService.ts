@@ -1,10 +1,11 @@
-import mongoose from 'mongoose';
 import commentsRepository from '../repositories/commands/commentsRepository';
+import likesRepository from '../repositories/commands/likesRepository';
 import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
 import validateInputId from '../utils/validations/validateInputId';
-import likesRepository from '../repositories/commands/likesRepository';
 
 const commentsService = {
   async createCommentForPost(userId: string, postId: string, content: string) {
@@ -64,6 +65,12 @@ const commentsService = {
     likeStatus: 'Like' | 'Dislike' | 'None',
     userId: string
   ) {
+    const comment = await commentsRepository.getCommentById(commentId);
+
+    if (!comment) {
+      throw new CustomError('Comment not found', HTTP_STATUSES.NOT_FOUND);
+    }
+
     const existingLike = await likesRepository.findLikeByUserIdAndCommentId(
       commentId,
       userId

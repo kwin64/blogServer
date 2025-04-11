@@ -92,6 +92,8 @@ const commentsController = {
       const { likeStatus } = req.body;
       const userId = req.user!.userId;
 
+      validateInputId(commentId);
+
       if (!['Like', 'Dislike', 'None'].includes(likeStatus)) {
         throw new CustomError('Invalid like status', HTTP_STATUSES.BAD_REQUEST);
       }
