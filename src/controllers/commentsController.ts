@@ -71,9 +71,12 @@ const commentsController = {
       const { commentId } = req.params;
       validateInputId(commentId);
 
-      const getMappedComment = await commentQueryRepository.getCommentById(
+      let getMappedComment = await commentQueryRepository.getCommentById(
         commentId
       );
+
+      getMappedComment.likesInfo.myStatus = 'None';
+      
       res.status(HTTP_STATUSES.OK).json(getMappedComment);
     } catch (error) {
       next(error);
