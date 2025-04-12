@@ -28,6 +28,7 @@ const authMiddleware = async (
     const decoded = Buffer.from(authHeader.split(' ')[1], 'base64').toString(
       'utf-8'
     );
+
     if (
       decoded.split(':')[0] !== AUTH_USERNAME ||
       decoded.split(':')[1] !== AUTH_PASSWORD

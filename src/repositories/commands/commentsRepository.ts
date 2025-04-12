@@ -56,6 +56,22 @@ const commentsRepository = {
       'likesInfo.dislikesCount': dislikesCount,
     });
   },
+  async updateMyStatusByCommentAndUser(
+    commentId: string,
+    userId: string,
+    status: 'Like' | 'Dislike' | 'None'
+  ) {
+    return await Comment.findOneAndUpdate(
+      {
+        _id: commentId,
+        'commentatorInfo.userId': userId,
+      },
+      {
+        $set: { 'likesInfo.myStatus': status },
+      },
+      { new: true }
+    );
+  },
 };
 
 export default commentsRepository;

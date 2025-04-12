@@ -79,12 +79,14 @@ const commentsService = {
     if (existingLike === null) {
       await likesRepository.createLike(commentId, userId, likeStatus);
     } else {
-      if (likeStatus === 'None') {
-        await likesRepository.deleteLike(commentId, userId);
-      } else {
-        await likesRepository.updateLikeStatus(commentId, userId, likeStatus);
-      }
+      await likesRepository.updateLikeStatus(commentId, userId, likeStatus);
     }
+
+    await commentsRepository.updateMyStatusByCommentAndUser(
+      commentId,
+      userId,
+      likeStatus
+    );
 
     const likesCount = await likesRepository.countLikes(commentId);
     const dislikesCount = await likesRepository.countDislikes(commentId);
