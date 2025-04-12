@@ -66,7 +66,7 @@ const commentsController = {
       }
     }
   },
-  async getComment(req: Request, res: Response) {
+  async getComment(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { commentId } = req.params;
       validateInputId(commentId);
@@ -75,15 +75,8 @@ const commentsController = {
         commentId
       );
       res.status(HTTP_STATUSES.OK).json(getMappedComment);
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        console.error('Unexpected error:', error);
-        res
-          .status(HTTP_STATUSES.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+    } catch (error) {
+      next(error);
     }
   },
   async changeLikeStatus(req: AuthRequest, res: Response, next: NextFunction) {
