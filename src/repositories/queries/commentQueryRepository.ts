@@ -43,5 +43,11 @@ const commentQueryRepository = {
       throw new Error('Failed to fetch comments for post');
     }
   },
+  async getCommentsAuthUser (commentId: string, userId: string) {
+    return await Comment.findOne({
+      commentId,
+      userId,
+    });
+  }
 };
 export default commentQueryRepository;

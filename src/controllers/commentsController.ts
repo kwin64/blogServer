@@ -6,6 +6,10 @@ import ApiError from '../utils/handlers/ApiError';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import validateInputId from '../utils/validations/validateInputId';
 import { CustomError } from '../utils/errors/CustomError ';
+import jwtToken from '../utils/handlers/jwtToken';
+import SETTINGS from '../utils/constants/settings';
+import { JwtPayload } from 'jsonwebtoken';
+import likesRepository from '../repositories/commands/likesRepository';
 
 const commentsController = {
   async changeComment(req: AuthRequest, res: Response) {
@@ -70,13 +74,31 @@ const commentsController = {
     try {
       const { commentId } = req.params;
       validateInputId(commentId);
+      const authHeader = req.headers.authorization;
+      let getMappedComment;
+      let userId: string | null = null;
 
-      let getMappedComment = await commentQueryRepository.getCommentById(
-        commentId
-      );
+      if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        const verifyToken = jwtToken.verifyToken(
+          token,
+          SETTINGS.JWT_ACCESS_KEY
+        ) as JwtPayload;
+        userId = verifyToken.userId;
+      }
 
-      getMappedComment.likesInfo.myStatus = 'None';
-      
+      getMappedComment = await commentQueryRepository.getCommentById(commentId);
+
+      if (!userId) {
+        getMappedComment.likesInfo.myStatus = 'None';
+      } else {
+        const like = await likesRepository.findLikeByUserIdAndCommentId(
+          commentId,
+          userId
+        );
+        getMappedComment.likesInfo.myStatus = like?.status || 'None';
+      }
+
       res.status(HTTP_STATUSES.OK).json(getMappedComment);
     } catch (error) {
       next(error);
