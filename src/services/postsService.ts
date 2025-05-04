@@ -1,6 +1,8 @@
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/commands/blogsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
+import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
+import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
 
 const postsService = {
@@ -85,6 +87,22 @@ const postsService = {
     //   throw new Error('Could not update post');
     // }
     return await postsRepository.change(post);
+  },
+  async updateLikeStatus(
+    postId: string,
+    likeStatus: 'Like' | 'Dislike' | 'None',
+    userId: string
+  ) {
+    const comment = await postsRepository.getPostById(postId);
+
+    if (!comment) {
+      throw new CustomError('post not found', HTTP_STATUSES.NOT_FOUND);
+    }
+
+    const existingLike = await postsRepository.findLikeByUserIdAndCommentId(
+      postId,
+      userId
+    );
   },
 };
 export default postsService;

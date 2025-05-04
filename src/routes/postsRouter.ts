@@ -31,7 +31,7 @@ postsRouter.post(
   postsController.newCommentForPost
 );
 postsRouter.get('/:postId/comments', postsController.getAllCommentsForPost);
-
+postsRouter.put('/:postId/like-status',authMiddlewareJWT, postsController.changeLikeStatus);
 postsRouter.delete('/:id', authMiddleware, postsController.deletePost);
 
 export default postsRouter;

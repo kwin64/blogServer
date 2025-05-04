@@ -11,5 +11,11 @@ export const mapPostDocumentToPostType = (
     blogId: postDoc.blogId,
     blogName: postDoc.blogName,
     createdAt: postDoc.createdAt,
+    extendedLikesInfo: {
+      dislikesCount: 0,
+      likesCount: 0,
+      myStatus: 'Like' | 'Dislike' | 'None',
+      newestLikes: [],
+    },
   };
 };

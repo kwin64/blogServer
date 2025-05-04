@@ -31,12 +31,19 @@ export interface PostDocument extends Document {
 }
 
 const PostSchema: Schema<PostDocument> = new Schema(
-  {
+  {   
+    //fix
     title: { type: String, required: true },
     shortDescription: { type: String, required: true },
     content: { type: String, required: true },
     blogId: { type: String, required: true },
     blogName: { type: String, required: true },
+    extendedLikesInfo: {
+      dislikesCount: number,
+      likesCount: number,
+      myStatus: 'Like' | 'Dislike' | 'None',
+      newestLikes: [],
+    },
   },
   { timestamps: true }
 );

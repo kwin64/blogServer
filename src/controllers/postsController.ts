@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddlewareJWT';
 import { IPost } from '../models/PostModel';
 import commentQueryRepository from '../repositories/queries/commentQueryRepository';
@@ -9,6 +9,7 @@ import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import ApiError from '../utils/handlers/ApiError';
 import parseQueryParams from '../utils/parsers/parseQueryParams';
 import validateInputId from '../utils/validations/validateInputId';
+import { CustomError } from '../utils/errors/CustomError ';
 
 const postsController = {
   async allPosts(req: Request, res: Response) {
@@ -207,5 +208,31 @@ const postsController = {
       }
     }
   },
+  async changeLikeStatus(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const { postId } = req.params;
+      const { likeStatus } = req.body;
+      const userId = req.user!.userId;
+
+      validateInputId(postId);
+
+      if (!['Like', 'Dislike', 'None'].includes(likeStatus)) {
+        throw new CustomError(
+          [{ message: 'Invalid like status', field: 'likeStatus' }],
+          HTTP_STATUSES.BAD_REQUEST
+        );
+      }
+
+      const result = await postsService.updateLikeStatus(
+        postId,
+        likeStatus,
+        userId
+      );
+
+      res.status(HTTP_STATUSES.NO_CONTENT).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 };
 export default postsController;
