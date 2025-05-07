@@ -44,8 +44,6 @@ const postsService = {
       throw new Error('Post ID must be provided');
     }
 
-    console.log('id', id);
-
     const post = await postsRepository.getPost(id);
 
     if (!post) {

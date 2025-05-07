@@ -1,5 +1,5 @@
 import { mapPostDocumentToPostType } from '../../mappers/mapPostDocumentToPostType';
-import { Post } from '../../models/';
+import { Like, Post } from '../../models/';
 import { IPost, PostDocument } from '../../models/PostModel';
 
 const postsRepository = {
@@ -26,6 +26,12 @@ const postsRepository = {
       if (!post) {
         return null;
       }
+
+      // const newestLikes = await Like.find({ postId: id })
+      //   .sort({ addedAt: -1 })
+      //   .limit(3)
+      //   .select('userId login addedAt -_id');
+      // addedAt: post.createdAt,
       return mapPostDocumentToPostType(post);
     } catch (error) {
       console.error('Error fetching post:', error);

@@ -7,11 +7,13 @@ export interface ICommentWithPagination {}
 export interface LikesDocument extends Document {
   commentId: Types.ObjectId;
   userId: Types.ObjectId;
+  postId?: Types.ObjectId;
   status: 'Like' | 'Dislike' | 'None';
 }
 
 const LikesSchema: Schema<LikesDocument> = new Schema(
   {
+    postId: { type: Schema.Types.ObjectId, ref: 'Posts', required: false },
     commentId: { type: Schema.Types.ObjectId, ref: 'Comments', required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
     status: { type: String, enum: ['Like', 'Dislike', 'None'], required: true },

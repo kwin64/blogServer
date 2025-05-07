@@ -14,7 +14,7 @@ export const mapPostDocumentToPostType = (
     extendedLikesInfo: {
       dislikesCount: 0,
       likesCount: 0,
-      myStatus: 'Like' | 'Dislike' | 'None',
+      myStatus: 'None',
       newestLikes: [],
     },
   };

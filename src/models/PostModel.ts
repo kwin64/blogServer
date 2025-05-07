@@ -9,6 +9,12 @@ export interface IPost {
   blogName: string;
   createdAt?: Date;
   updatedAt?: Date;
+  extendedLikesInfo?: {
+    dislikesCount: number;
+    likesCount: number;
+    myStatus: 'Like' | 'Dislike' | 'None';
+    newestLikes: [];
+  };
 }
 
 export interface IPostWithPagination {
@@ -28,21 +34,40 @@ export interface PostDocument extends Document {
   blogName: string;
   createdAt: Date;
   updatedAt: Date;
+  extendedLikesInfo: {
+    dislikesCount: number;
+    likesCount: number;
+    myStatus: 'Like' | 'Dislike' | 'None';
+    newestLikes: [];
+  };
 }
 
 const PostSchema: Schema<PostDocument> = new Schema(
-  {   
-    //fix
+  {
     title: { type: String, required: true },
     shortDescription: { type: String, required: true },
     content: { type: String, required: true },
     blogId: { type: String, required: true },
     blogName: { type: String, required: true },
     extendedLikesInfo: {
-      dislikesCount: number,
-      likesCount: number,
-      myStatus: 'Like' | 'Dislike' | 'None',
-      newestLikes: [],
+      dislikesCount: { type: Number, required: true, default: 0 },
+      likesCount: { type: Number, required: true, default: 0 },
+      myStatus: {
+        type: String,
+        enum: ['Like', 'Dislike', 'None'],
+        required: true,
+        default: 'None',
+      },
+      newestLikes: {
+        type: [
+          {
+            userId: String,
+            login: String,
+            addedAt: Date,
+          },
+        ],
+        default: [],
+      },
     },
   },
   { timestamps: true }
