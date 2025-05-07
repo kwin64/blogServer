@@ -1,6 +1,7 @@
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/commands/blogsRepository';
 import postsRepository from '../repositories/commands/postsRepository';
+import userRepository from '../repositories/commands/usersRepository';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
@@ -91,11 +92,17 @@ const postsService = {
     likeStatus: 'Like' | 'Dislike' | 'None',
     userId: string
   ) {
-    const comment = await postsRepository.getPostById(postId);
+    const post = await postsRepository.getPostById(postId);
+    const user = await userRepository.getUserById(userId);
 
-    if (!comment) {
+    if (!post) {
       throw new CustomError('post not found', HTTP_STATUSES.NOT_FOUND);
     }
+
+    
+
+    console.log('post', post);
+    console.log('user', user);
 
     const existingLike = await postsRepository.findLikeByUserIdAndCommentId(
       postId,

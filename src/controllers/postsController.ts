@@ -233,6 +233,6 @@ const postsController = {
     } catch (error) {
       next(error);
     }
-  }
+  },
 };
 export default postsController;
