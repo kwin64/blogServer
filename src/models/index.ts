@@ -5,3 +5,4 @@ export { default as Comment } from './CommentModel';
 export { default as DeviceSession } from './DeviceSessionModel';
 export { default as ApiRequest } from './ApiRequestModel';
 export { default as Like } from './LikeModel';
+export { default as PostsLikes } from './PostsLikeModel';

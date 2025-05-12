@@ -81,5 +81,32 @@ const postsRepository = {
   async getPostById(_id: string) {
     return await Post.findOne({ _id }).lean<PostDocument>();
   },
+  async changeStatusLike(
+    postId: string,
+    updatedLikesInfo: {
+      likesCount: number;
+      dislikesCount: number;
+      newestLikes: {
+        userId: string;
+        login: string;
+        addedAt: string;
+        status: 'Like' | 'Dislike';
+      }[];
+    }
+  ) {
+    return Post.updateOne(
+      { _id: postId },
+      {
+        $set: {
+          'extendedLikesInfo.likesCount': updatedLikesInfo.likesCount,
+          'extendedLikesInfo.dislikesCount': updatedLikesInfo.dislikesCount,
+          'extendedLikesInfo.newestLikes': updatedLikesInfo.newestLikes.slice(
+            0,
+            3
+          ),
+        },
+      }
+    );
+  },
 };
 export default postsRepository;

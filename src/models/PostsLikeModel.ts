@@ -13,10 +13,7 @@ const PostsLikesSchema: Schema<LikesDocument> = new Schema(
   { timestamps: true }
 );
 const PostsLikes: Model<LikesDocument> = mongoose.model<LikesDocument>(
-  'Likes',
+  'PostsLikes',
   PostsLikesSchema
 );
 export default PostsLikes;
-
-//тут остановился
-// модель создания лайков на посты

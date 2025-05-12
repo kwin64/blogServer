@@ -1,10 +1,25 @@
+import { PostsLikes } from '../models';
 import { IPost } from '../models/PostModel';
 import blogsRepository from '../repositories/commands/blogsRepository';
+import likesRepository from '../repositories/commands/likesRepository';
 import postsRepository from '../repositories/commands/postsRepository';
 import userRepository from '../repositories/commands/usersRepository';
 import { HTTP_STATUSES } from '../utils/constants/httpStatuses';
 import { CustomError } from '../utils/errors/CustomError ';
 import ApiError from '../utils/handlers/ApiError';
+
+interface NewestLike {
+  userId: string;
+  login: string;
+  addedAt: string;
+  status: 'Like' | 'Dislike';
+}
+
+interface UpdatedLikesInfo {
+  likesCount: number;
+  dislikesCount: number;
+  newestLikes: NewestLike[];
+}
 
 const postsService = {
   async getPosts() {
@@ -95,19 +110,60 @@ const postsService = {
     const post = await postsRepository.getPostById(postId);
     const user = await userRepository.getUserById(userId);
 
-    if (!post) {
-      throw new CustomError('post not found', HTTP_STATUSES.NOT_FOUND);
+    if (!user) throw ApiError.notFound('User not found');
+    if (!post) throw ApiError.notFound('Post not found');
+
+    const info = post.extendedLikesInfo;
+
+    if (likeStatus === 'Dislike') {
+      if (info.newestLikes.find((like) => like.userId !== userId)) {
+        info.dislikesCount++;
+      }
     }
 
-    
+    // роверить наличие лайка дизлайка, и менять либо не менть
 
-    console.log('post', post);
-    console.log('user', user);
+    // const newestLikes: NewestLike[] = Array.isArray(info.newestLikes)
+    //   ? (info.newestLikes as NewestLike[])
+    //   : [];
 
-    const existingLike = await postsRepository.findLikeByUserIdAndCommentId(
-      postId,
-      userId
-    );
+    // const oldLike = newestLikes.find((like) => like.userId === userId);
+
+    // let filteredLikes = newestLikes.filter((like) => like.userId !== userId);
+
+    // let likesCount: number = info.likesCount ?? 0;
+    // let dislikesCount: number = info.dislikesCount ?? 0;
+
+    // if (oldLike) {
+    //   if (oldLike.status === 'Like') likesCount--;
+    //   if (oldLike.status === 'Dislike') dislikesCount--;
+    // }
+
+    // if (likeStatus !== 'None') {
+    //   const newLike: NewestLike = {
+    //     userId,
+    //     login: user.login,
+    //     addedAt: new Date().toISOString(),
+    //     status: likeStatus,
+    //   };
+
+    //   filteredLikes.unshift(newLike);
+
+    //   if (likeStatus === 'Like') likesCount++;
+    //   if (likeStatus === 'Dislike') dislikesCount++;
+    // }
+
+    // const top3NewestLikes = filteredLikes
+    //   .filter((like) => like.status === 'Like')
+    //   .slice(0, 3);
+
+    // const updatedLikesInfo: UpdatedLikesInfo = {
+    //   likesCount,
+    //   dislikesCount,
+    //   newestLikes: top3NewestLikes,
+    // };
+
+    // await postsRepository.changeStatusLike(postId, updatedLikesInfo);
   },
 };
 export default postsService;
